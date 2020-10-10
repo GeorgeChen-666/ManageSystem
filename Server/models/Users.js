@@ -1,60 +1,56 @@
 const appRoot = require('app-root-path');
-const crypto = require("crypto");
-const BaseEntity = appRoot.require("/core/BaseEntity");
-const SUPER_PERMISSION = "*";
+const crypto = require('crypto');
+const BaseEntity = appRoot.require('/core/BaseEntity');
+const SUPER_PERMISSION = '*';
 
 const Users = class extends BaseEntity {
-  constructor(source = "", currentUser = "") {
+  constructor(source = '', currentUser = '') {
     super(source, currentUser);
-    Object.defineProperty(this, "password", {
+    Object.defineProperty(this, 'password', {
       configurable: true,
       enumerable: false,
-      set: function (value) {
-        this.data["password"] = Users.md5(value);
+      set: function(value) {
+        this.data['password'] = Users.md5(value);
       },
-      get: function () {
-        return this.data["password"];
-      },
+      get: function() {
+        return this.data['password'];
+      }
     });
   }
 
   static md5(text) {
-    return crypto.createHash("md5").update(text).digest("hex");
-  }
-
-  static pageRecords({startIndex, pageSize, filter, sort}) {
-    return BaseEntity.pageRecords.call(this, {startIndex, pageSize, filter, sort});
+    return crypto.createHash('md5').update(text).digest('hex');
   }
 
   static getUserByName(username) {
-    return (Users.findRecords({username}) || [])[0]
+    return (Users.findRecords({ username }) || [])[0];
   }
 
   saveRecord() {
     if (this.isNew()) {
-      const count = Users.findRecords({username: this.username}).length;
+      const count = Users.findRecords({ username: this.username }).length;
       if (count > 0) {
-        throw new Error("用户名重复");
+        throw new Error('用户名重复');
       }
     }
     super.saveRecord.call(this);
   }
 };
 Users.schema = {
-  username: null,
-  password: null,
-  errorTimes: null,
-  lock: null,
-  lastLoginDate: null,
-  servers: null,
-  permissions: null
+  username: String,
+  password: String,
+  errorTimes: Number,
+  lock: Boolean,
+  lastLoginDate: Number,
+  servers: Array,
+  permissions: Array
 };
 Users.defaultRecords = [
   {
-    "username": "admin",
-    "password": "d0970714757783e6cf17b26fb8e2298f",
-    "permissions": [SUPER_PERMISSION],
-    "id": 1
+    'username': 'admin',
+    'password': 'd0970714757783e6cf17b26fb8e2298f',
+    'permissions': [SUPER_PERMISSION],
+    'id': 1
   }
 ];
 

@@ -1,23 +1,33 @@
 const express = require('express');
 const path = require('path');
+const appRoot = require('app-root-path');
+const { registerJwtFilter } = appRoot.require('/core/jwt');
 const createError = require('http-errors');
 const indexRouter = require('./index');
 const usersRouter = require('./users');
 
+
 function setupRoutes(app) {
 
   app.use(express.static(path.join(__dirname, 'public')));
+  registerJwtFilter(app);
 
   app.use('/', indexRouter);
   app.use('/users', usersRouter);
 
-// catch 404 and forward to error handler
-  app.use(function (req, res, next) {
+  app.use(function(err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+      next(createError(401));
+    }
+    next(err, req, res, next);
+  });
+  // catch 404 and forward to error handler
+  app.use(function(req, res, next) {
     next(createError(404));
   });
 
-// error handler
-  app.use(function (err, req, res, next) {
+  // error handler
+  app.use(function(err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -27,7 +37,7 @@ function setupRoutes(app) {
     //res.render('error');
     res.json({
       error: err.message
-    })
+    });
   });
 }
 

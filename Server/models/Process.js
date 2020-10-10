@@ -1,20 +1,20 @@
 const appRoot = require('app-root-path');
-const BaseEntity = appRoot.require("/core/BaseEntity");
-const BaseProcess = appRoot.require("/core/BaseProcess");
+const BaseEntity = appRoot.require('/core/BaseEntity');
+const BaseProcess = appRoot.require('/core/BaseProcess');
 
 
 class Process extends BaseProcess {
   constructor(config) {
     super(config);
-    this.on("onData", (data) => {
-      console.log("===", data)
+    this.on('onData', (data) => {
+      console.log('===', data);
     });
     this.run();
   }
 }
 
 class ProcessEntity extends BaseEntity {
-  constructor(source = "", currentUser = "") {
+  constructor(source = '', currentUser = '') {
     super(source, currentUser);
   }
 }

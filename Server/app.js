@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const setupRoutes = require("./routes/setupRoutes");
+const setupRoutes = require('./routes/setupRoutes');
 
 
 const app = express();

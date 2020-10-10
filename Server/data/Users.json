@@ -7,9 +7,18 @@
         "*"
       ],
       "id": 1,
-      "lastLoginDate": 1602303506220,
+      "lastLoginDate": 1602318549843,
       "errorTimes": 0,
-      "updateOn": 1602303506221
+      "updateOn": 1602318549843
+    },
+    {
+      "username": "xiaoming",
+      "password": "112233",
+      "id": 1602306639695,
+      "createOn": 1602306639695,
+      "errorTimes": 5,
+      "updateOn": 1602312533517,
+      "lock": true
     }
   ]
 }

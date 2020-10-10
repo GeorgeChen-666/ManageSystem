@@ -1,6 +1,6 @@
-const os = require("os");
+const os = require('os');
 const iconv = require('iconv-lite');
-const child_process = require("child_process");
+const child_process = require('child_process');
 const EventEmitter = require('events');
 
 class BaseProcess extends EventEmitter {
@@ -10,7 +10,7 @@ class BaseProcess extends EventEmitter {
   }
 
   run() {
-    const defaultEncoding = os.platform() === "win32" ? "GBK" : "UTF-8";
+    const defaultEncoding = os.platform() === 'win32' ? 'GBK' : 'UTF-8';
     const {
       cmd, param, cwd, encoding = defaultEncoding
     } = this.config;
@@ -38,7 +38,7 @@ class BaseProcess extends EventEmitter {
   }
   sendProcessCommand(command) {
     this.process.stdin.write(command);
-    this.process.stdin.write("\n");
+    this.process.stdin.write('\n');
   }
   killProcess(silent = false) {
     if (this.isRun()) {
