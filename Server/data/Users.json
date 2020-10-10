@@ -1,0 +1,15 @@
+{
+  "records": [
+    {
+      "username": "admin",
+      "password": "d0970714757783e6cf17b26fb8e2298f",
+      "permissions": [
+        "*"
+      ],
+      "id": 1,
+      "lastLoginDate": 1602303506220,
+      "errorTimes": 0,
+      "updateOn": 1602303506221
+    }
+  ]
+}
