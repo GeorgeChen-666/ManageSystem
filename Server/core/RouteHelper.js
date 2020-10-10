@@ -11,7 +11,7 @@ function PublicHandler(callback) {
 }
 
 function regestRemove(router, entityType, {
-  pathName = '/delete',
+  pathName = '/remove',
   extraRules = []
 } = {}) {
   router.delete(pathName, [
@@ -19,8 +19,11 @@ function regestRemove(router, entityType, {
     ...extraRules
   ], PublicHandler(function(req, res, next) {
     const { id } = req.body;
-    const entityData = new entityType(id);
+    const entityData = new entityType(id, req.currentUser);
     entityData.removeRecord();
+    res.json({
+      message: 'remove'
+    });
   }));
 }
 
@@ -28,16 +31,21 @@ function regestRestore(router, entityType, {
   pathName = '/restore',
   extraRules = []
 } = {}) {
-  router.delete(pathName, [
+  router.post(pathName, [
     body('id').exists().withMessage('请传入id'),
     ...extraRules
   ], PublicHandler(function(req, res, next) {
     const { id } = req.body;
     const entityData = new entityType(id);
     entityData.restoreRecord();
+    res.json({
+      message: 'restore'
+    });
   }));
 }
 
 module.exports = {
-  PublicHandler
+  PublicHandler,
+  regestRemove,
+  regestRestore
 };

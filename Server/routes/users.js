@@ -3,7 +3,7 @@ const appRoot = require('app-root-path');
 const { body } = require('express-validator');
 const router = express.Router();
 const Users = appRoot.require('/models/Users');
-const { PublicHandler } = appRoot.require('/core/RouteHelper');
+const { PublicHandler, regestRemove, regestRestore } = appRoot.require('/core/RouteHelper');
 const { generateToken } = appRoot.require('/core/jwt');
 
 const publicRules = [
@@ -16,7 +16,8 @@ router.get('/', function(req, res, next) {
     message: 'respond with a resource'
   });
 });
-
+regestRemove(router, Users, {});
+regestRestore(router, Users, {});
 router.post('/register', [
   ...publicRules,
   body('username').custom(username => {

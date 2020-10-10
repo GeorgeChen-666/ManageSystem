@@ -14,7 +14,7 @@ class Process extends BaseProcess {
 }
 
 class ProcessEntity extends BaseEntity {
-  constructor(source = '', currentUser = '') {
+  constructor(source, currentUser) {
     super(source, currentUser);
   }
 }

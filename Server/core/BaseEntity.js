@@ -14,7 +14,7 @@ const systemProperty = Object.freeze({
 
 class BaseEntity {
 
-  constructor(source = '', currentUser = '') {
+  constructor(source = '', currentUser = null) {
     Object.defineProperty(this, 'data', {
       enumerable: false,
       writable: true,
@@ -43,7 +43,8 @@ class BaseEntity {
       if (_.isObject(source)) {
         this.data = source;
       } else if (_.isString(source)) {
-        this.data = this.constructor.getJsonBase().find({ [systemProperty.id]: source }).value();
+        const id = source * 1;
+        this.data = this.constructor.getObject(RECORDS_PATH_NAME).find({ [systemProperty.id]: id }).value();
       }
     }
   }
@@ -97,14 +98,14 @@ class BaseEntity {
     if (isNew) {
       _.set(updateObj, systemProperty.createOn, new Date().getTime());
       if (this.currentUser) {
-        _.set(updateObj, systemProperty.createBy, this.currentUser);
+        _.set(updateObj, systemProperty.createBy, this.currentUser.username);
       }
       this.constructor.getObject(RECORDS_PATH_NAME).push(updateObj).write();
       this[systemProperty.id] = _.get(updateObj, systemProperty.id);
     } else {
       _.set(updateObj, systemProperty.updateOn, new Date().getTime());
       if (this.currentUser) {
-        _.set(updateObj, systemProperty.updateBy, this.currentUser);
+        _.set(updateObj, systemProperty.updateBy, this.currentUser.username);
       }
       this.constructor.getObject(RECORDS_PATH_NAME).find({ [systemProperty.id]: this[systemProperty.id] }).assign(updateObj).write();
     }
@@ -116,7 +117,7 @@ class BaseEntity {
     if (!isNew) {
       _.set(updateObj, systemProperty.updateOn, new Date().getTime());
       if (this.currentUser) {
-        _.set(updateObj, systemProperty.updateBy, this.currentUser);
+        _.set(updateObj, systemProperty.updateBy, this.currentUser.username);
       }
       _.set(updateObj, 'deleted', true);
       this.constructor.getObject(RECORDS_PATH_NAME).find({ [systemProperty.id]: this[systemProperty.id] }).assign(updateObj).write();
@@ -129,7 +130,7 @@ class BaseEntity {
     if (!isNew) {
       _.set(updateObj, systemProperty.updateOn, new Date().getTime());
       if (this.currentUser) {
-        _.set(updateObj, systemProperty.updateBy, this.currentUser);
+        _.set(updateObj, systemProperty.updateBy, this.currentUser.username);
       }
       _.set(updateObj, 'deleted', false);
       this.constructor.getObject(RECORDS_PATH_NAME).find({ [systemProperty.id]: this[systemProperty.id] }).assign(updateObj).write();

@@ -4,7 +4,7 @@ const BaseEntity = appRoot.require('/core/BaseEntity');
 const SUPER_PERMISSION = '*';
 
 const Users = class extends BaseEntity {
-  constructor(source = '', currentUser = '') {
+  constructor(source, currentUser) {
     super(source, currentUser);
     Object.defineProperty(this, 'password', {
       configurable: true,

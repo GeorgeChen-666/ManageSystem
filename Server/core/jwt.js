@@ -14,8 +14,7 @@ function registerJwtFilter(app) {
     const token = (req.headers.authorization || '').replace('Bearer ', '');
     if (token) {
       const { username } = jwt.verify(token, KEY);
-      req.currentUser = username;
-      req.currentUserEntity = new Users(Users.getUserByName(username), username);
+      req.currentUser = new Users(Users.getUserByName(username), username);
     }
     next();
   });
