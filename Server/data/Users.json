@@ -4,12 +4,13 @@
       "username": "admin",
       "password": "d0970714757783e6cf17b26fb8e2298f",
       "permissions": [
-        "*"
+        "*1"
       ],
       "id": 1,
-      "lastLoginDate": 1602319805752,
+      "lastLoginDate": 1602430036795,
       "errorTimes": 0,
-      "updateOn": 1602319805752
+      "updateOn": 1602430759857,
+      "updateBy": "admin"
     },
     {
       "username": "xiaoming",
@@ -17,10 +18,17 @@
       "id": 1602306639695,
       "createOn": 1602306639695,
       "errorTimes": 5,
-      "updateOn": 1602321296430,
+      "updateOn": 1602430666024,
       "lock": true,
       "updateBy": "admin",
-      "deleted": false
+      "deleted": true
+    },
+    {
+      "username": "liuzi",
+      "password": "112233",
+      "id": 1602431998492,
+      "createOn": 1602431998492,
+      "createBy": "admin"
     }
   ]
 }

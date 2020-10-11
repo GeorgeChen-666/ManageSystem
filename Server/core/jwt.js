@@ -1,7 +1,7 @@
 const appRoot = require('app-root-path');
 const expressJWT = require('express-jwt');
 const jwt = require('jsonwebtoken');
-const Users = appRoot.require('/models/Users');
+const Users = require('../models/Users');
 const KEY = '!@#$%^&*';
 
 function registerJwtFilter(app, unless = []) {

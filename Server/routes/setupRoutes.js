@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
-const appRoot = require('app-root-path');
-const { registerJwtFilter } = appRoot.require('/core/jwt');
+const { registerJwtFilter } = require('../core/jwt');
 const createError = require('http-errors');
 const indexRouter = require('./index');
 const usersRouter = require('./users');

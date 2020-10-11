@@ -1,7 +1,5 @@
-const appRoot = require('app-root-path');
-const BaseEntity = appRoot.require('/core/BaseEntity');
-const BaseProcess = appRoot.require('/core/BaseProcess');
-
+const BaseEntity = require('../core/BaseEntity');
+const BaseProcess = require('../core/BaseProcess');
 
 class Process extends BaseProcess {
   constructor(config) {
@@ -27,6 +25,5 @@ ProcessEntity.schema = {
   param: null,
   cwd: null,
   encoding: null,
-  outputs: null
+  outputs: null,
 };
-
