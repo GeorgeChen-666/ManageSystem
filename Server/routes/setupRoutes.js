@@ -6,28 +6,26 @@ const createError = require('http-errors');
 const indexRouter = require('./index');
 const usersRouter = require('./users');
 
-
 function setupRoutes(app) {
-
   app.use(express.static(path.join(__dirname, 'public')));
-  registerJwtFilter(app);
+
+  registerJwtFilter(app, ['/users/login']);
 
   app.use('/', indexRouter);
   app.use('/users', usersRouter);
-
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
       next(createError(401));
     }
     next(err, req, res, next);
   });
   // catch 404 and forward to error handler
-  app.use(function(req, res, next) {
+  app.use(function (req, res, next) {
     next(createError(404));
   });
 
   // error handler
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -36,7 +34,7 @@ function setupRoutes(app) {
     res.status(err.status || 500);
     //res.render('error');
     res.json({
-      error: err.message
+      error: err.message,
     });
   });
 }

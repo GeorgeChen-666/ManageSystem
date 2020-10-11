@@ -4,20 +4,23 @@ const jwt = require('jsonwebtoken');
 const Users = appRoot.require('/models/Users');
 const KEY = '!@#$%^&*';
 
-function registerJwtFilter(app) {
-  app.use(expressJWT({
-    secret: KEY,
-    algorithms: ['HS256']
-  }).unless({
-    path: ['/users/login']  //除了这个地址，其他的URL都需要验证
-  }), function(req, res, next) {
-    const token = (req.headers.authorization || '').replace('Bearer ', '');
-    if (token) {
-      const { username } = jwt.verify(token, KEY);
-      req.currentUser = new Users(Users.getUserByName(username), username);
+function registerJwtFilter(app, unless = []) {
+  app.use(
+    expressJWT({
+      secret: KEY,
+      algorithms: ['HS256'],
+    }).unless({
+      path: [...unless], //除了这个地址，其他的URL都需要验证
+    }),
+    function (req, res, next) {
+      const token = (req.headers.authorization || '').replace('Bearer ', '');
+      if (token) {
+        const { username } = jwt.verify(token, KEY);
+        req.currentUser = new Users(Users.getUserByName(username), username);
+      }
+      next();
     }
-    next();
-  });
+  );
 }
 
 function generateToken(object) {
@@ -26,5 +29,5 @@ function generateToken(object) {
 
 module.exports = {
   registerJwtFilter,
-  generateToken
+  generateToken,
 };
