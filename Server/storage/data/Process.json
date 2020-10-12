@@ -2,6 +2,7 @@
   "records": [
     {
       "name": "8766",
+      "cmd": "cmd",
       "id": 1602473215540,
       "createOn": 1602473216349,
       "createBy": "admin"

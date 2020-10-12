@@ -1,13 +1,11 @@
 const BaseEntity = require('../core/BaseEntity');
 const BaseProcess = require('../core/BaseProcess');
+const { getProcessLogsClass } = require('./ProcessLogs');
+const activeProcess = new Map();
 
 class SystemProcess extends BaseProcess {
   constructor(config) {
     super(config);
-    this.on('onData', (data) => {
-      console.log('===', data);
-    });
-    this.run();
   }
 }
 
@@ -17,23 +15,35 @@ class Process extends BaseEntity {
   }
 
   isLoaded() {
+    return activeProcess.has(this.name);
   }
 
   load() {
+    const { cmd, param, cwd, encoding } = this;
+    const processObj = new SystemProcess({ cmd, param, cwd, encoding });
+    processObj.on('onData', (data) => {
+      new (getProcessLogsClass(this.name))(this.currentUser, data).saveRecord();
+    });
+    //processObj.run();
+    activeProcess.set(this.name, {
+      processObj,
+      ftpObj: null,
+    });
   }
 
   unload() {
+    //processObj.kill();
+    activeProcess.delete(this.name);
   }
 
   static loadAllActiveProcess() {
-    const activeDatas = Process.findRecords(record => !record.deleted);
-    activeDatas.forEach(data => {
+    const activeDataList = Process.findRecords((record) => !record.deleted);
+    activeDataList.forEach((data) => {
       new Process(data).load();
     });
   }
 }
 
-Process.activeProcess = [];
 Process.schema = {
   name: String,
   description: String,
@@ -42,6 +52,9 @@ Process.schema = {
   param: null,
   cwd: null,
   encoding: null,
-  outputs: null
+  outputs: null,
 };
+
+Process.loadAllActiveProcess();
+
 module.exports = Process;

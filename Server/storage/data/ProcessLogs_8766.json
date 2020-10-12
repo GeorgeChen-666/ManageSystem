@@ -1,0 +1,24 @@
+{
+  "records": [
+    {
+      "log": "Microsoft Windows [版本 10.0.17763.316]\r\n(c) 2018 Microsoft Corporation。保留所有权利。\r\n",
+      "id": 1602511275144,
+      "createOn": 1602511275144
+    },
+    {
+      "log": "\r\nD:\\Documents\\Project\\ManageSystem\\Server>",
+      "id": 1602511275152,
+      "createOn": 1602511275152
+    },
+    {
+      "log": "Microsoft Windows [版本 10.0.17763.316]\r\n(c) 2018 Microsoft Corporation。保留所有权利。\r\n",
+      "id": 1602511291321,
+      "createOn": 1602511291321
+    },
+    {
+      "log": "\r\nD:\\Documents\\Project\\ManageSystem\\Server>",
+      "id": 1602511291329,
+      "createOn": 1602511291329
+    }
+  ]
+}

@@ -11,10 +11,8 @@ class BaseProcess extends EventEmitter {
 
   run() {
     const defaultEncoding = os.platform() === 'win32' ? 'GBK' : 'UTF-8';
-    const {
-      cmd, param, cwd, encoding = defaultEncoding
-    } = this.config;
-    this.kill(true);
+    const { cmd, param, cwd, encoding = defaultEncoding } = this.config;
+    //this.kill(true);
     this.process = child_process.spawn(cmd, param, {
       // cwd,
       // stdio: 'pipe',
@@ -23,8 +21,8 @@ class BaseProcess extends EventEmitter {
     const onData = (data) => this.emit('onData', iconv.decode(data, encoding));
     this.process.stdout.on('data', onData);
     this.process.stderr.on('data', onData);
-    this.process.on('message',onData);
-    this.process.on('warning',onData);
+    this.process.on('message', onData);
+    this.process.on('warning', onData);
     this.process.on('error', (err) => {
       this.emit('onError', err);
     });
@@ -47,7 +45,6 @@ class BaseProcess extends EventEmitter {
       }
       this.process.kill('SIGKILL');
       this.process = null;
-
     }
   }
 }
