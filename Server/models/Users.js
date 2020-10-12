@@ -9,12 +9,12 @@ const Users = class extends BaseEntity {
     Object.defineProperty(this, 'password', {
       configurable: true,
       enumerable: false,
-      set: function (value) {
+      set: function(value) {
         this.data['password'] = Users.md5(value);
       },
-      get: function () {
+      get: function() {
         return this.data['password'];
-      },
+      }
     });
   }
 
@@ -23,7 +23,7 @@ const Users = class extends BaseEntity {
   }
 
   static getUserByName(username) {
-    return (Users.findRecords({ username }) || [])[0];
+    return Users.findRecords({ username })[0];
   }
 
   saveRecord() {
@@ -43,15 +43,15 @@ Users.schema = {
   lock: Boolean,
   lastLoginDate: Number,
   servers: Array,
-  permissions: Array,
+  permissions: Array
 };
 Users.defaultRecords = [
   {
     username: 'admin',
     password: 'd0970714757783e6cf17b26fb8e2298f',
     permissions: [SUPER_PERMISSION],
-    id: 1,
-  },
+    id: 1
+  }
 ];
 
 //const uuu = new Users("xiaoming", "");

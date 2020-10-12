@@ -5,22 +5,22 @@ const router = express.Router();
 const Users = require('../models/Users');
 const {
   PublicHandler,
-  regestRemove,
-  regestRestore,
+  canRemove,
+  canRestore
 } = require('../core/RouteHelper');
 const { generateToken } = require('../core/jwt');
 
 const publicRules = [
   body('username').exists().withMessage('请传入用户名'),
-  body('password').exists().withMessage('请传入密码'),
+  body('password').exists().withMessage('请传入密码')
 ];
 
-router.get('/', function (req, res, next) {
+router.get('/', function(req, res, next) {
   res.json({
-    message: 'respond with a resource',
+    message: 'respond with a resource'
   });
 });
-regestRemove(router, Users, {
+canRemove(router, Users, {
   extraRules: [
     body().custom(({ id }, { req }) => {
       const opUser = new Users(id);
@@ -31,10 +31,10 @@ regestRemove(router, Users, {
       if (!currentUser.permissions.includes('*')) {
         throw new Error('无操作权限');
       }
-    }),
-  ],
+    })
+  ]
 });
-regestRestore(router, Users, {});
+canRestore(router, Users, {});
 router.post(
   '/register',
   [
@@ -46,14 +46,14 @@ router.post(
         throw new Error('用户已经重复');
       }
       return true;
-    }),
+    })
   ],
-  PublicHandler(function (req, res, next) {
+  PublicHandler(function(req, res, next) {
     const userData = _.pick(req.body, ['username', 'password']);
     const userEntity = new Users(userData, req.currentUser);
     userEntity.saveRecord();
     res.json({
-      message: 'login',
+      message: 'login'
     });
   })
 );
@@ -85,15 +85,15 @@ router.post(
       userEntity.errorTimes = 0;
       userEntity.saveRecord();
       return true;
-    }),
+    })
   ],
   PublicHandler((req, res, next) => {
     const { username } = req.body;
     const token = generateToken({
-      username,
+      username
     });
     res.json({
-      message: token,
+      message: token
     });
   })
 );

@@ -52,7 +52,7 @@ class BaseEntity {
   static getJsonBase() {
     const baseName = this._baseName || this.name;
     if (this.base === undefined) {
-      const adapter = new FileSync(path.join(appRoot.path, 'data', `${baseName}.json`));
+      const adapter = new FileSync(path.join(appRoot.path, 'storage/data', `${baseName}.json`));
       this.base = low(adapter);
     }
     this.base.defaults({ [RECORDS_PATH_NAME]: this.defaultRecords }).write();
@@ -101,7 +101,6 @@ class BaseEntity {
         _.set(updateObj, systemProperty.createBy, this.currentUser.username);
       }
       this.constructor.getObject(RECORDS_PATH_NAME).push(updateObj).write();
-      this[systemProperty.id] = _.get(updateObj, systemProperty.id);
     } else {
       _.set(updateObj, systemProperty.updateOn, new Date().getTime());
       if (this.currentUser) {
@@ -109,6 +108,7 @@ class BaseEntity {
       }
       this.constructor.getObject(RECORDS_PATH_NAME).find({ [systemProperty.id]: this[systemProperty.id] }).assign(updateObj).write();
     }
+    this.data = updateObj;
   }
 
   removeRecord() {
@@ -121,6 +121,7 @@ class BaseEntity {
       }
       _.set(updateObj, 'deleted', true);
       this.constructor.getObject(RECORDS_PATH_NAME).find({ [systemProperty.id]: this[systemProperty.id] }).assign(updateObj).write();
+      this.data = updateObj;
     }
   }
 
@@ -134,6 +135,7 @@ class BaseEntity {
       }
       _.set(updateObj, 'deleted', false);
       this.constructor.getObject(RECORDS_PATH_NAME).find({ [systemProperty.id]: this[systemProperty.id] }).assign(updateObj).write();
+      this.data = updateObj;
     }
   }
 
@@ -149,7 +151,7 @@ class BaseEntity {
     if (!_.isNil(filter)) {
       obj = obj.filter(filter);
     }
-    return obj.value();
+    return obj.value() || [];
   }
 
   static pageRecords({ startIndex = 0, pageSize = 5, filter = null, sort = '' }) {
