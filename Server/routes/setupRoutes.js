@@ -11,9 +11,9 @@ function setupRoutes(app) {
 
   registerJwtFilter(app, ['/users/login']);
 
-  app.use('/', indexRouter);
-  app.use('/users', usersRouter);
-  app.use('/process', processRouter);
+  app.use('/api/', indexRouter);
+  app.use('/api/users', usersRouter);
+  app.use('/api/process', processRouter);
   app.use(function(err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
       next(createError(401));
