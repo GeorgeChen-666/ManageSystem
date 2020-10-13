@@ -31,13 +31,16 @@ class BaseProcess extends EventEmitter {
     });
     this.emit('onRun');
   }
+
   isProcessRun() {
     return !!this.process;
   }
+
   sendProcessCommand(command) {
     this.process.stdin.write(command);
     this.process.stdin.write('\n');
   }
+
   killProcess(silent = false) {
     if (this.isRun()) {
       if (!silent) {
@@ -48,4 +51,5 @@ class BaseProcess extends EventEmitter {
     }
   }
 }
+
 module.exports = BaseProcess;

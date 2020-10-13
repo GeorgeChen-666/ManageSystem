@@ -24,10 +24,12 @@ class Process extends BaseEntity {
     processObj.on('onData', (data) => {
       new (getProcessLogsClass(this.name))(this.currentUser, data).saveRecord();
     });
-    //processObj.run();
+    if (this.autoStart) {
+      processObj.run();
+    }
     activeProcess.set(this.name, {
       processObj,
-      ftpObj: null,
+      ftpObj: null
     });
   }
 
@@ -48,11 +50,13 @@ Process.schema = {
   name: String,
   description: String,
   type: String,
+  autoStart: Boolean,
+  ftpPort: String,
   cmd: null,
   param: null,
   cwd: null,
   encoding: null,
-  outputs: null,
+  outputs: null
 };
 
 Process.loadAllActiveProcess();
