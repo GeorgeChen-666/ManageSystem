@@ -7,9 +7,22 @@ class AuthorizedEntity extends BaseEntity {
 
   static getJsonBase() {
     const base = BaseEntity.getJsonBase();
-    base.defaults({ permissions: AuthorizedEntity.permissions });
+    base.defaults({ permissions: AuthorizedEntity.defaultPermissions });
     return base;
   }
 }
 
-AuthorizedEntity.permissions = {};
+AuthorizedEntity.defaultPermissions = {
+  query: {
+    users: ['@Any']
+  },
+  create: {
+    users: ['@Any']
+  },
+  modify: {
+    users: ['@Own']
+  },
+  remove: {
+    users: ['@Own']
+  }
+};
