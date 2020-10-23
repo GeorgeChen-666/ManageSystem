@@ -1,4 +1,3 @@
-const appRoot = require('app-root-path');
 const crypto = require('crypto');
 const BaseEntity = require('../core/BaseEntity');
 const SUPER_PERMISSION = '*';
@@ -9,12 +8,12 @@ const Users = class extends BaseEntity {
     Object.defineProperty(this, 'password', {
       configurable: true,
       enumerable: false,
-      set: function (value) {
+      set: function(value) {
         this.data['password'] = Users.md5(value);
       },
-      get: function () {
+      get: function() {
         return this.data['password'];
-      },
+      }
     });
   }
 
@@ -43,15 +42,15 @@ Users.schema = {
   lock: Boolean,
   lastLoginDate: Number,
   servers: Array,
-  permissions: Array,
+  permissions: Array
 };
 Users.defaultRecords = [
   {
     username: 'admin',
     password: Users.md5('112233'),
     permissions: [SUPER_PERMISSION],
-    id: 1,
-  },
+    id: 1
+  }
 ];
 
 //const uuu = new Users("xiaoming", "");
