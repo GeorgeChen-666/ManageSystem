@@ -52,4 +52,4 @@ class BaseProcess extends EventEmitter {
   }
 }
 
-module.exports = BaseProcess;
+module.exports = { BaseProcess };

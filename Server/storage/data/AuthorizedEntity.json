@@ -1,0 +1,17 @@
+{
+  "records": [],
+  "permissionInfo": {
+    "query": [
+      "@Any"
+    ],
+    "create": [
+      "@Any"
+    ],
+    "modify": [
+      "@Own"
+    ],
+    "remove": [
+      "@Own"
+    ]
+  }
+}

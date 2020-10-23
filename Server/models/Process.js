@@ -1,5 +1,5 @@
-const BaseEntity = require('../core/BaseEntity');
-const BaseProcess = require('../core/BaseProcess');
+const { BaseEntity } = require('../core/BaseEntity');
+const { BaseProcess } = require('../core/BaseProcess');
 const { getProcessLogsClass } = require('./ProcessLogs');
 const activeProcess = new Map();
 
@@ -29,7 +29,7 @@ class Process extends BaseEntity {
     }
     activeProcess.set(this.name, {
       processObj,
-      ftpObj: null
+      ftpObj: null,
     });
   }
 
@@ -56,7 +56,7 @@ Process.schema = {
   param: null,
   cwd: null,
   encoding: null,
-  outputs: null
+  outputs: null,
 };
 
 Process.loadAllActiveProcess();

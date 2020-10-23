@@ -1,4 +1,4 @@
-const BaseEntity = require('../core/BaseEntity');
+const { BaseEntity } = require('../core/BaseEntity');
 function getProcessLogsClass(processName) {
   const ProcessLogs = class extends BaseEntity {
     constructor(currentUser, log) {

@@ -7,9 +7,9 @@
         "*1"
       ],
       "id": 1,
-      "lastLoginDate": 1603437960437,
+      "lastLoginDate": 1603466677723,
       "errorTimes": 0,
-      "updateOn": 1603437960438,
+      "updateOn": 1603466689211,
       "updateBy": "admin"
     },
     {
@@ -18,10 +18,10 @@
       "id": 1602306639695,
       "createOn": 1602306639695,
       "errorTimes": 5,
-      "updateOn": 1602430666024,
+      "updateOn": 1603465607854,
       "lock": true,
       "updateBy": "admin",
-      "deleted": true
+      "deleted": false
     },
     {
       "username": "liuzi",
@@ -30,5 +30,19 @@
       "createOn": 1602431998492,
       "createBy": "admin"
     }
-  ]
+  ],
+  "permissionInfo": {
+    "query": [
+      "@Any"
+    ],
+    "create": [
+      "@Any"
+    ],
+    "modify": [
+      "@Own"
+    ],
+    "remove": [
+      "@Own"
+    ]
+  }
 }

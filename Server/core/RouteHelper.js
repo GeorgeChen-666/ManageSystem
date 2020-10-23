@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+const { body, param, validationResult } = require('express-validator');
 
 function PublicHandler(callback) {
   return function (req, res, next) {
@@ -34,13 +34,13 @@ function canModify(
 function canRemove(
   router,
   entityType,
-  { pathName = '/remove', extraRules = [] } = {}
+  { pathName = '/remove/:id', extraRules = [] } = {}
 ) {
   router.delete(
     pathName,
-    [body('id').exists().withMessage('请传入id'), ...extraRules],
+    [param('id').exists().withMessage('请传入id'), ...extraRules],
     PublicHandler(function (req, res, next) {
-      const { id } = req.body;
+      const { id } = req.params;
       const entityData = new entityType(id, req.currentUser);
       entityData.removeRecord();
       res.json({
@@ -53,13 +53,13 @@ function canRemove(
 function canRestore(
   router,
   entityType,
-  { pathName = '/restore', extraRules = [] } = {}
+  { pathName = '/restore/:id', extraRules = [] } = {}
 ) {
-  router.post(
+  router.patch(
     pathName,
-    [body('id').exists().withMessage('请传入id'), ...extraRules],
+    [param('id').exists().withMessage('请传入id'), ...extraRules],
     PublicHandler(function (req, res, next) {
-      const { id } = req.body;
+      const { id } = req.params;
       const entityData = new entityType(id, req.currentUser);
       entityData.restoreRecord();
       res.json({

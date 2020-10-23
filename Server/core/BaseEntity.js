@@ -47,6 +47,9 @@ class BaseEntity {
           .getObject(RECORDS_PATH_NAME)
           .find({ [systemProperty.id]: id })
           .value();
+        if (this.data === undefined) {
+          throw Error('数据不存在');
+        }
       }
     }
   }
@@ -171,7 +174,7 @@ class BaseEntity {
     }
   }
 
-  static findRecords(filter = null) {
+  static findRecords(filter = null, currentUser = null) {
     let obj = this.getRecordsObject();
     if (!_.isNil(filter)) {
       obj = obj.filter(filter);
@@ -179,13 +182,10 @@ class BaseEntity {
     return obj.value() || [];
   }
 
-  static pageRecords({
-    searchAfter = null,
-    startIndex = 0,
-    pageSize = 5,
-    filter = null,
-    sort = '',
-  }) {
+  static pageRecords(
+    { searchAfter = null, pageSize = 5, filter = null, sort = '' },
+    currentUser = null
+  ) {
     let obj = this.getRecordsObject();
     if (!_.isNil(filter)) {
       obj = obj.filter(filter);
@@ -207,4 +207,4 @@ class BaseEntity {
 
 BaseEntity.schema = {};
 BaseEntity.defaultRecords = [];
-module.exports = BaseEntity;
+module.exports = { BaseEntity };
