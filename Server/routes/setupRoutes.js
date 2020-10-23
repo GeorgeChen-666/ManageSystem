@@ -9,7 +9,7 @@ const processRouter = require('./process');
 function setupRoutes(app) {
   app.use(express.static(path.join(__dirname, 'public')));
 
-  registerJwtFilter(app, ['/users/login']);
+  registerJwtFilter(app, ['/api/users/login']);
 
   app.use('/api/', indexRouter);
   app.use('/api/users', usersRouter);
@@ -35,7 +35,8 @@ function setupRoutes(app) {
     res.status(err.status || 500);
     //res.render('error');
     res.json({
-      error: err.message
+      message: err.message,
+      stack: err.stack
     });
   });
 }

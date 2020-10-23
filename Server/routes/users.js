@@ -73,7 +73,7 @@ router.post(
         if (Users.md5(password) !== userEntity.password) {
           userEntity.errorTimes = (userEntity.errorTimes || 0) + 1;
           if (userEntity.errorTimes >= 5) {
-            userEntity.lock = true;
+            // userEntity.lock = true;
           }
           userEntity.saveRecord();
           throw new Error('密码不正确');
