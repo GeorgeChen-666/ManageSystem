@@ -35,7 +35,8 @@ class AuthorizedEntity extends BaseEntity {
     if (
       info === null ||
       (this.username !== this.currentUser.username &&
-        info === enumPermissions.own)
+        info === enumPermissions.own &&
+        !this.currentUser.isAdmin())
     ) {
       throw new Error('无权限');
     }
@@ -63,7 +64,7 @@ class AuthorizedEntity extends BaseEntity {
   static findRecords(filter = null, currentUser = null) {
     const permission = this.getPermission(currentUser, 'query');
     const newFilter = filter || {};
-    if (permission === enumPermissions.own) {
+    if (permission === enumPermissions.own && !currentUser.isAdmin()) {
       newFilter.createBy = currentUser;
     }
     super.findRecords(newFilter, currentUser);
@@ -71,7 +72,7 @@ class AuthorizedEntity extends BaseEntity {
   static pageRecords(searchParams, currentUser = null) {
     const permission = this.getPermission(currentUser, 'query');
     const newFilter = searchParams.filter || {};
-    if (permission === enumPermissions.own) {
+    if (permission === enumPermissions.own && !currentUser.isAdmin()) {
       newFilter.createBy = currentUser;
     }
     super.pageRecords({ ...searchParams, filter: newFilter }, currentUser);

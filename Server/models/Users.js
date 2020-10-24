@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const _ = require('lodash');
 const { AuthorizedEntity } = require('../core/AuthorizedEntity');
 const SUPER_PERMISSION = '*';
 const express = require('express');
@@ -28,7 +29,10 @@ const Users = class extends AuthorizedEntity {
   static getUserByName(username) {
     return Users.findRecords({ username })[0];
   }
-
+  isAdmin() {
+    const permissions = this.permissions;
+    return _.includes(permissions, '*');
+  }
   saveRecord() {
     if (this.isNew()) {
       const count = Users.findRecords({ username: this.username }).length;
