@@ -1,6 +1,5 @@
-import React from 'react';
 import { SmileOutlined, CrownOutlined } from '@ant-design/icons';
-
+import React from 'react';
 
 export default {
   route: {
@@ -20,18 +19,17 @@ export default {
         component: './Admin',
         routes: [
           {
-            path: '/process',
+            path: '/admin/process',
             name: '进程管理',
             icon: <SmileOutlined />,
             component: './Welcome',
           },
           {
-            path: '/users',
+            path: '/admin/users',
             name: '用户管理',
             icon: <SmileOutlined />,
             component: './Welcome',
           },
-
         ],
       },
       {

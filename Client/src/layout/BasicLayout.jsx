@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
-import {
-  Avatar
-} from 'antd';
+import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import ProLayout, {SettingDrawer } from '@ant-design/pro-layout';
-import {
-  Link,
-  useLocation
-} from "react-router-dom";
+import ProLayout, { SettingDrawer } from '@ant-design/pro-layout';
+import { Link, useLocation } from 'react-router-dom';
+import menuProps from '../common/menu';
 import '@ant-design/pro-layout/dist/layout.css';
-
 
 export default (props) => {
   const [settings, setSetting] = useState(undefined);
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
+
   return (
     <div
       id="test-pro-layout"
@@ -23,7 +19,18 @@ export default (props) => {
       }}
     >
       <ProLayout
-        {...props}h
+        {...menuProps}
+        breadcrumbRender={(routes) => {
+          return [
+            {
+              path: '/',
+              breadcrumbName: '主页',
+            },
+            ...(routes.map((route) => ({
+              breadcrumbName: route.breadcrumbName,
+            })) || []),
+          ];
+        }}
         style={{
           height: '100vh',
         }}
