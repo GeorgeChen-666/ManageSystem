@@ -1,1 +1,2 @@
 SET DEBUG=server:* & npm start
+yes
