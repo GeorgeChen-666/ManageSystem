@@ -15,20 +15,19 @@ export default {
         path: '/admin',
         name: '管理页',
         icon: <CrownOutlined />,
-        access: 'canAdmin',
-        component: './Admin',
         routes: [
           {
             path: '/admin/process',
             name: '进程管理',
             icon: <SmileOutlined />,
+            hideInMenu: true,
             component: './Welcome',
           },
           {
             path: '/admin/users',
             name: '用户管理',
             icon: <SmileOutlined />,
-            component: './Welcome',
+            component: import('../pages/Users'),
           },
         ],
       },
