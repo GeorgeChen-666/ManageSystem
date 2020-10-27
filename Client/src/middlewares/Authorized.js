@@ -16,14 +16,14 @@
 //     console.log('打印' + 7);
 //   });
 // });
-export default function createAuthorized(extraArgument) {
+export default function createAuthorized() {//extraArgument
   return ({ dispatch, getState }) => (next) => (action) => {
     // if (typeof action === 'function') {
     //   return action(dispatch, getState, extraArgument);
     // }
-    const {
-      Users: { currentUser },
-    } = getState();
+    // const {
+    //   Users: { currentUser },
+    // } = getState();
     setTimeout(() => {
       next(action);
     }, 3000);

@@ -2,14 +2,12 @@ import React from 'react';
 import Loadable from 'react-loadable';
 import _ from 'lodash';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import BasicLayout from '../layout/BasicLayout';
-import Users from '../pages/Users';
+import DefaultLayout from '../layout/DefaultLayout';
 import menuData from './menu';
 function getFlatMenuData(menus) {
   let keys = [];
   menus.forEach((item) => {
     const newItem = { ...item };
-    console.log(typeof newItem.component);
     if (typeof newItem.component === 'object') {
       const componentPromise = newItem.component;
       newItem.component = Loadable({
@@ -17,7 +15,7 @@ function getFlatMenuData(menus) {
         loading: () => <div>loading...</div>,
       });
     } else if (newItem.component) {
-      newItem.component = <div>{newItem.component}</div>;
+      newItem.component = () => <div>{newItem.component}</div>;
     }
     keys.push(newItem);
     if (item.routes) {
@@ -36,13 +34,14 @@ export const Router = (
         const Component = item.component;
         if (!!Component) {
           return (
-            <Route path={item.path}>
-              <BasicLayout>
+            <Route key={item.path} path={item.path}>
+              <DefaultLayout>
                 <Component />
-              </BasicLayout>
+              </DefaultLayout>
             </Route>
           );
         }
+        return null;
       })}
       <Redirect exact from="/" to="/monitor" />
     </Switch>

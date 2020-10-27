@@ -1,4 +1,4 @@
-import { SmileOutlined, CrownOutlined } from '@ant-design/icons';
+import {SmileOutlined, CrownOutlined} from '@ant-design/icons';
 import React from 'react';
 
 export default {
@@ -8,25 +8,24 @@ export default {
       {
         path: '/monitor',
         name: '监控页',
-        icon: <SmileOutlined />,
+        icon: <SmileOutlined/>,
         component: './Welcome',
       },
       {
         path: '/admin',
         name: '管理页',
-        icon: <CrownOutlined />,
+        icon: <CrownOutlined/>,
         routes: [
           {
             path: '/admin/process',
             name: '进程管理',
-            icon: <SmileOutlined />,
-            hideInMenu: true,
+            icon: <SmileOutlined/>,
             component: './Welcome',
           },
           {
             path: '/admin/users',
             name: '用户管理',
-            icon: <SmileOutlined />,
+            icon: <SmileOutlined/>,
             component: import('../pages/Users'),
           },
         ],
@@ -34,8 +33,14 @@ export default {
       {
         path: '/about',
         name: '关于',
-        icon: <SmileOutlined />,
+        icon: <SmileOutlined/>,
         component: './Welcome',
+      },
+      {
+        path: '/login',
+        hideInMenu: true,
+        layout: import('../layout/BlankLayout'),
+        component: import('../pages/Login'),
       },
     ],
   },

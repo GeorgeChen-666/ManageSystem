@@ -7,9 +7,7 @@ import store from './store';
 import { Router } from './common/route';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>{Router}</Provider>
-  </React.StrictMode>,
+  <Provider store={store}>{Router}</Provider>,
   // eslint-disable-next-line no-undef
   document.getElementById('root')
 );
