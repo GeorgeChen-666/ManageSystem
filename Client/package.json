@@ -6,6 +6,7 @@
     "@ant-design/icons": "^4.2.2",
     "@ant-design/pro-layout": "^6.5.1",
     "antd": "^4.7.0",
+    "axios": "^0.21.0",
     "lodash": "^4.17.20",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

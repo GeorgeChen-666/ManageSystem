@@ -2,7 +2,6 @@ import React from 'react';
 import Loadable from 'react-loadable';
 import _ from 'lodash';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import DefaultLayout from '../layout/DefaultLayout';
 import menuData from './menu';
 function getFlatMenuData(menus) {
   let keys = [];
@@ -32,12 +31,17 @@ export const Router = (
     <Switch>
       {menuItemData.map((item) => {
         const Component = item.component;
+        const Layout = Loadable({
+          loader: () =>
+            item.layout ? item.layout : import('../layout/DefaultLayout'),
+          loading: () => <div>loading...</div>,
+        });
         if (!!Component) {
           return (
             <Route key={item.path} path={item.path}>
-              <DefaultLayout>
+              <Layout>
                 <Component />
-              </DefaultLayout>
+              </Layout>
             </Route>
           );
         }
