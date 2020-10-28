@@ -1,15 +1,16 @@
 import React from 'react';
 import { Checkbox, Button, Input, Card } from 'antd';
-import { doLogin } from '../services/user';
+import { useScripts } from './Login.Scripts';
 
 export default (props) => {
-  const { login, submitting } = {
+  const { login } = {
     login: { status: 'error', type: 'account' },
-    submitting: false,
   };
+  const { doLogin, isLoginLoading } = useScripts();
   const autoLogin = true;
   return (
     <div>
+      <div>isLoading:{isLoginLoading.toString()}</div>
       <Card title="登录系统" style={{ width: 300 }}>
         <Input name="userName" placeholder="用户名" />
         <Input name="password" placeholder="密码" />
@@ -20,9 +21,9 @@ export default (props) => {
           </a>
         </div>
         <Button
-          loading={submitting}
+          loading={isLoginLoading}
           onClick={() => {
-            doLogin({ username: 'admin', password: '112233' });
+            doLogin({ username: 'admin1', password: '112233' });
           }}
         >
           登录

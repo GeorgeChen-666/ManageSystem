@@ -3,7 +3,7 @@ import { Button, Descriptions, Result, Space, Statistic } from 'antd';
 import React from 'react';
 import { LikeOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
-import * as userActions from '../models/Users';
+import * as userActions from '../../models/Users';
 const content = (
   <Descriptions size="small" column={2}>
     <Descriptions.Item label="创建人">张三</Descriptions.Item>
