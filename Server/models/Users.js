@@ -13,12 +13,12 @@ const Users = class extends AuthorizedEntity {
     Object.defineProperty(this, 'password', {
       configurable: true,
       enumerable: false,
-      set: function (value) {
+      set: function(value) {
         this.data['password'] = Users.md5(value);
       },
-      get: function () {
+      get: function() {
         return this.data['password'];
-      },
+      }
     });
   }
 
@@ -27,12 +27,14 @@ const Users = class extends AuthorizedEntity {
   }
 
   static getUserByName(username) {
-    return Users.findRecords({ username })[0];
+    return _.get(Users.findRecords({ username }), 0);
   }
+
   isAdmin() {
     const permissions = this.permissions;
     return _.includes(permissions, '*');
   }
+
   saveRecord() {
     if (this.isNew()) {
       const count = Users.findRecords({ username: this.username }).length;
@@ -48,17 +50,17 @@ Users.schema = {
   password: String,
   errorTimes: Number,
   lock: Boolean,
-  lastLoginDate: Number,
+  lastLoginTime: Number,
   servers: Array,
-  permissions: Array,
+  permissions: Array
 };
 Users.defaultRecords = [
   {
     username: 'admin',
     password: Users.md5('112233'),
     permissions: [SUPER_PERMISSION],
-    id: 1,
-  },
+    id: 1
+  }
 ];
 
 //const uuu = new Users("xiaoming", "");
