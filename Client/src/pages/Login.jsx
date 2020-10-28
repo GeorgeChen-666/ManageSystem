@@ -1,7 +1,7 @@
 import React from 'react';
 import { Checkbox, Button, Input, Card } from 'antd';
 import { doLogin } from '../services/user';
-import styles from './Login.less';
+
 export default (props) => {
   const { login, submitting } = {
     login: { status: 'error', type: 'account' },
@@ -22,7 +22,7 @@ export default (props) => {
         <Button
           loading={submitting}
           onClick={() => {
-            doLogin({ username: 'admin', password: '666' });
+            doLogin({ username: 'admin', password: '112233' });
           }}
         >
           登录
