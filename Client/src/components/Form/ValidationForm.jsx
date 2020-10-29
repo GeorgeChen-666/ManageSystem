@@ -1,20 +1,15 @@
 import React from 'react';
-import {
-  Form,
-  Input,
-  Button,
-  Checkbox,
-} from 'antd';
-import {UploadOutlined, InboxOutlined} from '@ant-design/icons';
+import { Form, Input, Button, Checkbox } from 'antd';
 
 const formItemLayout = {
-  labelCol: {span: 6},
-  wrapperCol: {span: 14},
+  labelCol: { span: 6 },
+  wrapperCol: { span: 14 },
 };
 
-const Demo = () => {
-  const onFinish = values => {
+const Demo = (props) => {
+  const onFinish = (values) => {
     console.log('Received values of form: ', values);
+    props.onFinish(values);
   };
 
   return (
@@ -23,33 +18,36 @@ const Demo = () => {
       {...formItemLayout}
       onFinish={onFinish}
       initialValues={{
-        ['input-number']: 3,
-        ['checkbox-group']: ['A', 'B'],
+        'input-number': 3,
+        'checkbox-group': ['A', 'B'],
         rate: 3.5,
       }}
     >
-
       <Form.Item
         label="Username"
         name="username"
-        rules={[{required: true, message: 'Please input your username!'}]}
+        rules={[{ required: true, message: 'Please input your username!' }]}
       >
-        <Input/>
+        <Input />
       </Form.Item>
 
       <Form.Item
         label="Password"
         name="password"
-        rules={[{required: true, message: 'Please input your password!'}]}
+        rules={[{ required: true, message: 'Please input your password!' }]}
       >
-        <Input.Password/>
+        <Input.Password />
       </Form.Item>
 
-      <Form.Item name="remember" valuePropName="checked">
+      <Form.Item
+        name="remember"
+        valuePropName="checked"
+        wrapperCol={{ span: 12, offset: 6 }}
+      >
         <Checkbox>Remember me</Checkbox>
       </Form.Item>
 
-      <Form.Item wrapperCol={{span: 12, offset: 6}}>
+      <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
