@@ -3,7 +3,7 @@ import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import ProLayout, { SettingDrawer } from '@ant-design/pro-layout';
 import { Link, useLocation } from 'react-router-dom';
-import menuProps from '../common/menu';
+import menuProps from '../../common/menu';
 import '@ant-design/pro-layout/dist/layout.css';
 
 export default (props) => {

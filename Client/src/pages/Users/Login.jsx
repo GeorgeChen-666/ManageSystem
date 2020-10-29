@@ -1,7 +1,7 @@
 import React from 'react';
 import { Checkbox, Button, Input, Card } from 'antd';
 import { useScripts } from './Login.Scripts';
-
+import Demo from '../../components/Form/ValidationForm'
 export default (props) => {
   const { login } = {
     login: { status: 'error', type: 'account' },
@@ -28,6 +28,9 @@ export default (props) => {
         >
           登录
         </Button>
+      </Card>
+      <Card>
+        <Demo />
       </Card>
     </div>
   );

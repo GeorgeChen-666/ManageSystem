@@ -24,6 +24,7 @@ export default function createAuthorized() {//extraArgument
     // const {
     //   Users: { currentUser },
     // } = getState();
+
     setTimeout(() => {
       next(action);
     }, 3000);

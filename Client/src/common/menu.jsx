@@ -39,7 +39,7 @@ export default {
       {
         path: '/login',
         hideInMenu: true,
-        layout: import('../layout/BlankLayout'),
+        layout: import('../components/Layout/BlankLayout'),
         component: import('../pages/Users/Login'),
       },
     ],

@@ -5,6 +5,7 @@ export default (callback, deps = []) => {
     setLoading((v) => v + 1);
     const result = await callback(...args);
     setLoading((v) => v - 1);
+    return result;
   }, deps);
   return [func, isLoading > 0];
 };
