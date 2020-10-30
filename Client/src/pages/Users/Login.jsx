@@ -30,7 +30,7 @@ export default (props) => {
         </Button>
       </Card>
       <Card>
-        <Demo onFinish={doLogin} />
+        <Demo onSubmit={doLogin} isSubmitLoading={isLoginLoading} />
       </Card>
     </div>
   );

@@ -1,22 +1,23 @@
 import React from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import {Form, Input, Button, Checkbox} from 'antd';
+import {useScripts} from './ValidationForm.Scripts'
 
 const formItemLayout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 14 },
+  labelCol: {span: 6},
+  wrapperCol: {span: 14},
 };
 
 const Demo = (props) => {
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-    props.onFinish(values);
-  };
-
+  const {isSubmitLoading} = props;
+  const {onFormSubmit, onFieldChange, fieldServerErrorValidator, fromInstance} = useScripts(props)
   return (
     <Form
-      name="validate_other"
+      loading={true}
+      form={fromInstance}
+      name="validate_login"
       {...formItemLayout}
-      onFinish={onFinish}
+      onFinish={onFormSubmit}
+      onValuesChange={onFieldChange}
       initialValues={{
         'input-number': 3,
         'checkbox-group': ['A', 'B'],
@@ -26,29 +27,29 @@ const Demo = (props) => {
       <Form.Item
         label="Username"
         name="username"
-        rules={[{ required: true, message: 'Please input your username!' }]}
+        rules={[{required: true, message: 'Please input your username!'}, fieldServerErrorValidator()]}
       >
-        <Input />
+        <Input/>
       </Form.Item>
 
       <Form.Item
         label="Password"
         name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        rules={[{required: true, message: 'Please input your password!'}, fieldServerErrorValidator()]}
       >
-        <Input.Password />
+        <Input.Password/>
       </Form.Item>
 
       <Form.Item
         name="remember"
         valuePropName="checked"
-        wrapperCol={{ span: 12, offset: 6 }}
+        wrapperCol={{span: 12, offset: 6}}
       >
         <Checkbox>Remember me</Checkbox>
       </Form.Item>
 
-      <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
-        <Button type="primary" htmlType="submit">
+      <Form.Item wrapperCol={{span: 12, offset: 6}}>
+        <Button type="primary" htmlType="submit" loading={isSubmitLoading}>
           Submit
         </Button>
       </Form.Item>

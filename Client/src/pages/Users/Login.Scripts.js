@@ -1,20 +1,16 @@
 import React from 'react';
-import { useDispatch, useStore } from 'react-redux';
-import { login } from '../../services/user';
+import {login} from '../../services/user';
 import useLoading from '../../components/Hooks/useLoading';
-import {setError} from '../../models/Errors';
+
 export const useScripts = (props) => {
-  const dispatch = useDispatch();
-  const state = useStore().getState();
-  console.log(999,state)
-  const [doLogin, isLoginLoading] = useLoading(
-    async ({ username, password }) => {
-      try {
-        await login({ username, password });
-      } catch (e) {
-        await dispatch(setError(e));
-      }
-    }
-  );
-  return { doLogin, isLoginLoading };
+  const [doLogin, isLoginLoading] = useLoading(login);
+  return {doLogin, isLoginLoading};
 };
+// try {
+//   await login({username, password});
+// } catch (e) {
+//   const errorData = e.response.data;
+//   errorData.message = JSON.parse(errorData.message);
+//   setErrors(() => errorData);
+//   //await dispatch(setError(e));
+// }
