@@ -29,7 +29,7 @@ export default (props) => {
           登录
         </Button>
       </Card>
-      <Card>
+      <Card title="登录系统" style={{ width: 300 }}>
         <Demo onSubmit={doLogin} isSubmitLoading={isLoginLoading} />
       </Card>
     </div>
