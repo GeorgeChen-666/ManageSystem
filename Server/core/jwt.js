@@ -15,8 +15,8 @@ function registerJwtFilter(app, unless = []) {
     function (req, res, next) {
       const token = (req.headers.authorization || '').replace('Bearer ', '');
       if (token) {
-        const { username } = jwt.verify(token, KEY);
-        req.currentUser = new Users(Users.getUserByName(username), username);
+        const { user } = jwt.verify(token, KEY);
+        req.currentUser = new Users(user, user.username);
       }
       next();
     }

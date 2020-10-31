@@ -89,12 +89,11 @@ router.post(
     }),
   ],
   PublicHandler((req, res, next) => {
-    const { username } = req.body;
-    const token = generateToken({
-      username,
-    });
+    const user = req.userEntity.getData();
+    const token = generateToken(user);
     res.json({
       jwt: token,
+      user,
       lastLoginTime: req.lastLoginTime,
     });
   })
