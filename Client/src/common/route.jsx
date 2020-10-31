@@ -33,7 +33,9 @@ export const Router = (
         const Component = item.component;
         const Layout = Loadable({
           loader: () =>
-            item.layout ? item.layout : import('../components/Layout/DefaultLayout'),
+            item.layout
+              ? item.layout
+              : import('../components/Layout/DefaultLayout'),
           loading: () => <div>loading...</div>,
         });
         if (!!Component) {

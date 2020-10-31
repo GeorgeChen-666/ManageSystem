@@ -1,44 +1,42 @@
-import _ from 'lodash';
-import React, {useState, useCallback} from 'react';
-import {Form} from 'antd';
+import { useState, useCallback } from 'react';
+import { Form } from 'antd';
 
 export const useScripts = (props) => {
-  const {onSubmit} = props;
+  const { onSubmit, onSubmitDone } = props;
   const [errors, setErrors] = useState(null);
   const [fromInstance] = Form.useForm();
   const onFormSubmit = useCallback(async () => {
     try {
-      await onSubmit(fromInstance.getFieldsValue());
+      const result = await onSubmit(fromInstance.getFieldsValue());
+      onSubmitDone(result);
     } catch (e) {
       const errorData = e.response.data;
       errorData.message = JSON.parse(errorData.message);
-      setErrors(() => errorData);
-      fromInstance.validateFields();
+      await setErrors(() => errorData);
+      await fromInstance.validateFields();
     }
-  }, [onSubmit, setErrors, fromInstance]);
-  const onFieldChange = useCallback(async (valueObject) => {
-    const [key] = Object.keys(valueObject);
-    await setErrors((prvError) => {
-      if (prvError !== null) {
-        return {
-          ...prvError,
-          message: prvError.message.filter((errInfo) => errInfo.param !== key)
+  }, [onSubmit, onSubmitDone, setErrors, fromInstance]);
+  const onFieldChange = useCallback(
+    async (valueObject) => {
+      const [key] = Object.keys(valueObject);
+      await setErrors((prvError) => {
+        if (prvError !== null) {
+          return {
+            ...prvError,
+            message: [],
+          };
         }
-      }
-      return prvError;
-    });
-    fromInstance.validateFields([key]);
-  }, [onSubmit, setErrors, fromInstance]);
-  const fieldServerErrorValidator = useCallback(() => ({getFieldValue}) => ({
-    validator({field}, value) {
-      const fieldError = _.find(_.get(errors, 'message'), {param: field});
-      if (!!fieldError) {
-        return Promise.reject(fieldError.msg);
-      }
-      return Promise.resolve();
+        return prvError;
+      });
+      await fromInstance.validateFields([key]);
     },
-  }), [errors]);
+    [setErrors, fromInstance]
+  );
+
   return {
-    onFormSubmit, onFieldChange, fieldServerErrorValidator,fromInstance
-  }
+    onFormSubmit,
+    onFieldChange,
+    fromInstance,
+    errors,
+  };
 };

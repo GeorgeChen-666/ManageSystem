@@ -1,10 +1,10 @@
 const initialState = {
-  Error: null,
+  Error: {},
 };
 const Errors = (state = initialState, action) => {
   switch (action.type) {
     case Types.setError: {
-      const {Error} = action.payload;
+      const { Error } = action.payload;
       let errorData = null;
       if (!!Error) {
         errorData = Error.response.data;
@@ -21,7 +21,7 @@ const Errors = (state = initialState, action) => {
 };
 export const setError = (Error) => ({
   type: Types.setError,
-  payload: {Error},
+  payload: { Error },
 });
 export const Types = {
   setError: `${Errors.name}/setError`,

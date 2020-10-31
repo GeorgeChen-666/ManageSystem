@@ -19,7 +19,7 @@ const content = (
 );
 export default () => {
   const dispatch = useDispatch();
-  dispatch(userActions.setCurrentUser(666));
+  //dispatch(userActions.setCurrentUser(666));
   return (
     <PageContainer
       content={content}

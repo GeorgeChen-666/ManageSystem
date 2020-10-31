@@ -4,20 +4,21 @@ const initialState = {
 const Users = (state = initialState, action) => {
   switch (action.type) {
     case Types.setCurrentUser: {
-      const { username } = action.payload;
+      const { user, token } = action.payload;
       console.log('reducer!!!');
       return {
         ...state,
-        currentUser: username,
+        token,
+        currentUser: user,
       };
     }
     default:
       return state;
   }
 };
-export const setCurrentUser = (username) => ({
+export const setCurrentUser = (user, token) => ({
   type: Types.setCurrentUser,
-  payload: { username },
+  payload: { user, token },
 });
 export const Types = {
   setCurrentUser: `${Users.name}/setCurrentUser`,

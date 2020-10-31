@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 import ProLayout, { SettingDrawer } from '@ant-design/pro-layout';
 import { Link, useLocation } from 'react-router-dom';
-import menuProps from '../../common/menu';
+import menuProps from '../../../common/menu';
+import GlobalHeader from './GlobalHeader';
 import '@ant-design/pro-layout/dist/layout.css';
 
 export default (props) => {
@@ -41,11 +40,7 @@ export default (props) => {
         menuItemRender={(item, dom) => (
           <Link to={item.path || '/welcome'}>{dom}</Link>
         )}
-        rightContentRender={() => (
-          <div>
-            <Avatar shape="square" size="small" icon={<UserOutlined />} />
-          </div>
-        )}
+        rightContentRender={GlobalHeader}
         {...settings}
       >
         {props.children}

@@ -26,6 +26,7 @@ export default {
             path: '/admin/users',
             name: '用户管理',
             icon: <SmileOutlined />,
+            layout: import('../components/Layout/AuthorizedLayout'),
             component: import('../pages/Users/Users'),
           },
         ],

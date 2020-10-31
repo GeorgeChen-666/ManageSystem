@@ -1,36 +1,33 @@
 import React from 'react';
 import { Checkbox, Button, Input, Card } from 'antd';
 import { useScripts } from './Login.Scripts';
-import Demo from '../../components/Form/ValidationForm';
+import ValidationForm from '../../components/Form/ValidationForm';
+import FormField from '../../components/Form/FormField';
 export default (props) => {
-  const { login } = {
-    login: { status: 'error', type: 'account' },
-  };
-  const { doLogin, isLoginLoading } = useScripts();
-  const autoLogin = true;
+  const { doLogin, isLoginLoading, onLoginDoneCallback } = useScripts(props);
   return (
     <div>
-      <div>isLoading:{isLoginLoading.toString()}</div>
       <Card title="登录系统" style={{ width: 300 }}>
-        <Input name="userName" placeholder="用户名" />
-        <Input name="password" placeholder="密码" />
-        <div>
-          <Checkbox checked={autoLogin}>自动登录</Checkbox>
-          <a style={{ float: 'right' }} href="">
-            忘记密码
-          </a>
-        </div>
-        <Button
-          loading={isLoginLoading}
-          onClick={() => {
-            doLogin({ username: 'admin1', password: '112233' });
-          }}
+        <ValidationForm
+          onSubmit={doLogin}
+          onSubmitDone={onLoginDoneCallback}
+          name={'validate_login'}
         >
-          登录
-        </Button>
-      </Card>
-      <Card title="登录系统" style={{ width: 300 }}>
-        <Demo onSubmit={doLogin} isSubmitLoading={isLoginLoading} />
+          <FormField name="username" required={true} initialValue={'admin'}>
+            <Input />
+          </FormField>
+          <FormField name="password" required={true} initialValue={'112233'}>
+            <Input.Password />
+          </FormField>
+          <FormField name="remember" valuePropName="checked">
+            <Checkbox>自动登录</Checkbox>
+          </FormField>
+          <FormField name="remember" valuePropName="checked">
+            <Button type="primary" htmlType="submit" loading={isLoginLoading}>
+              登录
+            </Button>
+          </FormField>
+        </ValidationForm>
       </Card>
     </div>
   );

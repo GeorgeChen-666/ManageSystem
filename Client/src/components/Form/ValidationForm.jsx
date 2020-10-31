@@ -1,56 +1,24 @@
 import React from 'react';
-import {Form, Input, Button, Checkbox} from 'antd';
-import {useScripts} from './ValidationForm.Scripts'
+import { Form } from 'antd';
+import { useScripts } from './ValidationForm.Scripts';
+import ValidationFormContext from './ValidationFormContext';
 
-const formItemLayout = {
-  labelCol: {span: 6},
-  wrapperCol: {span: 14},
-};
-
-const Demo = (props) => {
-  const {isSubmitLoading} = props;
-  const {onFormSubmit, onFieldChange, fieldServerErrorValidator, fromInstance} = useScripts(props)
+const ValidationForm = (props) => {
+  const { onFormSubmit, onFieldChange, fromInstance, errors } = useScripts(
+    props
+  );
   return (
-    <Form
-      loading={true}
-      form={fromInstance}
-      name="validate_login"
-      onFinish={onFormSubmit}
-      onValuesChange={onFieldChange}
-      initialValues={{
-        'input-number': 3,
-        'checkbox-group': ['A', 'B'],
-        rate: 3.5,
-      }}
-    >
-      <Form.Item
-        name="username"
-        rules={[{required: true, message: 'Please input your username!'}, fieldServerErrorValidator()]}
+    <ValidationFormContext.Provider value={{ errors }}>
+      <Form
+        name={props.name}
+        form={fromInstance}
+        onFinish={onFormSubmit}
+        onValuesChange={onFieldChange}
       >
-        <Input/>
-      </Form.Item>
-
-      <Form.Item
-        name="password"
-        rules={[{required: true, message: 'Please input your password!'}, fieldServerErrorValidator()]}
-      >
-        <Input.Password/>
-      </Form.Item>
-
-      <Form.Item
-        name="remember"
-        valuePropName="checked"
-      >
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit" loading={isSubmitLoading}>
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
+        {props.children}
+      </Form>
+    </ValidationFormContext.Provider>
   );
 };
 
-export default Demo;
+export default ValidationForm;
