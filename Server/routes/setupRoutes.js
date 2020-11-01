@@ -14,19 +14,19 @@ function setupRoutes(app) {
   app.use('/api/', indexRouter);
   app.use('/api/users', usersRouter);
   app.use('/api/process', processRouter);
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
       next(createError(401));
     }
     next(err, req, res, next);
   });
   // catch 404 and forward to error handler
-  app.use(function(req, res, next) {
+  app.use(function (req, res, next) {
     next(createError(404));
   });
 
   // error handler
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -36,7 +36,7 @@ function setupRoutes(app) {
     //res.render('error');
     res.json({
       message: err.message,
-      stack: err.stack
+      stack: err.stack,
     });
   });
 }

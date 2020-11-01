@@ -90,7 +90,7 @@ router.post(
   ],
   PublicHandler((req, res, next) => {
     const user = req.userEntity.getData();
-    const token = generateToken(user);
+    const token = generateToken({ user });
     res.json({
       jwt: token,
       user,
