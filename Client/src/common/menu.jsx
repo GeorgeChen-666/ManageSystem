@@ -1,5 +1,7 @@
 import { SmileOutlined, CrownOutlined } from '@ant-design/icons';
 import React from 'react';
+import BlankLayout from '../components/Layout/BlankLayout';
+import AuthorizedLayout from '../components/Layout/AuthorizedLayout';
 
 export default {
   route: {
@@ -26,7 +28,7 @@ export default {
             path: '/admin/users',
             name: '用户管理',
             icon: <SmileOutlined />,
-            layout: import('../components/Layout/AuthorizedLayout'),
+            //layout: AuthorizedLayout,
             component: import('../pages/Users/Users'),
           },
         ],
@@ -40,7 +42,7 @@ export default {
       {
         path: '/login',
         hideInMenu: true,
-        layout: import('../components/Layout/BlankLayout'),
+        layout: BlankLayout,
         component: import('../pages/Users/Login'),
       },
     ],

@@ -1,9 +1,11 @@
 import { useStore } from 'react-redux';
-
 export default () => {
-  const state = useStore().getState();
-  const { currentUser } = state.Users;
+  const store = useStore();
   return {
-    currentUser,
+    getCurrentUser: () => {
+      const state = store.getState();
+      const { getCurrentUser, token } = state.Users;
+      return getCurrentUser(token);
+    },
   };
 };

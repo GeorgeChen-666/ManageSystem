@@ -8,7 +8,6 @@ import '@ant-design/pro-layout/dist/layout.css';
 export default (props) => {
   const [settings, setSetting] = useState(undefined);
   const { pathname } = useLocation();
-
   return (
     <div
       id="test-pro-layout"

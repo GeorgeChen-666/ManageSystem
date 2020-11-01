@@ -19,7 +19,8 @@ import useCurrentUser from '../../../Hooks/useCurrentUser';
 const isMobile = false;
 const collapsed = false;
 export default () => {
-  const { currentUser } = useCurrentUser();
+  const { getCurrentUser } = useCurrentUser();
+  const currentUser = getCurrentUser();
   const menu = (
     <Menu selectedKeys={[]}>
       <Menu.Item disabled>

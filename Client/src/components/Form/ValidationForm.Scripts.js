@@ -8,7 +8,7 @@ export const useScripts = (props) => {
   const onFormSubmit = useCallback(async () => {
     try {
       const result = await onSubmit(fromInstance.getFieldsValue());
-      onSubmitDone(result);
+      onSubmitDone(result, fromInstance.getFieldsValue());
     } catch (e) {
       const errorData = e.response.data;
       errorData.message = JSON.parse(errorData.message);

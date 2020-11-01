@@ -22,7 +22,7 @@ export default (props) => {
           <FormField name="remember" valuePropName="checked">
             <Checkbox>自动登录</Checkbox>
           </FormField>
-          <FormField name="remember" valuePropName="checked">
+          <FormField name="submit" valuePropName="checked">
             <Button type="primary" htmlType="submit" loading={isLoginLoading}>
               登录
             </Button>
