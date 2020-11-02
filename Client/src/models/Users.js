@@ -21,8 +21,9 @@ const Users = (state = initialState, action) => {
       return {
         ...state,
         login: {
+          remember: false,
           ...payload,
-          expires: new Date().getTime() + 604800000, //一周后，连续一周不进系统就需要重新登录
+          expires: payload && new Date().getTime() + 604800000, //一周后，连续一周不进系统就需要重新登录
         },
       };
     }

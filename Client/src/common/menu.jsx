@@ -1,6 +1,6 @@
-import {SmileOutlined, CrownOutlined} from '@ant-design/icons';
+import { SmileOutlined, CrownOutlined } from '@ant-design/icons';
 import React from 'react';
-import _ from 'lodash'
+import _ from 'lodash';
 
 export const routeItems = {
   path: '/',
@@ -8,32 +8,29 @@ export const routeItems = {
     {
       path: '/manage',
       layout: import('../components/Layout/DefaultLayout'),
-      routes:[
+      routes: [
         {
           path: '/manage/monitor',
           name: '监控页',
-          icon: <SmileOutlined/>,
-          component: './Welcome',
+          icon: <SmileOutlined />,
         },
         {
           path: '/manage/admin/process',
           name: '进程管理',
-          icon: <SmileOutlined/>,
-          component: './Welcome',
+          icon: <SmileOutlined />,
         },
         {
           path: '/manage/admin/users',
           name: '用户管理',
-          icon: <SmileOutlined/>,
+          icon: <SmileOutlined />,
           component: import('../pages/Users/Users'),
         },
         {
           path: '/manage/about',
           name: '关于',
-          icon: <SmileOutlined/>,
-          component: './Welcome',
+          icon: <SmileOutlined />,
         },
-      ]
+      ],
     },
     {
       path: '/login',
@@ -41,13 +38,13 @@ export const routeItems = {
       layout: import('../components/Layout/BlankLayout'),
       component: import('../pages/Users/Login'),
     },
-  ]
+  ],
 };
 
 export const routeMenus = {
   route: {
     path: '/',
-    routes: _.get(routeItems,['routes',0,'routes']),
+    routes: _.get(routeItems, ['routes', 0, 'routes']),
   },
   location: {
     pathname: '/',

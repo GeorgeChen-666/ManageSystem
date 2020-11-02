@@ -6,7 +6,7 @@ const registerAxioInterceptors = (store) => {
     async (config) => {
       const state = store.getState();
       const { token } = state.Users;
-      const { exp } = jwt_decode(token);
+      //const { exp } = jwt_decode(token);
       //TODO 如果快超时了就刷新token
       return config;
     },

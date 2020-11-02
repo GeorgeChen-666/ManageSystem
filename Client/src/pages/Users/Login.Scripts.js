@@ -24,17 +24,21 @@ export const useScripts = (props) => {
     },
     [dispatch, history]
   );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     const state = store.getState();
     const autoLoginInfo = state.Users.login;
-    if (autoLoginInfo && autoLoginInfo.expires > new Date().getTime()) {
+    if (
+      autoLoginInfo &&
+      autoLoginInfo.remember &&
+      autoLoginInfo.expires > new Date().getTime()
+    ) {
       (async () => {
         const result = await doLogin(autoLoginInfo);
         await onLoginDoneCallback(result, autoLoginInfo);
       })();
     }
     return () => {};
-  });
+  }, [doLogin, onLoginDoneCallback, store]);
   return { doLogin, isLoginLoading, onLoginDoneCallback };
 };
