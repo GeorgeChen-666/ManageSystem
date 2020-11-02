@@ -20,7 +20,7 @@ export const useScripts = (props) => {
       } else {
         await dispatch(userActions.rememberLogin(null));
       }
-      history.push('/admin/users');
+      history.push('/');
     },
     [dispatch, history]
   );

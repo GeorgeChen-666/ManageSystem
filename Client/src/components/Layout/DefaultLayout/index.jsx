@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ProLayout, { SettingDrawer } from '@ant-design/pro-layout';
 import { Link, useLocation } from 'react-router-dom';
-import menuProps from '../../../common/menu';
+import {routeMenus} from '../../../common/menu';
 import GlobalHeader from './GlobalHeader';
 import '@ant-design/pro-layout/dist/layout.css';
 
@@ -17,7 +17,7 @@ export default (props) => {
       }}
     >
       <ProLayout
-        {...menuProps}
+        {...routeMenus}
         breadcrumbRender={(routes) => {
           return [
             {
