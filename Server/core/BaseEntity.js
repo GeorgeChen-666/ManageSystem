@@ -9,7 +9,7 @@ const systemProperty = Object.freeze({
   createOn: 'createOn',
   createBy: 'createBy',
   updateOn: 'updateOn',
-  updateBy: 'updateBy',
+  updateBy: 'updateBy'
 });
 
 class BaseEntity {
@@ -17,24 +17,24 @@ class BaseEntity {
     Object.defineProperty(this, 'data', {
       enumerable: false,
       writable: true,
-      value: [],
+      value: []
     });
     Object.defineProperty(this, 'currentUser', {
       enumerable: false,
       writable: true,
-      value: currentUser,
+      value: currentUser
     });
     const keys = Object.keys(this.constructor.schema);
     [...Object.values(systemProperty), ...keys].forEach((key) => {
       Object.defineProperty(this, key, {
         configurable: true,
         enumerable: true,
-        set: function (value) {
+        set: function(value) {
           this.data[key] = value;
         },
-        get: function () {
+        get: function() {
           return this.data[key];
-        },
+        }
       });
     });
 
@@ -69,9 +69,11 @@ class BaseEntity {
   static setbaseName(baseName) {
     this._baseName = baseName;
   }
+
   static getRecordsObject() {
     return this.getObject(RECORDS_PATH_NAME);
   }
+
   static getObject(path = 'meta') {
     const base = this.getJsonBase();
     base.defaults({ [path]: path.endsWith('s') ? [] : {} }).write();
@@ -97,6 +99,14 @@ class BaseEntity {
 
   isNew() {
     return !this[systemProperty.id];
+  }
+
+  static fitData(data) {
+    return data;
+  }
+
+  getFitData() {
+    return this.constructor.fitData(this.getRawData());
   }
 
   saveRecord() {
@@ -201,7 +211,7 @@ class BaseEntity {
       const index = obj.findIndex({ id: searchAfter * 1 }).value();
       obj = obj.drop(index + 1);
     }
-    return obj.take(pageSize).value();
+    return obj.take(pageSize).value() || [];
   }
 }
 

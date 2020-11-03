@@ -11,20 +11,21 @@ class AuthorizedEntity extends BaseEntity {
     super(source, currentUser);
   }
 
-  static getJsonBase() {
-    const base = super.getJsonBase();
-    const permissions = {
-      ...AuthorizedEntity.defaultPermissions,
-      ...(this.defaultPermissions || {})
-    };
-    base.defaults({ [PERMISSIONS_PATH_NAME]: permissions }).write();
-    return base;
-  }
+  // static getJsonBase() {
+  //   const base = super.getJsonBase();
+  //   const permissions = {
+  //     ...AuthorizedEntity.defaultPermissions,
+  //     ...(this.defaultPermissions || {})
+  //   };
+  //   base.defaults({ [PERMISSIONS_PATH_NAME]: permissions }).write();
+  //   return base;
+  // }
 
   static getPermission(currentUser, type) {
-    const permissions = this.getObject(PERMISSIONS_PATH_NAME)
-      .get(type)
-      .value();
+    // const permissions = this.getObject(PERMISSIONS_PATH_NAME)
+    //   .get(type)
+    //   .value();
+    const permissions = this.defaultPermissions;
     let info = null;
     if (_.includes(permissions, enumPermissions.any)) {
       info = enumPermissions.any;
@@ -41,7 +42,7 @@ class AuthorizedEntity extends BaseEntity {
         info === enumPermissions.own &&
         !this.currentUser.isAdmin())
     ) {
-      throw new Error('无权限');
+      //throw new Error('无权限');
     }
     return info;
   }
@@ -89,8 +90,8 @@ class AuthorizedEntity extends BaseEntity {
 }
 
 AuthorizedEntity.defaultPermissions = {
-  query: [enumPermissions.any],
-  create: [enumPermissions.any],
+  query: [enumPermissions.own],
+  create: [enumPermissions.own],
   modify: [enumPermissions.own],
   remove: [enumPermissions.own]
 };
