@@ -2,7 +2,7 @@ const _ = require('lodash');
 const { BaseEntity } = require('./BaseEntity');
 const enumPermissions = Object.freeze({
   any: '@Any',
-  own: '@Own'
+  own: '@Own',
 });
 const PERMISSIONS_PATH_NAME = 'permissionInfo';
 
@@ -72,7 +72,7 @@ class AuthorizedEntity extends BaseEntity {
 
   static findRecords(filter = null, currentUser = null) {
     const permission = this.getPermission(currentUser, 'query');
-    const newFilter = filter || {};
+    const newFilter = filter || [];
     if (permission === enumPermissions.own && !currentUser.isAdmin()) {
       newFilter.createBy = currentUser;
     }
@@ -81,11 +81,14 @@ class AuthorizedEntity extends BaseEntity {
 
   static pageRecords(searchParams, currentUser = null) {
     const permission = this.getPermission(currentUser, 'query');
-    const newFilter = searchParams.filter || {};
+    const newFilter = searchParams.filter || [];
     if (permission === enumPermissions.own && !currentUser.isAdmin()) {
       newFilter.createBy = currentUser;
     }
-    return super.pageRecords({ ...searchParams, filter: newFilter }, currentUser);
+    return super.pageRecords(
+      { ...searchParams, filter: newFilter },
+      currentUser
+    );
   }
 }
 
@@ -93,7 +96,7 @@ AuthorizedEntity.defaultPermissions = {
   query: [enumPermissions.own],
   create: [enumPermissions.own],
   modify: [enumPermissions.own],
-  remove: [enumPermissions.own]
+  remove: [enumPermissions.own],
 };
 
 // let ttt = AuthorizedEntity.getPermission('admin', 'query');

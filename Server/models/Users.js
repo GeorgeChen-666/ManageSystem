@@ -13,12 +13,12 @@ const Users = class extends AuthorizedEntity {
     Object.defineProperty(this, 'password', {
       configurable: true,
       enumerable: false,
-      set: function(value) {
+      set: function (value) {
         this.data['password'] = Users.md5(value);
       },
-      get: function() {
+      get: function () {
         return this.data['password'];
-      }
+      },
     });
   }
 
@@ -58,33 +58,30 @@ Users.schema = {
   lock: Boolean,
   lastLoginTime: Number,
   servers: Array,
-  permissions: Array
+  permissions: Array,
 };
 Users.defaultRecords = [
   {
     username: 'admin',
     password: Users.md5('112233'),
     permissions: [SUPER_PERMISSION],
-    id: 1
-  }
+    id: 1,
+  },
 ];
 
 //const uuu = new Users("xiaoming", "");
 // uuu.password = "112233";
 // uuu.username = "xiaoming";
 // uuu.saveRecord();
-console.log(Users.pageRecords({
-  filter: { password: 'd0970714757783e6cf17b26fb8e2298f' }, filterFun: (obj) => {
-    return obj.filter((row) => {
-      return ['admin'].includes(row.username);
-    });
-  }
-}));
+console.log(
+  Users.pageRecords({
+    filter: { password: 'd0970714757783e6cf17b26fb8e2298f' },
+    filterFun: (obj) => {
+      return obj.filter((row) => {
+        return ['admin'].includes(row.username);
+      });
+    },
+  })
+);
 
-const filterParam = [{
-  'propertyName': 'lifecycleStatus',
-  'value': ['Submitted', 'Archived'],
-  'type': 'terms',
-  'operator': null
-}];
 module.exports = Users;
