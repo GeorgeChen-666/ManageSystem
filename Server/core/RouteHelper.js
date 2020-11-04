@@ -1,9 +1,9 @@
 const { body, param, validationResult } = require('express-validator');
 
 function param2filters(params) {
-  const arrayFunction = (values) => (obj) => {
+  const arrayFunction = (propertyName, values) => (obj) => {
     return obj.filter((row) => {
-      return values.includes(row.username);
+      return values.includes(row[propertyName]);
     });
   };
   return params
@@ -11,9 +11,11 @@ function param2filters(params) {
       const { propertyName, value } = param;
       const values = [].concat(value);
       if (values.length > 1) {
-        return arrayFunction(value);
+        return arrayFunction(propertyName, value);
       } else if (values.length === 1) {
-        return values[0];
+        return {
+          [propertyName]: values[0],
+        };
       }
     })
     .filter((e) => e);
@@ -86,16 +88,16 @@ function canRestore(
     })
   );
 }
-// const filterParams = [
-//   {
-//     propertyName: 'username',
-//     value: ['admin'],
-//   },
-//   {
-//     propertyName: 'id',
-//     value: ['1', '1602306639695', '1602431998492'],
-//   },
-// ];
+const filterParams = [
+  {
+    propertyName: 'username',
+    value: ['admin'],
+  },
+  {
+    propertyName: 'id',
+    value: ['1', '1602306639695', '1602431998492'],
+  },
+];
 function canPageSearch(
   router,
   entityType,
@@ -105,8 +107,13 @@ function canPageSearch(
     pathName,
     [...extraRules],
     PublicHandler(function (req, res) {
-      const { filter: paramFilter, searchAfter, pageSize, sort } = req.params;
-      const filter = param2filters(paramFilter);
+      const {
+        filter: paramFilter = '[]',
+        searchAfter,
+        pageSize,
+        sort,
+      } = req.query;
+      const filter = param2filters(JSON.parse(paramFilter));
       const items = entityType
         .pageRecords(
           {
