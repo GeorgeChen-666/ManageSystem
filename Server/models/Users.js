@@ -73,7 +73,18 @@ Users.defaultRecords = [
 // uuu.password = "112233";
 // uuu.username = "xiaoming";
 // uuu.saveRecord();
-//console.log(Users.pageRecords({ searchAfter: '1602306639695' })); //
-//console.log(Users.VerifyPassword("admin", "1112233"))
+console.log(Users.pageRecords({
+  filter: { password: 'd0970714757783e6cf17b26fb8e2298f' }, filterFun: (obj) => {
+    return obj.filter((row) => {
+      return ['admin'].includes(row.username);
+    });
+  }
+}));
 
+const filterParam = [{
+  'propertyName': 'lifecycleStatus',
+  'value': ['Submitted', 'Archived'],
+  'type': 'terms',
+  'operator': null
+}];
 module.exports = Users;

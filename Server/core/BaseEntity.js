@@ -197,9 +197,8 @@ class BaseEntity {
     currentUser = null
   ) {
     let obj = this.getRecordsObject();
-    if (!_.isNil(filter)) {
-      obj = obj.filter(filter);
-    }
+    const filterArray = [].concat(filter).filter(e => e);
+    obj = filterArray.reduce((to, cu) => to.filter(cu), obj);
     if (sort !== '') {
       const [sortKey, sortWay] = sort.split(' ');
       obj = obj.sortBy(sortKey);
