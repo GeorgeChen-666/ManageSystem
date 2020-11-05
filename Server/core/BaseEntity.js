@@ -184,7 +184,7 @@ class BaseEntity {
     }
   }
 
-  static findRecords(filter = null, currentUser = null) {
+  static findRecords(filter = null) {
     let obj = this.getRecordsObject();
     if (!_.isNil(filter)) {
       obj = obj.filter(filter);
@@ -193,8 +193,7 @@ class BaseEntity {
   }
 
   static pageRecords(
-    { searchAfter = null, pageSize = 5, filter = null, sort = '' },
-    currentUser = null
+    { searchAfter = null, pageSize = 5, filter = null, sort = '' }
   ) {
     let obj = this.getRecordsObject();
     const filterArray = [].concat(filter).filter(e => e);

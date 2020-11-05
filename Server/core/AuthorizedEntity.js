@@ -75,7 +75,7 @@ class AuthorizedEntity extends BaseEntity {
     if (permission === enumPermissions.own && !currentUser.isAdmin()) {
       newFilter.createBy = currentUser;
     }
-    return super.findRecords(newFilter, currentUser);
+    return super.findRecords(newFilter);
   }
 
   static pageRecords(searchParams, currentUser = null) {
@@ -86,8 +86,7 @@ class AuthorizedEntity extends BaseEntity {
       newFilter.createBy = currentUser;
     }
     return super.pageRecords(
-      { ...searchParams, filter: newFilter },
-      currentUser
+      { ...searchParams, filter: newFilter }
     );
   }
 }
