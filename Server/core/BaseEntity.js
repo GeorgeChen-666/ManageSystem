@@ -13,7 +13,7 @@ const systemProperty = Object.freeze({
 });
 
 class BaseEntity {
-  constructor(source = '', currentUser = null) {
+  constructor(source = null, currentUser = null) {
     Object.defineProperty(this, 'data', {
       enumerable: false,
       writable: true,
@@ -38,19 +38,8 @@ class BaseEntity {
       });
     });
 
-    if (!(_.isNaN(source) || _.isNil(source))) {
-      if (_.isObject(source)) {
-        this.data = source;
-      } else if (_.isString(source)) {
-        const id = source * 1;
-        this.data = this.constructor
-          .getObject(RECORDS_PATH_NAME)
-          .find({ [systemProperty.id]: id })
-          .value();
-        if (this.data === undefined) {
-          throw Error('数据不存在');
-        }
-      }
+    if (_.isObject(source)) {
+      this.data = source;
     }
   }
 
@@ -95,6 +84,9 @@ class BaseEntity {
 
   getData() {
     return _.pick(this.data, Object.keys(this.constructor.schema));
+    // return _.pickBy(this.data, (v, k) => {
+    //   return Object.keys(this.constructor.schema).includes(k) && v !== null && v !== undefined;
+    // });
   }
 
   isNew() {
@@ -184,7 +176,12 @@ class BaseEntity {
     }
   }
 
-  static findRecords(filter = null) {
+  static getRecordById(id) {
+    const [record] = this.findRecords({ filter: { id: (id * 1) } });
+    return record;
+  }
+
+  static findRecords({ filter = null }) {
     let obj = this.getRecordsObject();
     if (!_.isNil(filter)) {
       obj = obj.filter(filter);

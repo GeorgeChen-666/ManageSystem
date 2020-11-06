@@ -1,8 +1,7 @@
 const crypto = require('crypto');
 const _ = require('lodash');
-const { AuthorizedEntity } = require('../core/AuthorizedEntity');
+const { AuthorizedEntity, enumPermissions, enumPermissionTypes } = require('../core/AuthorizedEntity');
 const SUPER_PERMISSION = '*';
-const express = require('express');
 
 const Users = class extends AuthorizedEntity {
   constructor(source, currentUser) {
@@ -13,12 +12,12 @@ const Users = class extends AuthorizedEntity {
     Object.defineProperty(this, 'password', {
       configurable: true,
       enumerable: false,
-      set: function (value) {
+      set: function(value) {
         this.data['password'] = Users.md5(value);
       },
-      get: function () {
+      get: function() {
         return this.data['password'];
-      },
+      }
     });
   }
 
@@ -30,9 +29,16 @@ const Users = class extends AuthorizedEntity {
     return _.get(Users.findRecords({ username }), 0);
   }
 
-  isAdmin() {
-    const permissions = this.permissions;
-    return _.includes(permissions, '*');
+  getPermissionType() {
+    return this.permissionType;
+  }
+
+  savePermissionType(type) {
+    if (this.isNew()) {
+      throw new Error('请先保存');
+    }
+    this.permissionType = type;
+    super.saveRecord.call(this);
   }
 
   saveRecord() {
@@ -42,6 +48,7 @@ const Users = class extends AuthorizedEntity {
         throw new Error('用户名重复');
       }
     }
+    delete this.data.permissionType;
     super.saveRecord.call(this);
   }
 
@@ -52,23 +59,32 @@ const Users = class extends AuthorizedEntity {
   }
 };
 Users.schema = {
-  username: String,
+  username: {
+    type: String,
+    permission: {}
+  },
   password: String,
   errorTimes: Number,
   lock: Boolean,
   lastLoginTime: Number,
   servers: Array,
-  permissions: Array,
+  permissionType: Number
 };
 Users.defaultRecords = [
   {
     username: 'admin',
     password: Users.md5('112233'),
-    permissions: [SUPER_PERMISSION],
-    id: 1,
-  },
+    permissionType: enumPermissions.admin,
+    id: 1
+  }
 ];
-
+Users.functionPermissions = {
+  [enumPermissionTypes.get]: enumPermissions.own,
+  [enumPermissionTypes.query]: enumPermissions.own,
+  [enumPermissionTypes.create]: enumPermissions.admin,
+  [enumPermissionTypes.modify]: enumPermissions.own,
+  [enumPermissionTypes.remove]: enumPermissions.own
+};
 //const uuu = new Users("xiaoming", "");
 // uuu.password = "112233";
 // uuu.username = "xiaoming";

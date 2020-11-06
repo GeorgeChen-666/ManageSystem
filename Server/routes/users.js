@@ -52,7 +52,31 @@ router.post(
     });
   })
 );
-
+router.patch(
+  '/setPermissionType',
+  [
+    param('permissionType').exists().withMessage('请传入permissionType'),
+    param('username').exists().withMessage('请传入username'),
+    body('username').custom((username, { req, res }) => {
+      if (!username) return true;
+      const userData = Users.getUserByName(username);
+      if (userData) {
+        const userEntity = new Users(userData, req.currentUser);
+        req.userEntity = userEntity;
+        return true;
+      } else {
+        throw new Error('用户不存在');
+      }
+    })
+  ],
+  PublicHandler((req, res, next) => {
+    const { permissionType } = req.params;
+    req.userEntity.savePermissionType(permissionType);
+    res.json({
+      message: 'success'
+    });
+  })
+);
 router.post(
   '/login',
   [
