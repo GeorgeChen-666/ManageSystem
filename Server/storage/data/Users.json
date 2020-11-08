@@ -7,9 +7,9 @@
         "*1"
       ],
       "id": 1,
-      "lastLoginTime": 1604643534018,
+      "lastLoginTime": 1604851096193,
       "errorTimes": 0,
-      "updateOn": 1604643571128,
+      "updateOn": 1604851098724,
       "updateBy": "admin"
     },
     {
@@ -18,17 +18,18 @@
       "id": 1602306639695,
       "createOn": 1602306639695,
       "errorTimes": 0,
-      "updateOn": 1604377859551,
+      "updateOn": 1604844298505,
       "updateBy": "xiaoming",
       "deleted": false,
-      "lastLoginTime": 1604377859545
+      "lastLoginTime": 1604844298505
     },
     {
       "username": "liuzi",
       "password": "112233",
       "id": 1602431998492,
       "createOn": 1602431998492,
-      "createBy": "admin"
+      "createBy": "admin",
+      "lastLoginTime": 1604844298505
     }
   ]
 }

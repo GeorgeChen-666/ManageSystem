@@ -9,7 +9,7 @@ const systemProperty = Object.freeze({
   createOn: 'createOn',
   createBy: 'createBy',
   updateOn: 'updateOn',
-  updateBy: 'updateBy'
+  updateBy: 'updateBy',
 });
 
 class BaseEntity {
@@ -17,24 +17,24 @@ class BaseEntity {
     Object.defineProperty(this, 'data', {
       enumerable: false,
       writable: true,
-      value: []
+      value: [],
     });
     Object.defineProperty(this, 'currentUser', {
       enumerable: false,
       writable: true,
-      value: currentUser
+      value: currentUser,
     });
     const keys = Object.keys(this.constructor.schema);
     [...Object.values(systemProperty), ...keys].forEach((key) => {
       Object.defineProperty(this, key, {
         configurable: true,
         enumerable: true,
-        set: function(value) {
+        set: function (value) {
           this.data[key] = value;
         },
-        get: function() {
+        get: function () {
           return this.data[key];
-        }
+        },
       });
     });
 
@@ -84,9 +84,6 @@ class BaseEntity {
 
   getData() {
     return _.pick(this.data, Object.keys(this.constructor.schema));
-    // return _.pickBy(this.data, (v, k) => {
-    //   return Object.keys(this.constructor.schema).includes(k) && v !== null && v !== undefined;
-    // });
   }
 
   isNew() {
@@ -177,11 +174,13 @@ class BaseEntity {
   }
 
   static getRecordById(id) {
-    const [record] = this.findRecords({ filter: { id: (id * 1) } });
+    const [record] = this.findRecords({
+      filter: { [systemProperty.id]: id * 1 },
+    });
     return record;
   }
 
-  static findRecords({ filter = null }) {
+  static findRecords(filter = null) {
     let obj = this.getRecordsObject();
     if (!_.isNil(filter)) {
       obj = obj.filter(filter);
@@ -189,13 +188,15 @@ class BaseEntity {
     return obj.value() || [];
   }
 
-  static pageRecords(
-    { searchAfter = null, pageSize = 5, filter = null, sort = '' }
-  ) {
+  static pageRecords({
+    searchAfter = null,
+    pageSize = 5,
+    filter = null,
+    sort = '',
+  }) {
     let obj = this.getRecordsObject();
-    const filterArray = [].concat(filter).filter(e => e);
+    const filterArray = [].concat(filter).filter((e) => e);
     obj = filterArray.reduce((to, cu) => {
-
       return to.filter(cu);
     }, obj);
     if (sort !== '') {
@@ -206,7 +207,9 @@ class BaseEntity {
       }
     }
     if (searchAfter !== null) {
-      const index = obj.findIndex({ id: searchAfter * 1 }).value();
+      const index = obj
+        .findIndex({ [systemProperty.id]: searchAfter * 1 })
+        .value();
       obj = obj.drop(index + 1);
     }
     return obj.take(pageSize).value() || [];

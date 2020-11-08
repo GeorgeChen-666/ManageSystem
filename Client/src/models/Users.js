@@ -6,6 +6,7 @@ const initialState = {
     }
     return null;
   },
+  listData: [],
 };
 const Users = (state = initialState, action) => {
   switch (action.type) {
@@ -27,6 +28,13 @@ const Users = (state = initialState, action) => {
         },
       };
     }
+    case Types.saveListData: {
+      const { listData } = action.payload;
+      return {
+        ...state,
+        listData,
+      };
+    }
     default:
       return state;
   }
@@ -39,8 +47,13 @@ export const rememberLogin = (payload) => ({
   type: Types.rememberLogin,
   payload,
 });
+export const saveListData = (payload) => ({
+  type: Types.saveListData,
+  payload,
+});
 export const Types = {
   setToken: `${Users.name}/setToken`,
   rememberLogin: `${Users.name}/rememberLogin`,
+  saveListData: `${Users.name}/saveListData`,
 };
 export default Users;

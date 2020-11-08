@@ -4,18 +4,15 @@ const enumPermissions = Object.freeze({
   any: 0,
   user: 10,
   own: 20,
-  admin: 30
+  admin: 30,
 });
 const enumPermissionTypes = Object.freeze({
-  filter: 'filter',
   query: 'query',
   get: 'get',
   create: 'create',
   modify: 'modify',
-  remove: 'remove'
+  remove: 'remove',
 });
-
-//const PERMISSIONS_PATH_NAME = 'permissionInfo';
 
 class AuthorizedEntity extends BaseEntity {
   constructor(source, currentUser) {
@@ -28,8 +25,7 @@ class AuthorizedEntity extends BaseEntity {
     let result = false;
     if (userPermissionType >= permission) {
       result = true;
-    }
-    else if (permission === enumPermissions.own) {
+    } else if (permission === enumPermissions.own) {
       result = entity.createBy === entity.currentUser.username;
     }
     if (!result) {
@@ -51,24 +47,25 @@ class AuthorizedEntity extends BaseEntity {
     return () => true;
   }
 
-  saveRecord() {
-    this.constructor.checkPermission(this,
+  saveRecordPermission() {
+    this.constructor.checkPermission(
+      this,
       this.isNew() ? enumPermissionTypes.create : enumPermissionTypes.modify
     );
     super.saveRecord();
   }
 
-  restoreRecord() {
+  restoreRecordPermission() {
     this.constructor.checkPermission(this, enumPermissionTypes.modify);
     super.restoreRecord();
   }
 
-  removeRecord() {
+  removeRecordPermission() {
     this.constructor.checkPermission(this, enumPermissionTypes.remove);
     super.removeRecord();
   }
 
-  realRemoveRecord() {
+  realRemoveRecordPermission() {
     this.constructor.checkPermission(this, null, enumPermissions.admin);
     super.realRemoveRecord();
   }
@@ -77,20 +74,18 @@ class AuthorizedEntity extends BaseEntity {
     return super.getRecordById(id);
   }
 
-  static findRecords(filter = null, currentUser = null) {
+  static findRecordsPermission(filter = null, currentUser = null) {
     const permissionFilter = this.getPermissionFilter(currentUser);
-    const newFilter = filter || [];
+    const newFilter = [].concat(filter || []);
     newFilter.push(permissionFilter);
     return super.findRecords(newFilter);
   }
 
-  static pageRecords(searchParams, currentUser = null) {
+  static pageRecordsPermission(searchParams, currentUser = null) {
     const permissionFilter = this.getPermissionFilter(currentUser);
-    const newFilter = searchParams.filter || [];
+    const newFilter = [].concat(searchParams.filter || []);
     newFilter.push(permissionFilter);
-    return super.pageRecords(
-      { ...searchParams, filter: newFilter }
-    );
+    return super.pageRecords({ ...searchParams, filter: newFilter });
   }
 }
 
@@ -99,7 +94,7 @@ AuthorizedEntity.functionPermissions = {
   [enumPermissionTypes.query]: enumPermissions.any,
   [enumPermissionTypes.create]: enumPermissions.any,
   [enumPermissionTypes.modify]: enumPermissions.any,
-  [enumPermissionTypes.remove]: enumPermissions.any
+  [enumPermissionTypes.remove]: enumPermissions.any,
 };
 
 // let ttt = AuthorizedEntity.getPermission('admin', 'query');

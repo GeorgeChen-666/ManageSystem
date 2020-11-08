@@ -23,7 +23,7 @@ export const routeItems = {
           path: '/manage/admin/users',
           name: '用户管理',
           icon: <SmileOutlined />,
-          component: import('../pages/Users/Users'),
+          component: import('../pages/Users/ManageUsers'),
         },
         {
           path: '/manage/about',

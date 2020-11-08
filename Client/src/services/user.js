@@ -1,7 +1,11 @@
 import axios from 'axios';
-export async function login({ username, password }) {
-  return await axios.post('/api/users/login', {
+export function login({ username, password }) {
+  return axios.post('/api/users/login', {
     username,
     password,
   });
+}
+
+export async function fetchList() {
+  return axios.get('/api/users/page', {});
 }
