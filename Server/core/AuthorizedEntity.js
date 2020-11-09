@@ -4,14 +4,14 @@ const enumPermissions = Object.freeze({
   any: 0,
   user: 10,
   own: 20,
-  admin: 30,
+  admin: 30
 });
 const enumPermissionTypes = Object.freeze({
   query: 'query',
   get: 'get',
   create: 'create',
   modify: 'modify',
-  remove: 'remove',
+  remove: 'remove'
 });
 
 class AuthorizedEntity extends BaseEntity {
@@ -37,17 +37,22 @@ class AuthorizedEntity extends BaseEntity {
     const permission = this.functionPermissions[enumPermissionTypes.query];
     if (currentUser) {
       const userPermissionType = currentUser.getPermissionType();
-      if (userPermissionType < permission) {
-        return () => false;
+      if (userPermissionType >= permission) {
+        return () => true;
+      }
+      else if (permission === enumPermissions.own) {
+        return (entity) => entity.createBy === currentUser.username || entity.username === currentUser.username;
       }
     }
-    if (permission === enumPermissions.own) {
-      return (entity) => entity.createBy === currentUser.username;
-    }
-    return () => true;
+
+    return () => false;
   }
 
-  saveRecordPermission() {
+  saveRecordWithoutPermission() {
+    super.saveRecord();
+  }
+
+  saveRecord() {
     this.constructor.checkPermission(
       this,
       this.isNew() ? enumPermissionTypes.create : enumPermissionTypes.modify
@@ -55,33 +60,53 @@ class AuthorizedEntity extends BaseEntity {
     super.saveRecord();
   }
 
-  restoreRecordPermission() {
+  restoreRecordWithoutPermission() {
+    super.restoreRecord();
+  }
+
+  restoreRecord() {
     this.constructor.checkPermission(this, enumPermissionTypes.modify);
     super.restoreRecord();
   }
 
-  removeRecordPermission() {
+  removeRecordWithoutPermission() {
+    super.removeRecord();
+  }
+
+  removeRecord() {
     this.constructor.checkPermission(this, enumPermissionTypes.remove);
     super.removeRecord();
   }
 
-  realRemoveRecordPermission() {
+  realRemoveRecordWithoutPermission() {
+    super.realRemoveRecord();
+  }
+
+  realRemoveRecord() {
     this.constructor.checkPermission(this, null, enumPermissions.admin);
     super.realRemoveRecord();
   }
 
-  static getRecordById(id) {
-    return super.getRecordById(id);
+  // static getRecordById(id) {
+  //   return super.getRecordById(id);
+  // }
+
+  static findRecordsWithoutPermission(filter) {
+    return super.findRecords(filter);
   }
 
-  static findRecordsPermission(filter = null, currentUser = null) {
+  static findRecords(filter = null, currentUser = null) {
     const permissionFilter = this.getPermissionFilter(currentUser);
     const newFilter = [].concat(filter || []);
     newFilter.push(permissionFilter);
     return super.findRecords(newFilter);
   }
 
-  static pageRecordsPermission(searchParams, currentUser = null) {
+  static pageRecordsWithoutPermission(searchParams) {
+    return super.pageRecords({ ...searchParams });
+  }
+
+  static pageRecords(searchParams, currentUser = null) {
     const permissionFilter = this.getPermissionFilter(currentUser);
     const newFilter = [].concat(searchParams.filter || []);
     newFilter.push(permissionFilter);
@@ -94,7 +119,7 @@ AuthorizedEntity.functionPermissions = {
   [enumPermissionTypes.query]: enumPermissions.any,
   [enumPermissionTypes.create]: enumPermissions.any,
   [enumPermissionTypes.modify]: enumPermissions.any,
-  [enumPermissionTypes.remove]: enumPermissions.any,
+  [enumPermissionTypes.remove]: enumPermissions.any
 };
 
 // let ttt = AuthorizedEntity.getPermission('admin', 'query');

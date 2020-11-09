@@ -3,7 +3,7 @@ const _ = require('lodash');
 const {
   AuthorizedEntity,
   enumPermissions,
-  enumPermissionTypes,
+  enumPermissionTypes
 } = require('../core/AuthorizedEntity');
 
 const Users = class extends AuthorizedEntity {
@@ -15,12 +15,12 @@ const Users = class extends AuthorizedEntity {
     Object.defineProperty(this, 'password', {
       configurable: true,
       enumerable: false,
-      set: function (value) {
+      set: function(value) {
         this.data['password'] = Users.md5(value);
       },
-      get: function () {
+      get: function() {
         return this.data['password'];
-      },
+      }
     });
   }
 
@@ -29,11 +29,11 @@ const Users = class extends AuthorizedEntity {
   }
 
   static getUserByName(username) {
-    return _.get(this.findRecords({ username }), 0);
+    return _.get(this.findRecordsWithoutPermission({ username }), 0);
   }
 
   getPermissionType() {
-    return this.permissionType;
+    return this.permissionType || enumPermissions.user;
   }
 
   savePermissionType(type) {
@@ -46,13 +46,12 @@ const Users = class extends AuthorizedEntity {
 
   saveRecord() {
     if (this.isNew()) {
-      const count = this.constructor.findRecords({ username: this.username })
-        .length;
+      const count = this.constructor.findRecordsWithoutPermission({ username: this.username }).length;
       if (count > 0) {
         throw new Error('用户名重复');
       }
     }
-    delete this.data.permissionType;
+    // delete this.data.permissionType;
     super.saveRecord();
   }
 
@@ -61,36 +60,33 @@ const Users = class extends AuthorizedEntity {
     delete newData.password;
     return newData;
   }
-  static pageRecords(searchParams, currentUser = null) {
-    return this.pageRecordsPermission(searchParams, currentUser);
-  }
 };
 Users.schema = {
   username: {
     type: String,
-    permission: {},
+    permission: {}
   },
   password: String,
   errorTimes: Number,
   lock: Boolean,
   lastLoginTime: Number,
   servers: Array,
-  permissionType: Number,
+  permissionType: Number
 };
 Users.defaultRecords = [
   {
     username: 'admin',
     password: Users.md5('112233'),
     permissionType: enumPermissions.admin,
-    id: 1,
-  },
+    id: 1
+  }
 ];
 Users.functionPermissions = {
   [enumPermissionTypes.get]: enumPermissions.own,
   [enumPermissionTypes.query]: enumPermissions.own,
   [enumPermissionTypes.create]: enumPermissions.admin,
   [enumPermissionTypes.modify]: enumPermissions.own,
-  [enumPermissionTypes.remove]: enumPermissions.own,
+  [enumPermissionTypes.remove]: enumPermissions.own
 };
 //const uuu = new Users("xiaoming", "");
 // uuu.password = "112233";

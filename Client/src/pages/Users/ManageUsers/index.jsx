@@ -1,45 +1,33 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import {
   Button,
-  Descriptions,
-  Result,
-  Space,
-  Statistic,
   Card,
   List,
   Dropdown,
   Menu,
 } from 'antd';
 import React from 'react';
-import dayjs from 'dayjs';
+import {getLabelFromTimeStamp} from "../../../utils/dateUtils";
 import { LikeOutlined, PlusOutlined, DownOutlined } from '@ant-design/icons';
 
 import { useScripts } from './index.Scripts';
+import styles from '../Style.module.less';
 
-const content = (
-  <Descriptions size="small" column={2}>
-    <Descriptions.Item label="创建人">张三</Descriptions.Item>
-    <Descriptions.Item label="联系方式">
-      <span>421421</span>
-    </Descriptions.Item>
-    <Descriptions.Item label="创建时间">2017-01-10</Descriptions.Item>
-    <Descriptions.Item label="更新时间">2017-10-10</Descriptions.Item>
-    <Descriptions.Item label="备注">
-      中国浙江省杭州市西湖区古翠路6666
-    </Descriptions.Item>
-  </Descriptions>
-);
-const ListContent = ({ owner, createOn, percent, status }) => (
-  <div>
-    <div>
+const ListContent = ({ owner, createOn, lastLoginTime, status }) => (
+  <div className={styles.listContent}>{(()=>{console.log('===',styles)})()}
+    <div className={styles.listContentItem} id="ffff">
       <span>Owner</span>
       <p>{owner}</p>
     </div>
-    <div>
-      <span>创建时间</span>
-      <p>{dayjs(createOn).format('YYYY-MM-DD')}</p>
+    <div className={styles.listContentItem}>
+      <span>上次登录</span>
+      <p>{getLabelFromTimeStamp(lastLoginTime)}</p>
     </div>
-    <div>Progress</div>
+    <div className={styles.listContentItem}>
+      <span>创建时间</span>
+      <p>{getLabelFromTimeStamp(createOn)}</p>
+    </div>
+    <div className={styles.listContentItem}>Progress</div>
   </div>
 );
 const menu = (
@@ -88,7 +76,7 @@ export default (props) => {
             <List.Item actions={[<a>编辑</a>, <MoreBtn />]}>
               <List.Item.Meta
                 // avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                title={<a href={item.href}>{item.title}</a>}
+                title={item.username}
                 description={item.subDescription}
               />
               <ListContent data={item} />

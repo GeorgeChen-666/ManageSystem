@@ -9,7 +9,7 @@ const systemProperty = Object.freeze({
   createOn: 'createOn',
   createBy: 'createBy',
   updateOn: 'updateOn',
-  updateBy: 'updateBy',
+  updateBy: 'updateBy'
 });
 
 class BaseEntity {
@@ -17,24 +17,24 @@ class BaseEntity {
     Object.defineProperty(this, 'data', {
       enumerable: false,
       writable: true,
-      value: [],
+      value: []
     });
     Object.defineProperty(this, 'currentUser', {
       enumerable: false,
       writable: true,
-      value: currentUser,
+      value: currentUser
     });
     const keys = Object.keys(this.constructor.schema);
     [...Object.values(systemProperty), ...keys].forEach((key) => {
       Object.defineProperty(this, key, {
         configurable: true,
         enumerable: true,
-        set: function (value) {
+        set: function(value) {
           this.data[key] = value;
         },
-        get: function () {
+        get: function() {
           return this.data[key];
-        },
+        }
       });
     });
 
@@ -175,25 +175,26 @@ class BaseEntity {
 
   static getRecordById(id) {
     const [record] = this.findRecords({
-      filter: { [systemProperty.id]: id * 1 },
+      filter: { [systemProperty.id]: id * 1 }
     });
     return record;
   }
 
   static findRecords(filter = null) {
     let obj = this.getRecordsObject();
-    if (!_.isNil(filter)) {
-      obj = obj.filter(filter);
-    }
+    const filterArray = [].concat(filter).filter((e) => e);
+    obj = filterArray.reduce((to, cu) => {
+      return to.filter(cu);
+    }, obj);
     return obj.value() || [];
   }
 
   static pageRecords({
-    searchAfter = null,
-    pageSize = 5,
-    filter = null,
-    sort = '',
-  }) {
+                       searchAfter = null,
+                       pageSize = 5,
+                       filter = null,
+                       sort = ''
+                     }) {
     let obj = this.getRecordsObject();
     const filterArray = [].concat(filter).filter((e) => e);
     obj = filterArray.reduce((to, cu) => {
