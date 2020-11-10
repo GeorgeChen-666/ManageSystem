@@ -24,6 +24,20 @@ export const routeItems = {
           name: '用户管理',
           icon: <SmileOutlined />,
           component: import('../pages/Users/ManageUsers'),
+          routes: [
+            {
+              path: '/manage/admin/users/add',
+              name: '新增用户',
+              hideInMenu: true,
+              //component: import('../pages/Users/ManageUsers'),
+            },
+            {
+              path: '/manage/admin/users/modify/:id',
+              name: '编辑用户',
+              hideInMenu: true,
+              //component: import('../pages/Users/ManageUsers'),
+            },
+          ],
         },
         {
           path: '/manage/about',

@@ -19,7 +19,6 @@ export default (props) => {
   }, [getCurrentUser, history, location]);
   const [settings, setSetting] = useState(undefined);
   const { pathname } = useLocation();
-  console.log(666);
   return (
     <div
       id="test-pro-layout"

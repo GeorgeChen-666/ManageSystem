@@ -1,21 +1,21 @@
 import { PageContainer } from '@ant-design/pro-layout';
-import {
-  Button,
-  Card,
-  List,
-  Dropdown,
-  Menu,
-  Modal
-} from 'antd';
-import React from 'react';
-import {getLabelFromTimeStamp} from "../../../utils/dateUtils";
+import { Button, Card, List, Dropdown, Menu, Modal } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
+import { getLabelFromTimeStamp } from '../../../utils/dateUtils';
 import { LikeOutlined, PlusOutlined, DownOutlined } from '@ant-design/icons';
-import { Link, useRouteMatch, Route, Switch } from 'react-router-dom';
+import {
+  Link,
+  useRouteMatch,
+  useHistory,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import UserEditor from './UserEditor';
 import { useScripts } from './index.Scripts';
 import styles from '../Style.module.less';
+import ValidationFormContext from '../../../components/Form/ValidationFormContext';
 
-const ListContent = ({data:{ owner, createOn, lastLoginTime, status }}) => (
+const ListContent = ({ data: { owner, createOn, lastLoginTime, status } }) => (
   <div className={styles.listContent}>
     <div className={styles.listContentItem}>
       <span>上次登录</span>
@@ -45,6 +45,8 @@ const MoreBtn = () => (
   </Dropdown>
 );
 export default (props) => {
+  const [form, setForm] = useState(() => {});
+  const history = useHistory();
   let match = useRouteMatch();
   const { listData, isFetchListLoading } = useScripts(props);
   return (
@@ -52,9 +54,11 @@ export default (props) => {
       extra={[
         <Button key="3">操作</Button>,
         <Button key="2">操作</Button>,
-        <Link to={`${match.path}/add`}><Button key="1" type="primary">
-          添加
-        </Button></Link>,
+        <Link to={`${match.path}/add`}>
+          <Button key="1" type="primary">
+            添加
+          </Button>
+        </Link>,
       ]}
     >
       <div className={styles.standardList}>
@@ -85,16 +89,24 @@ export default (props) => {
         </Card>
       </div>
       <Switch>
-        <Route path={[`${match.path}/add`,`${match.path}/modify/:id`]}>
+        <Route path={[`${match.path}/add`, `${match.path}/modify/:id`]}>
           <Modal
-            title="Modal 1000px width"
+            title="用户信息"
             centered
             visible={true}
-            // onOk={() => setVisible(false)}
-            // onCancel={() => setVisible(false)}
+            onOk={() => form.submit()}
+            onCancel={() => history.goBack()}
             width={1000}
           >
-            <UserEditor />
+            <UserEditor>
+              {() => {
+                const { fromInstance } = useContext(ValidationFormContext);
+                useEffect(() => {
+                  setForm(() => fromInstance);
+                });
+                return null;
+              }}
+            </UserEditor>
           </Modal>
         </Route>
       </Switch>

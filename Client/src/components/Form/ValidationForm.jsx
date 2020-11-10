@@ -8,7 +8,7 @@ const ValidationForm = (props) => {
     props
   );
   return (
-    <ValidationFormContext.Provider value={{ errors }}>
+    <ValidationFormContext.Provider value={{ errors, fromInstance }}>
       <Form
         name={props.name}
         form={fromInstance}
