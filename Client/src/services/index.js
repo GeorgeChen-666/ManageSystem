@@ -9,7 +9,8 @@ const registerAxioInterceptors = (store) => {
       //const { exp } = jwt_decode(token);
       if (token) {
         const {exp} = jwt_decode(token);
-        if (exp * 1000 < new Date().getTime() + 1800000) {
+        const fresh = exp * 1000 - new Date().getTime();
+        if (fresh < 1800000 && fresh > 0) {
           //TODO 如果快超时了就刷新token
           console.log('需要调用刷token')
         }
@@ -20,6 +21,7 @@ const registerAxioInterceptors = (store) => {
       return config;
     },
     (error) => {
+      console.log('request error')
       // Do something with request error
       return Promise.reject(error);
     }
@@ -29,6 +31,11 @@ const registerAxioInterceptors = (store) => {
       return response;
     },
     (error) => {
+      const {status} = error.response;
+      if(status===401) {
+        window.history.pushState({},'','/login')
+      }
+      console.log('response error',error)
       //debugger;
       return Promise.reject(error);
     }
