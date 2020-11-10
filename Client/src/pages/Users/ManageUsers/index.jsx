@@ -59,31 +59,34 @@ export default (props) => {
         </Button>,
       ]}
     >
-      <Card
-        // className={styles.listCard}
-        bordered={false}
-        style={{ marginTop: 24 }}
-        bodyStyle={{ padding: '0 32px 40px 32px' }}
-        // extra={extraContent}
-      >
-        <List
-          size="large"
-          rowKey="id"
-          loading={isFetchListLoading}
-          // pagination={paginationProps}
-          dataSource={listData.items}
-          renderItem={(item) => (
-            <List.Item actions={[<a>编辑</a>, <MoreBtn />]}>
-              <List.Item.Meta
-                // avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                title={item.username}
-                description={item.subDescription}
-              />
-              <ListContent data={item} />
-            </List.Item>
-          )}
-        />
-      </Card>
+      <div className={styles.standardList}>
+        <Card
+          // className={styles.listCard}
+          bordered={false}
+          style={{ marginTop: 24 }}
+          bodyStyle={{ padding: '0 32px 40px 32px' }}
+          // extra={extraContent}
+        >
+          <List
+            size="large"
+            rowKey="id"
+            loading={isFetchListLoading}
+            // pagination={paginationProps}
+            dataSource={listData.items}
+            renderItem={(item) => (
+              <List.Item actions={[<a>编辑</a>, <MoreBtn />]}>
+                <List.Item.Meta
+                  // avatar={<Avatar src={item.logo} shape="square" size="large" />}
+                  title={item.username}
+                  description={item.subDescription}
+                />
+                <ListContent data={item} />
+              </List.Item>
+            )}
+          />
+        </Card>
+      </div>
+
     </PageContainer>
   );
 };
