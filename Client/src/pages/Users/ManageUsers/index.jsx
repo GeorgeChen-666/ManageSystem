@@ -5,6 +5,7 @@ import {getLabelFromTimeStamp} from '../../../utils/dateUtils';
 import {LikeOutlined, PlusOutlined, DownOutlined} from '@ant-design/icons';
 import {
   Link,
+  matchPath,
   useRouteMatch,
   useHistory,
   Route,
@@ -47,15 +48,17 @@ const MoreBtn = () => (
 export default (props) => {
   const history = useHistory();
   let match = useRouteMatch();
+  const [PATH_ADD, PATH_MODIFY] = [`${match.path}/add`, `${match.path}/modify/:id`]
+  const currentMatch = matchPath(history.location.pathname, {path: [PATH_ADD, PATH_MODIFY]});
   const {listData, isFetchListLoading, formRef} = useScripts(props);
   const fromInstance = formRef.current || {submit: () => null};
-  console.log(formRef.current)
+  console.log();
   return (
     <PageContainer
       extra={[
         <Button key="3">操作</Button>,
         <Button key="2">操作</Button>,
-        <Link key="1" to={`${match.path}/add`}>
+        <Link key="1" to={PATH_ADD}>
           <Button type="primary">
             添加
           </Button>
@@ -92,18 +95,18 @@ export default (props) => {
       <Modal
         title="用户信息"
         centered
-        visible={history.location.pathname ===`${match.path}/add`}
+        visible={!!currentMatch}
         confirmLoading={fromInstance.isSaveLoading}
         onOk={() => fromInstance.submit()}
         onCancel={() => history.goBack()}
         width={'50%'}
       >
-        <UserEditor ref={formRef} />
+        <UserEditor ref={formRef}/>
       </Modal>
       {/*<Switch>*/}
-        {/*<Route path={[`${match.path}/add`, `${match.path}/modify/:id`]}>*/}
+      {/*<Route path={[`${match.path}/add`, `${match.path}/modify/:id`]}>*/}
 
-        {/*</Route>*/}
+      {/*</Route>*/}
       {/*</Switch>*/}
     </PageContainer>
   );
