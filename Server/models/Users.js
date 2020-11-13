@@ -62,6 +62,7 @@ const Users = class extends AuthorizedEntity {
   }
 };
 Users.schema = {
+  nickname: String,
   username: {
     type: String,
     permission: {}

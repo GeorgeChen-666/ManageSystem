@@ -4,9 +4,9 @@
       "username": "admin",
       "password": "d0970714757783e6cf17b26fb8e2298f",
       "id": 1,
-      "lastLoginTime": 1604907122767,
+      "lastLoginTime": 1605252967572,
       "errorTimes": 0,
-      "updateOn": 1604907122767,
+      "updateOn": 1605252967572,
       "updateBy": "admin",
       "permissionType": 30
     },
@@ -26,6 +26,13 @@
       "password": "112233",
       "id": 1602431998492,
       "createOn": 1602431998492,
+      "createBy": "admin"
+    },
+    {
+      "username": "zg",
+      "password": "112233",
+      "id": 1605081463265,
+      "createOn": 1605081463266,
       "createBy": "admin"
     }
   ]

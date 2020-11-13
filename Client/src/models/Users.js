@@ -1,4 +1,5 @@
 import jwt_decode from 'jwt-decode';
+
 const initialState = {
   getCurrentUser: (token) => {
     if (token) {
@@ -11,14 +12,14 @@ const initialState = {
 const Users = (state = initialState, action) => {
   switch (action.type) {
     case Types.setToken: {
-      const { token } = action.payload;
+      const {token} = action.payload;
       return {
         ...state,
         token,
       };
     }
     case Types.rememberLogin: {
-      const { payload } = action;
+      const {payload} = action;
       return {
         ...state,
         login: {
@@ -29,9 +30,10 @@ const Users = (state = initialState, action) => {
       };
     }
     case Types.saveListData: {
-      const { listData } = action.payload;
+      const {listData} = action.payload;
       return {
         ...state,
+        listDataDone: true,
         listData,
       };
     }
@@ -41,7 +43,7 @@ const Users = (state = initialState, action) => {
 };
 export const setToken = (token) => ({
   type: Types.setToken,
-  payload: { token },
+  payload: {token},
 });
 export const rememberLogin = (payload) => ({
   type: Types.rememberLogin,

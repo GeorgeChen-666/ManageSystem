@@ -1,16 +1,17 @@
-import React from 'react';
-import { Form } from 'antd';
-import { useScripts } from './ValidationForm.Scripts';
+import React,{useRef} from 'react';
+import {Form} from 'antd';
+import {useScripts} from './ValidationForm.Scripts';
 import ValidationFormContext from './ValidationFormContext';
 
-const ValidationForm = (props) => {
-  const { onFormSubmit, onFieldChange, fromInstance, errors } = useScripts(
-    props
+const ValidationForm = (props,ref) => {
+  const {onFormSubmit, onFieldChange, fromInstance, errors} = useScripts(
+    props,ref
   );
   return (
-    <ValidationFormContext.Provider value={{ errors, fromInstance }}>
+    <ValidationFormContext.Provider value={{errors, fromInstance}}>
       <Form
-        name={props.name}
+        {...props}
+        ref={ref}
         form={fromInstance}
         onFinish={onFormSubmit}
         onValuesChange={onFieldChange}
@@ -21,4 +22,4 @@ const ValidationForm = (props) => {
   );
 };
 
-export default ValidationForm;
+export default React.forwardRef(ValidationForm);

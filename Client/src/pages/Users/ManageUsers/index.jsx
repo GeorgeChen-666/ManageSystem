@@ -1,8 +1,8 @@
-import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Card, List, Dropdown, Menu, Modal } from 'antd';
-import React, { useContext, useEffect, useState } from 'react';
-import { getLabelFromTimeStamp } from '../../../utils/dateUtils';
-import { LikeOutlined, PlusOutlined, DownOutlined } from '@ant-design/icons';
+import {PageContainer} from '@ant-design/pro-layout';
+import {Button, Card, List, Dropdown, Menu, Modal} from 'antd';
+import React, {useRef} from 'react';
+import {getLabelFromTimeStamp} from '../../../utils/dateUtils';
+import {LikeOutlined, PlusOutlined, DownOutlined} from '@ant-design/icons';
 import {
   Link,
   useRouteMatch,
@@ -11,11 +11,11 @@ import {
   Switch,
 } from 'react-router-dom';
 import UserEditor from './UserEditor';
-import { useScripts } from './index.Scripts';
+import {useScripts} from './index.Scripts';
 import styles from '../Style.module.less';
-import ValidationFormContext from '../../../components/Form/ValidationFormContext';
 
-const ListContent = ({ data: { owner, createOn, lastLoginTime, status } }) => (
+
+const ListContent = ({data: {owner, createOn, lastLoginTime}}) => (
   <div className={styles.listContent}>
     <div className={styles.listContentItem}>
       <span>上次登录</span>
@@ -40,22 +40,23 @@ const menu = (
 const MoreBtn = () => (
   <Dropdown overlay={menu}>
     <a>
-      更多 <DownOutlined />
+      更多 <DownOutlined/>
     </a>
   </Dropdown>
 );
 export default (props) => {
-  const [form, setForm] = useState(() => {});
   const history = useHistory();
   let match = useRouteMatch();
-  const { listData, isFetchListLoading } = useScripts(props);
+  const {listData, isFetchListLoading, formRef} = useScripts(props);
+  const fromInstance = formRef.current || {submit: () => null};
+  console.log(formRef.current)
   return (
     <PageContainer
       extra={[
         <Button key="3">操作</Button>,
         <Button key="2">操作</Button>,
-        <Link to={`${match.path}/add`}>
-          <Button key="1" type="primary">
+        <Link key="1" to={`${match.path}/add`}>
+          <Button type="primary">
             添加
           </Button>
         </Link>,
@@ -65,8 +66,8 @@ export default (props) => {
         <Card
           // className={styles.listCard}
           bordered={false}
-          style={{ marginTop: 24 }}
-          bodyStyle={{ padding: '0 32px 40px 32px' }}
+          style={{marginTop: 24}}
+          bodyStyle={{padding: '0 32px 40px 32px'}}
           // extra={extraContent}
         >
           <List
@@ -76,40 +77,34 @@ export default (props) => {
             // pagination={paginationProps}
             dataSource={listData.items}
             renderItem={(item) => (
-              <List.Item actions={[<a>编辑</a>, <MoreBtn />]}>
+              <List.Item actions={[<a>编辑</a>, <MoreBtn/>]}>
                 <List.Item.Meta
                   // avatar={<Avatar src={item.logo} shape="square" size="large" />}
                   title={item.username}
                   description={item.subDescription}
                 />
-                <ListContent data={item} />
+                <ListContent data={item}/>
               </List.Item>
             )}
           />
         </Card>
       </div>
-      <Switch>
-        <Route path={[`${match.path}/add`, `${match.path}/modify/:id`]}>
-          <Modal
-            title="用户信息"
-            centered
-            visible={true}
-            onOk={() => form.submit()}
-            onCancel={() => history.goBack()}
-            width={1000}
-          >
-            <UserEditor>
-              {() => {
-                const { fromInstance } = useContext(ValidationFormContext);
-                useEffect(() => {
-                  setForm(() => fromInstance);
-                });
-                return null;
-              }}
-            </UserEditor>
-          </Modal>
-        </Route>
-      </Switch>
+      <Modal
+        title="用户信息"
+        centered
+        visible={history.location.pathname ===`${match.path}/add`}
+        confirmLoading={fromInstance.isSaveLoading}
+        onOk={() => fromInstance.submit()}
+        onCancel={() => history.goBack()}
+        width={'50%'}
+      >
+        <UserEditor ref={formRef} />
+      </Modal>
+      {/*<Switch>*/}
+        {/*<Route path={[`${match.path}/add`, `${match.path}/modify/:id`]}>*/}
+
+        {/*</Route>*/}
+      {/*</Switch>*/}
     </PageContainer>
   );
 };

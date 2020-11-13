@@ -44,7 +44,7 @@ router.post(
     })
   ],
   PublicHandler(function(req, res, next) {
-    const userData = _.pick(req.body, ['username', 'password']);
+    const userData = _.pick(req.body, ['username', 'password', 'nickname']);
     const userEntity = new Users(userData, req.currentUser);
     userEntity.saveRecord();
     res.json({

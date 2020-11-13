@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
-import { Form } from 'antd';
+import {useState, useCallback} from 'react';
+import {Form} from 'antd';
 
 export const useScripts = (props) => {
-  const { onSubmit, onSubmitDone } = props;
+  const {onSubmit, onSubmitDone} = props;
   const [errors, setErrors] = useState(null);
   const [fromInstance] = Form.useForm();
   const onFormSubmit = useCallback(async () => {
@@ -37,6 +37,5 @@ export const useScripts = (props) => {
     onFormSubmit,
     onFieldChange,
     fromInstance,
-    errors,
   };
 };
