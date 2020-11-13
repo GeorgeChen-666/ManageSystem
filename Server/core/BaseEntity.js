@@ -9,41 +9,46 @@ const systemProperty = Object.freeze({
   createOn: 'createOn',
   createBy: 'createBy',
   updateOn: 'updateOn',
-  updateBy: 'updateBy'
+  updateBy: 'updateBy',
 });
 
 class BaseEntity {
-  constructor(source = null, currentUser = null) {
+  constructor(id = null, currentUser = null) {
+    let cUser = currentUser;
+    if (currentUser === '@') {
+      cUser = this;
+    }
     Object.defineProperty(this, 'data', {
       enumerable: false,
       writable: true,
-      value: []
+      value: {},
     });
     Object.defineProperty(this, 'currentUser', {
       enumerable: false,
       writable: true,
-      value: currentUser
+      value: cUser,
     });
     const keys = Object.keys(this.constructor.schema);
     [...Object.values(systemProperty), ...keys].forEach((key) => {
       Object.defineProperty(this, key, {
         configurable: true,
         enumerable: true,
-        set: function(value) {
+        set: function (value) {
           this.data[key] = value;
         },
-        get: function() {
+        get: function () {
           return this.data[key];
-        }
+        },
       });
     });
-
-    if (_.isObject(source)) {
-      this.data = source;
+    if (id) {
+      this.data = this.constructor._findById(id).value();
+    } else {
+      this.data = {};
     }
   }
 
-  static getJsonBase() {
+  static _getJsonBase() {
     const baseName = this._baseName || this.name;
     if (this.base === undefined) {
       const adapter = new FileSync(
@@ -59,18 +64,18 @@ class BaseEntity {
     this._baseName = baseName;
   }
 
-  static getRecordsObject() {
-    return this.getObject(RECORDS_PATH_NAME);
+  static _getRecordsObject() {
+    return this._getObject(RECORDS_PATH_NAME);
   }
 
-  static getObject(path = 'meta') {
-    const base = this.getJsonBase();
+  static _getObject(path = 'meta') {
+    const base = this._getJsonBase();
     base.defaults({ [path]: path.endsWith('s') ? [] : {} }).write();
     return base.read().get([path]);
   }
 
   static setObject(data, path = 'meta') {
-    const base = this.getJsonBase();
+    const base = this._getJsonBase();
     if (data === null) {
       base.unset(path).save();
     } else {
@@ -80,6 +85,12 @@ class BaseEntity {
 
   getRawData() {
     return this.data;
+  }
+
+  setData(data) {
+    Object.keys(data).forEach((key) => {
+      this[key] = data[key];
+    });
   }
 
   getData() {
@@ -112,19 +123,25 @@ class BaseEntity {
       if (this.currentUser) {
         _.set(updateObj, systemProperty.createBy, this.currentUser.username);
       }
-      this.constructor.getRecordsObject().push(updateObj).write();
+      this.constructor._getRecordsObject().push(updateObj).write();
     } else {
       _.set(updateObj, systemProperty.updateOn, new Date().getTime());
       if (this.currentUser) {
         _.set(updateObj, systemProperty.updateBy, this.currentUser.username);
       }
       this.constructor
-        .getRecordsObject()
+        ._getRecordsObject()
         .find({ [systemProperty.id]: this[systemProperty.id] })
         .assign(updateObj)
         .write();
     }
     this.data = updateObj;
+  }
+
+  static _findById(id) {
+    return this._getRecordsObject().find({
+      [systemProperty.id]: id,
+    });
   }
 
   removeRecord() {
@@ -137,8 +154,7 @@ class BaseEntity {
       }
       _.set(updateObj, 'deleted', true);
       this.constructor
-        .getRecordsObject()
-        .find({ [systemProperty.id]: this[systemProperty.id] })
+        ._findById(this[systemProperty.id])
         .assign(updateObj)
         .write();
       this.data = updateObj;
@@ -155,8 +171,7 @@ class BaseEntity {
       }
       _.set(updateObj, 'deleted', false);
       this.constructor
-        .getRecordsObject()
-        .find({ [systemProperty.id]: this[systemProperty.id] })
+        ._findById(this[systemProperty.id])
         .assign(updateObj)
         .write();
       this.data = updateObj;
@@ -167,21 +182,25 @@ class BaseEntity {
     const isNew = this.isNew();
     if (!isNew) {
       this.constructor
-        .getRecordsObject()
+        ._getRecordsObject()
         .remove({ [systemProperty.id]: this[systemProperty.id] })
         .write();
     }
   }
 
   static getRecordById(id) {
-    const [record] = this.findRecords({
-      filter: { [systemProperty.id]: id * 1 }
-    });
+    const [record] = this._findById(id * 1).value();
     return record;
   }
 
+  static getEntityByData(data, currentUser) {
+    const entity = new this(data.id, currentUser);
+    entity.setData(data);
+    return entity;
+  }
+
   static findRecords(filter = null) {
-    let obj = this.getRecordsObject();
+    let obj = this._getRecordsObject();
     const filterArray = [].concat(filter).filter((e) => e);
     obj = filterArray.reduce((to, cu) => {
       return to.filter(cu);
@@ -190,12 +209,12 @@ class BaseEntity {
   }
 
   static pageRecords({
-                       searchAfter = null,
-                       pageSize = 5,
-                       filter = null,
-                       sort = ''
-                     }) {
-    let obj = this.getRecordsObject();
+    searchAfter = null,
+    pageSize = 5,
+    filter = null,
+    sort = '',
+  }) {
+    let obj = this._getRecordsObject();
     const filterArray = [].concat(filter).filter((e) => e);
     obj = filterArray.reduce((to, cu) => {
       return to.filter(cu);
@@ -219,4 +238,4 @@ class BaseEntity {
 
 BaseEntity.schema = {};
 BaseEntity.defaultRecords = [];
-module.exports = { BaseEntity };
+module.exports = { BaseEntity, systemProperty };

@@ -8,15 +8,15 @@ function registerJwtFilter(app, unless = []) {
   app.use(
     expressJWT({
       secret: KEY,
-      algorithms: ['HS256']
+      algorithms: ['HS256'],
     }).unless({
-      path: [...unless] //除了这个地址，其他的URL都需要验证
+      path: [...unless], //除了这个地址，其他的URL都需要验证
     }),
-    function(req, res, next) {
+    function (req, res, next) {
       const token = (req.headers.authorization || '').replace('Bearer ', '');
       if (token) {
         const { user } = jwt.verify(token, KEY);
-        req.currentUser = new Users(user, user.username);
+        req.currentUser = Users.getEntityByData(user.id, user.username);
       }
       next();
     }
@@ -29,5 +29,5 @@ function generateToken(object) {
 
 module.exports = {
   registerJwtFilter,
-  generateToken
+  generateToken,
 };

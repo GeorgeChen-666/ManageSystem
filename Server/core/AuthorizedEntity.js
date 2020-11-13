@@ -1,17 +1,17 @@
 const _ = require('lodash');
-const { BaseEntity } = require('./BaseEntity');
+const { BaseEntity, systemProperty } = require('./BaseEntity');
 const enumPermissions = Object.freeze({
   any: 0,
   user: 10,
   own: 20,
-  admin: 30
+  admin: 30,
 });
 const enumPermissionTypes = Object.freeze({
   query: 'query',
   get: 'get',
   create: 'create',
   modify: 'modify',
-  remove: 'remove'
+  remove: 'remove',
 });
 
 class AuthorizedEntity extends BaseEntity {
@@ -39,9 +39,10 @@ class AuthorizedEntity extends BaseEntity {
       const userPermissionType = currentUser.getPermissionType();
       if (userPermissionType >= permission) {
         return () => true;
-      }
-      else if (permission === enumPermissions.own) {
-        return (entity) => entity.createBy === currentUser.username || entity.username === currentUser.username;
+      } else if (permission === enumPermissions.own) {
+        return (entity) =>
+          entity.createBy === currentUser.username ||
+          entity.username === currentUser.username;
       }
     }
 
@@ -94,7 +95,19 @@ class AuthorizedEntity extends BaseEntity {
   static findRecordsWithoutPermission(filter) {
     return super.findRecords(filter);
   }
-
+  static getRecordByIdWithoutPermission(id) {
+    const [record] = this.findRecordsWithoutPermission({
+      [systemProperty.id]: id * 1,
+    });
+    return record;
+  }
+  static getRecordById(id, currentUser) {
+    const [record] = this.findRecords(
+      { [systemProperty.id]: id * 1 },
+      currentUser
+    );
+    return record;
+  }
   static findRecords(filter = null, currentUser = null) {
     const permissionFilter = this.getPermissionFilter(currentUser);
     const newFilter = [].concat(filter || []);
@@ -119,7 +132,7 @@ AuthorizedEntity.functionPermissions = {
   [enumPermissionTypes.query]: enumPermissions.any,
   [enumPermissionTypes.create]: enumPermissions.any,
   [enumPermissionTypes.modify]: enumPermissions.any,
-  [enumPermissionTypes.remove]: enumPermissions.any
+  [enumPermissionTypes.remove]: enumPermissions.any,
 };
 
 // let ttt = AuthorizedEntity.getPermission('admin', 'query');

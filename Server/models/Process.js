@@ -59,6 +59,6 @@ Process.schema = {
   outputs: null,
 };
 
-Process.loadAllActiveProcess();
+//Process.loadAllActiveProcess();
 
 module.exports = Process;

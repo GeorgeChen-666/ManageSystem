@@ -4,22 +4,22 @@
       "username": "admin",
       "password": "d0970714757783e6cf17b26fb8e2298f",
       "id": 1,
-      "lastLoginTime": 1605252967572,
+      "lastLoginTime": 1605283099295,
       "errorTimes": 0,
-      "updateOn": 1605252967572,
+      "updateOn": 1605283099296,
       "updateBy": "admin",
       "permissionType": 30
     },
     {
       "username": "xiaoming",
-      "password": "d0970714757783e6cf17b26fb8e2298f",
+      "password": "71f55003c9a36b40c4a094908f11fb77",
       "id": 1602306639695,
       "createOn": 1602306639695,
       "errorTimes": 0,
-      "updateOn": 1604892237819,
-      "updateBy": "xiaoming",
+      "updateOn": 1605283129985,
       "deleted": false,
-      "lastLoginTime": 1604892237819
+      "lastLoginTime": 1604892237819,
+      "nickname": "wewewe1"
     },
     {
       "username": "liuzi",

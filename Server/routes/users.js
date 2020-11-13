@@ -3,17 +3,23 @@ const _ = require('lodash');
 const { body, param } = require('express-validator');
 const router = express.Router();
 const Users = require('../models/Users');
-const { PublicHandler, canRemove, canRestore, canPageSearch } = require('../core/RouteHelper');
+const {
+  PublicHandler,
+  canRemove,
+  canRestore,
+  canPageSearch,
+  canModify,
+} = require('../core/RouteHelper');
 const { generateToken } = require('../core/jwt');
 
 const publicRules = [
   body('username').exists().withMessage('请传入用户名'),
-  body('password').exists().withMessage('请传入密码')
+  body('password').exists().withMessage('请传入密码'),
 ];
 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.json({
-    message: 'respond with a resource'
+    message: 'respond with a resource',
   });
 });
 canRemove(router, Users, {
@@ -25,10 +31,11 @@ canRemove(router, Users, {
         throw new Error('不能删除当前登录用户');
       }
       return true;
-    })
-  ]
+    }),
+  ],
 });
 canRestore(router, Users, {});
+canModify(router, Users, {});
 canPageSearch(router, Users, {});
 router.post(
   '/register',
@@ -36,19 +43,19 @@ router.post(
     ...publicRules,
     body('username').custom((username) => {
       if (!username) return true;
-      const user = Users.getUserByName(username);
+      const user = Users.getUserDataByName(username);
       if (user) {
         throw new Error('用户已经重复');
       }
       return true;
-    })
+    }),
   ],
-  PublicHandler(function(req, res, next) {
+  PublicHandler(function (req, res, next) {
     const userData = _.pick(req.body, ['username', 'password', 'nickname']);
-    const userEntity = new Users(userData, req.currentUser);
+    const userEntity = Users.getEntityByData(userData, req.currentUser);
     userEntity.saveRecord();
     res.json({
-      message: 'register'
+      message: 'register',
     });
   })
 );
@@ -59,21 +66,21 @@ router.patch(
     param('username').exists().withMessage('请传入username'),
     body('username').custom((username, { req, res }) => {
       if (!username) return true;
-      const userData = Users.getUserByName(username);
+      const userData = Users.getUserDataByName(username);
       if (userData) {
-        const userEntity = new Users(userData, req.currentUser);
+        const userEntity = Users.getEntityByData(userData, req.currentUser);
         req.userEntity = userEntity;
         return true;
       } else {
         throw new Error('用户不存在');
       }
-    })
+    }),
   ],
   PublicHandler((req, res, next) => {
     const { permissionType } = req.params;
     req.userEntity.savePermissionType(permissionType);
     res.json({
-      message: 'success'
+      message: 'success',
     });
   })
 );
@@ -83,9 +90,9 @@ router.post(
     ...publicRules,
     body('username').custom((username, { req, res }) => {
       if (!username) return true;
-      const userData = Users.getUserByName(username);
+      const userData = Users.getUserDataByName(username);
       if (userData) {
-        const userEntity = new Users(userData, req.currentUser);
+        const userEntity = new Users(userData.id, '@');
         req.userEntity = userEntity;
         if (userEntity.lock) {
           throw new Error('用户被锁定');
@@ -111,14 +118,14 @@ router.post(
       userEntity.errorTimes = 0;
       userEntity.saveRecord();
       return true;
-    })
+    }),
   ],
   PublicHandler((req, res, next) => {
     const user = req.userEntity.getFitData();
     const token = generateToken({ user });
     res.json({
       jwt: token,
-      lastLoginTime: req.lastLoginTime
+      lastLoginTime: req.lastLoginTime,
     });
   })
 );

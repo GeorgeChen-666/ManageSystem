@@ -15,7 +15,7 @@ function getProcessLogsClass(processName) {
       if (datas.length === 2000) {
         const oldestDate = datas.pop().updateOn;
         this.constructor
-          .getRecordsObject()
+          ._getRecordsObject()
           .remove((record) => record.updateOn < oldestDate)
           .write();
       }
