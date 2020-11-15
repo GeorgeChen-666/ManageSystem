@@ -1,8 +1,10 @@
 import { createStore, applyMiddleware } from 'redux';
 import reducer from './models';
 import { persistStore } from 'redux-persist';
+import createSagaMiddleware from 'redux-saga';
+const sagaMiddleware = createSagaMiddleware();
 const middleware = [];
-
+middleware.push(sagaMiddleware);
 const store = createStore(reducer, applyMiddleware(...middleware));
 window.store = store;
 const persisted = persistStore(store);

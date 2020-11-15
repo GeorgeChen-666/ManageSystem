@@ -51,6 +51,7 @@ export const routeItems = {
       hideInMenu: true,
       layout: import('../components/Layout/BlankLayout'),
       component: import('../pages/Users/Login'),
+      component1: import('../pages/Demo'),
     },
   ],
 };

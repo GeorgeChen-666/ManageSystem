@@ -34,7 +34,7 @@ function canModify(
   entityType,
   { pathName = ['/modify', '/modify/:id'], extraRules = [] } = {}
 ) {
-  router.put(
+  router.patch(
     pathName,
     [...extraRules],
     PublicHandler(function (req, res, next) {

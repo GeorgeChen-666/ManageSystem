@@ -4,11 +4,12 @@
       "username": "admin",
       "password": "d0970714757783e6cf17b26fb8e2298f",
       "id": 1,
-      "lastLoginTime": 1605283099295,
+      "lastLoginTime": 1605454107417,
       "errorTimes": 0,
-      "updateOn": 1605283099296,
+      "updateOn": 1605454107417,
       "updateBy": "admin",
-      "permissionType": 30
+      "permissionType": 30,
+      "nickname": "aaa"
     },
     {
       "username": "xiaoming",

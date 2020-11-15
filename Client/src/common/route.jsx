@@ -35,7 +35,7 @@ function getFlatMenuData(menus) {
 }
 const menuItemData = getFlatMenuData(_.get(routeItems, ['routes'], []));
 console.log(menuItemData);
-export const Router = (
+export const Router = () => (
   <BrowserRouter>
     <Switch>
       {menuItemData

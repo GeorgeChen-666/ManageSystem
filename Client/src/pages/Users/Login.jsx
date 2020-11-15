@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Checkbox, Button, Input, Card } from 'antd';
-import { useScripts } from './Login.Scripts';
 import ValidationForm from '../../components/Form/ValidationForm';
 import FormField from '../../components/Form/FormField';
-export default (props) => {
-  const { doLogin, isLoginLoading, onLoginDoneCallback } = useScripts(props);
+import * as userNewActions from '../../models/Users_new';
+import useLoading from '../../components/Hooks/useLoading';
+
+export default () => {
+  const checkAutoLogin = userNewActions.useCheckAutoLogin();
+  useEffect(() => {
+    checkAutoLogin();
+  }, []);
+  const [doLogin, isLoginLoading] = useLoading(userNewActions.useDoLogin());
   return (
     <div>
       <Card title="登录系统" style={{ width: 300 }}>
-        <ValidationForm
-          onSubmit={doLogin}
-          onSubmitDone={onLoginDoneCallback}
-          name={'validate_login'}
-        >
+        <ValidationForm onSubmit={doLogin} name={'validate_login'}>
           <FormField name="username" required={true} initialValue={'admin'}>
             <Input />
           </FormField>

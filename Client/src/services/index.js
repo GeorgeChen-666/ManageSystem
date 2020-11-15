@@ -1,12 +1,10 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import { setToken } from '../models/Users';
 
-const registerAxioInterceptors = (store) => {
+const registerAxioInterceptors = () => {
   axios.interceptors.request.use(
     async (config) => {
-      const state = store.getState();
-      const { token } = state.Users;
+      const token = localStorage.getItem('token');
       //const { exp } = jwt_decode(token);
       if (token) {
         const { exp } = jwt_decode(token);
@@ -34,7 +32,7 @@ const registerAxioInterceptors = (store) => {
     (error) => {
       const { status } = error.response;
       if (status === 401) {
-        store.dispatch(setToken(null));
+        localStorage.removeItem('token');
       }
       return Promise.reject(error);
     }

@@ -1,54 +1,68 @@
 import React from 'react';
-import {useParams} from 'react-router-dom';
-import {Checkbox, Input} from 'antd';
+import { Checkbox, Input } from 'antd';
 import ValidationForm from '../../../components/Form/ValidationForm';
 import FormField from '../../../components/Form/FormField';
-import {useScripts} from './UserEditor.Scripts';
+import { useScripts } from './UserEditor.Scripts';
 
 export default React.forwardRef((props, ref) => {
-  let {id} = useParams();
-  const {doRegister, onRegisterDone} = useScripts(props, ref);
+  //const { doSave, onSaveDone, data } = useScripts(props, ref);
+  const { doSave, onSaveDone, data } = {
+    doSave: () => {},
+    onSaveDone: () => {},
+    data: {},
+  };
   return (
-    <ValidationForm ref={ref} name={props.name} onSubmit={doRegister} onSubmitDone={onRegisterDone}>
+    <ValidationForm
+      ref={ref}
+      name={props.name}
+      onSubmit={doSave}
+      onSubmitDone={onSaveDone}
+    >
+      <FormField name="id" hidden={true} initialValue={data.id}>
+        <Input />
+      </FormField>
       <FormField
         name="nickname"
         required={true}
         label={'昵称'}
-        labelCol={{span: 5}}
+        labelCol={{ span: 5 }}
+        initialValue={data.nickname}
       >
-        <Input/>
+        <Input />
       </FormField>
       <FormField
         name="username"
         required={true}
         label={'用户名'}
-        labelCol={{span: 5}}
+        labelCol={{ span: 5 }}
+        initialValue={data.username}
       >
-        <Input/>
+        <Input />
       </FormField>
       <FormField
         name="password"
-        required={true}
+        required={!data.id}
         label={'密码'}
-        labelCol={{span: 5}}
+        labelCol={{ span: 5 }}
       >
-        <Input.Password/>
+        <Input.Password />
       </FormField>
       <FormField
         name="con_password"
-        required={true}
+        required={!data.id}
         label={'确认密码'}
-        labelCol={{span: 5}}
+        labelCol={{ span: 5 }}
       >
-        <Input.Password/>
+        <Input.Password />
       </FormField>
       <FormField
         name="isAdmin"
         valuePropName="checked"
         label={'管理员'}
-        labelCol={{span: 5}}
+        labelCol={{ span: 5 }}
+        initialValue={data.permissionType}
       >
-        <Checkbox/>
+        <Checkbox />
       </FormField>
     </ValidationForm>
   );
