@@ -29,13 +29,11 @@ export const routeItems = {
               path: '/manage/admin/users/add',
               name: '新增用户',
               hideInMenu: true,
-              //component: import('../pages/Users/ManageUsers'),
             },
             {
               path: '/manage/admin/users/modify/:id',
               name: '编辑用户',
               hideInMenu: true,
-              //component: import('../pages/Users/ManageUsers'),
             },
           ],
         },
@@ -51,7 +49,6 @@ export const routeItems = {
       hideInMenu: true,
       layout: import('../components/Layout/BlankLayout'),
       component: import('../pages/Users/Login'),
-      component1: import('../pages/Demo'),
     },
   ],
 };

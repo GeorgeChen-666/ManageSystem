@@ -2,15 +2,15 @@ import React, { useEffect } from 'react';
 import { Checkbox, Button, Input, Card } from 'antd';
 import ValidationForm from '../../components/Form/ValidationForm';
 import FormField from '../../components/Form/FormField';
-import * as userNewActions from '../../models/Users_new';
+import * as userModel from '../../models/Users';
 import useLoading from '../../components/Hooks/useLoading';
 
 export default () => {
-  const checkAutoLogin = userNewActions.useCheckAutoLogin();
+  const checkAutoLogin = userModel.useCheckAutoLogin();
   useEffect(() => {
     checkAutoLogin();
   }, []);
-  const [doLogin, isLoginLoading] = useLoading(userNewActions.useDoLogin());
+  const [doLogin, isLoginLoading] = useLoading(userModel.useDoLogin());
   return (
     <div>
       <Card title="登录系统" style={{ width: 300 }}>

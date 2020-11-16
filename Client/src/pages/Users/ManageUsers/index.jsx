@@ -1,14 +1,14 @@
-import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Card, List, Dropdown, Menu, Modal } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
-import { getLabelFromTimeStamp } from '../../../utils/dateUtils';
-import { LikeOutlined, PlusOutlined, DownOutlined } from '@ant-design/icons';
-import { Link, matchPath, useRouteMatch, useHistory } from 'react-router-dom';
+import {PageContainer} from '@ant-design/pro-layout';
+import {Button, Card, List, Dropdown, Menu, Modal, Avatar} from 'antd';
+import React, {useEffect, useRef, useState} from 'react';
+import {getLabelFromTimeStamp} from '../../../utils/dateUtils';
+import {LikeOutlined, PlusOutlined, DownOutlined} from '@ant-design/icons';
+import {Link, matchPath, useRouteMatch, useHistory} from 'react-router-dom';
 import UserEditor from './UserEditor';
-import { useScripts } from './index.Scripts';
+import {useScripts} from './index.Scripts';
 import styles from '../Style.module.less';
 
-const ListContent = ({ data: { owner, createOn, lastLoginTime } }) => (
+const ListContent = ({data: {owner, createOn, lastLoginTime}}) => (
   <div className={styles.listContent}>
     <div className={styles.listContentItem}>
       <span>上次登录</span>
@@ -33,7 +33,7 @@ const menu = (
 const MoreBtn = () => (
   <Dropdown overlay={menu}>
     <a>
-      更多 <DownOutlined />
+      更多 <DownOutlined/>
     </a>
   </Dropdown>
 );
@@ -44,7 +44,7 @@ export default (props) => {
   const currentMatch = matchPath(history.location.pathname, {
     path: [PATH_ADD, PATH_MODIFY],
   });
-  const { listData, listDataDone, isFetchListLoading, formRef } = useScripts(
+  const {listData, listDataDone, isFetchListLoading, formRef} = useScripts(
     props
   );
 
@@ -62,8 +62,8 @@ export default (props) => {
         <Card
           // className={styles.listCard}
           bordered={false}
-          style={{ marginTop: 24 }}
-          bodyStyle={{ padding: '0 32px 40px 32px' }}
+          style={{marginTop: 24}}
+          bodyStyle={{padding: '0 32px 40px 32px'}}
           // extra={extraContent}
         >
           <List
@@ -76,15 +76,15 @@ export default (props) => {
               <List.Item
                 actions={[
                   <Link to={`${match.path}/modify/${item.id}`}>编辑</Link>,
-                  <MoreBtn />,
+                  <MoreBtn/>,
                 ]}
               >
                 <List.Item.Meta
-                  // avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                  title={item.username}
-                  description={item.subDescription}
+                  avatar={<Avatar shape="square" size="large">{item.nickname}</Avatar>}
+                  title={`${item.nickname || 'noname'} (${item.username})`}
+                  description={item.permissionType === 30 ? '管理员' : '一般用户'}
                 />
-                <ListContent data={item} />
+                <ListContent data={item}/>
               </List.Item>
             )}
           />
@@ -101,7 +101,7 @@ export default (props) => {
           width={'50%'}
           destroyOnClose={true}
         >
-          <UserEditor ref={formRef} />
+          <UserEditor ref={formRef}/>
         </Modal>
       )}
 

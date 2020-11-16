@@ -1,66 +1,71 @@
-import jwt_decode from 'jwt-decode';
-import { fetchList } from '../services/user';
+import {atom, selector, useRecoilState, useRecoilValue} from 'recoil';
+import {login, fetchList, register,modify} from '../services/user';
+import {useHistory} from 'react-router-dom';
 
-const initialState = {
-  getCurrentUser: (token) => {
-    if (token) {
-      return jwt_decode(token).user;
-    }
-    return null;
+const usersState = atom({
+  key: 'Users',
+  default: {
+    listData: {},
   },
-  listData: [],
+});
+const usersListState = selector({
+  key: 'Users.List',
+  get: ({get}) => get(usersState).listData,
+  set: ({set, get}, newValue) =>
+    set(usersState, {...get(usersState), listData: newValue}),
+});
+export const useUsersData = () => useRecoilState(usersState);
+export const useFetchList = () => {
+  const [, setListData] = useRecoilState(usersListState);
+  return async (payload) => {
+    const result = await fetchList(payload);
+    setListData(result.data);
+  };
 };
-const Users = (state = initialState, action) => {
-  switch (action.type) {
-    case Types.setToken: {
-      const { token } = action.payload;
-      return {
-        ...state,
-        token,
-      };
+export const useCheckAutoLogin = () => {
+  const doLogin = useDoLogin();
+  return () => {
+    const autoLoginInfo = JSON.parse(localStorage.getItem('autoLogin') || '{}');
+    if (
+      autoLoginInfo &&
+      autoLoginInfo.remember &&
+      autoLoginInfo.expires > new Date().getTime()
+    ) {
+      doLogin(autoLoginInfo);
     }
-    case Types.rememberLogin: {
-      const { payload } = action;
-      return {
-        ...state,
-        login: {
-          remember: false,
-          ...payload,
-          expires: payload && new Date().getTime() + 604800000, //一周后，连续一周不进系统就需要重新登录
-        },
-      };
+  };
+};
+export const useDoLogin = () => {
+  const history = useHistory();
+  return async (payload) => {
+    const result = await login(payload);
+    const {remember} = payload;
+    const {jwt} = result.data;
+    localStorage.setItem('token', jwt);
+    if (remember) {
+      payload.expires = new Date().getTime() + 604800000; //一周后，连续一周不进系统就需要重新登录
+      localStorage.setItem('autoLogin', JSON.stringify(payload));
+    } else {
+      localStorage.removeItem('autoLogin');
     }
-    case Types.saveListData: {
-      const { listData } = action.payload;
-      return {
-        ...state,
-        listDataDone: true,
-        listData,
-      };
-    }
-    default:
-      return state;
+    history.push('/');
+  };
+};
+export const useDoRegister = () => {
+  const doFetchList = useFetchList();
+  const history = useHistory();
+  return async (payload) =>{
+    await register(payload);
+    await doFetchList();
+    history.goBack();
   }
-};
-export const setToken = (token) => ({
-  type: Types.setToken,
-  payload: { token },
-});
-export const rememberLogin = (payload) => ({
-  type: Types.rememberLogin,
-  payload,
-});
-export const saveListData = (payload) => ({
-  type: Types.saveListData,
-  payload,
-});
-export const fetchListData = () => async (dispatch, getState) => {
-  const result = await fetchList();
-  await dispatch(saveListData({ listData: result.data }));
-};
-export const Types = {
-  setToken: `${Users.name}/setToken`,
-  rememberLogin: `${Users.name}/rememberLogin`,
-  saveListData: `${Users.name}/saveListData`,
-};
-export default Users;
+}
+export const useDoModify = () => {
+  const doFetchList = useFetchList();
+  const history = useHistory();
+  return async (payload) =>{
+    await modify(payload);
+    await doFetchList();
+    history.goBack();
+  }
+}
