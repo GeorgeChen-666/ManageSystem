@@ -1,6 +1,5 @@
-
 import useLoading from '../../../components/Hooks/useLoading';
-import { useEffect, useRef } from 'react';
+import {useEffect, useRef} from 'react';
 import * as userModel from '../../../models/Users';
 
 export const useScripts = () => {
@@ -8,12 +7,13 @@ export const useScripts = () => {
   const [doFetchList, isFetchListLoading] = useLoading(
     userModel.useFetchList()
   );
-  const [{ listData }] = userModel.useUsersData();
-
+  const [{listData}] = userModel.useUsersData();
+  console.log('asd', listData)
   useEffect(() => {
     doFetchList();
   }, []);
   return {
+    doFetchList,
     isFetchListLoading,
     formRef,
     listData,

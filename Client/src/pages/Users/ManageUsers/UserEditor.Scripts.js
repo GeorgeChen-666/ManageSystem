@@ -23,7 +23,7 @@ export const useScripts = (props, ref) => {
   }, [isSaveLoading]);
   const [{ listData }] = userModel.useUsersData();
   const data = _.find(_.get(listData, ['items']), { id: id * 1 }) || {};
-  if (currentMatch && id !== data.id) {
+  if (currentMatch && id && id !== data.id) {
     history.goBack();
   }
   return {

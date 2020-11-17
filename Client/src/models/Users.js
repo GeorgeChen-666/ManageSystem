@@ -1,11 +1,14 @@
 import {atom, selector, useRecoilState, useRecoilValue} from 'recoil';
-import {login, fetchList, register,modify} from '../services/user';
+import {login, fetchList, register, modify} from '../services/user';
 import {useHistory} from 'react-router-dom';
+import _ from 'lodash'
 
 const usersState = atom({
   key: 'Users',
   default: {
-    listData: {},
+    listData: {
+      items: []
+    },
   },
 });
 const usersListState = selector({
@@ -16,10 +19,18 @@ const usersListState = selector({
 });
 export const useUsersData = () => useRecoilState(usersState);
 export const useFetchList = () => {
-  const [, setListData] = useRecoilState(usersListState);
-  return async (payload) => {
+  const [listData, setListData] = useRecoilState(usersListState);
+  return async (payload = {}) => {
+    console.log('getListData', listData);
+    const {searchAfter} = listData;
+    payload.searchAfter = searchAfter;
     const result = await fetchList(payload);
-    setListData(result.data);
+    setListData(() => {
+      const newListData = {...listData, ...result.data};
+      newListData.items = [...listData.items, ...result.data.items];
+      newListData.searchAfter = _.get(_.findLast(result.data.items), 'id', newListData.searchAfter);
+      return newListData;
+    });
   };
 };
 export const useCheckAutoLogin = () => {
@@ -54,7 +65,7 @@ export const useDoLogin = () => {
 export const useDoRegister = () => {
   const doFetchList = useFetchList();
   const history = useHistory();
-  return async (payload) =>{
+  return async (payload) => {
     await register(payload);
     await doFetchList();
     history.goBack();
@@ -63,7 +74,7 @@ export const useDoRegister = () => {
 export const useDoModify = () => {
   const doFetchList = useFetchList();
   const history = useHistory();
-  return async (payload) =>{
+  return async (payload) => {
     await modify(payload);
     await doFetchList();
     history.goBack();
