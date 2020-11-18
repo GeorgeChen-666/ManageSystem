@@ -1,28 +1,28 @@
-import {atom, selector, useRecoilState, useRecoilValue, useResetRecoilState} from 'recoil';
-import {login, fetchList, register, modify} from '../services/user';
-import {useHistory} from 'react-router-dom';
-import _ from 'lodash'
+import { atom, selector, useRecoilState } from 'recoil';
+import { login, fetchList, register, modify } from '../services/user';
+import { useHistory } from 'react-router-dom';
+import _ from 'lodash';
 
 const usersState = atom({
   key: 'Users',
   default: {
     listData: {
-      items: []
+      items: [],
     },
   },
 });
 const usersListState = selector({
   key: 'Users.List',
-  get: ({get}) => get(usersState).listData,
-  set: ({set, get}, newValue) =>
-    set(usersState, {...get(usersState), listData: newValue}),
+  get: ({ get }) => get(usersState).listData,
+  set: ({ set, get }, newValue) =>
+    set(usersState, { ...get(usersState), listData: newValue }),
 });
 export const useUsersData = () => useRecoilState(usersState);
 export const useFetchList = () => {
   const [listData, setListData] = useRecoilState(usersListState);
-  return async (payload = {}, {isNew = false, keepSize = false} = {}) => {
+  return async (payload = {}, { isNew = false, keepSize = false } = {}) => {
     if (!isNew) {
-      const {searchAfter} = listData;
+      const { searchAfter } = listData;
       payload.searchAfter = searchAfter;
     }
     if (keepSize) {
@@ -32,13 +32,17 @@ export const useFetchList = () => {
     setListData(() => {
       let newListData = {};
       if (!isNew) {
-        newListData = {...newListData, ...listData}
+        newListData = { ...newListData, ...listData };
       }
-      newListData = {...newListData, ...result.data};
+      newListData = { ...newListData, ...result.data };
       if (!isNew) {
         newListData.items = [...listData.items, ...result.data.items];
       }
-      newListData.searchAfter = _.get(_.findLast(result.data.items), 'id', newListData.searchAfter);
+      newListData.searchAfter = _.get(
+        _.findLast(result.data.items),
+        'id',
+        newListData.searchAfter
+      );
       return newListData;
     });
   };
@@ -60,8 +64,8 @@ export const useDoLogin = () => {
   const history = useHistory();
   return async (payload) => {
     const result = await login(payload);
-    const {remember} = payload;
-    const {jwt} = result.data;
+    const { remember } = payload;
+    const { jwt } = result.data;
     localStorage.setItem('token', jwt);
     if (remember) {
       payload.expires = new Date().getTime() + 604800000; //一周后，连续一周不进系统就需要重新登录
@@ -77,16 +81,16 @@ export const useDoRegister = () => {
   const history = useHistory();
   return async (payload) => {
     await register(payload);
-    await doFetchList({}, {isNew: true, keepSize: true});
+    doFetchList({}, { isNew: true, keepSize: true });
     history.goBack();
-  }
-}
+  };
+};
 export const useDoModify = () => {
   const doFetchList = useFetchList();
   const history = useHistory();
   return async (payload) => {
     await modify(payload);
-    await doFetchList({}, {isNew: true, keepSize: true});
+    doFetchList({}, { isNew: true, keepSize: true });
     history.goBack();
-  }
-}
+  };
+};

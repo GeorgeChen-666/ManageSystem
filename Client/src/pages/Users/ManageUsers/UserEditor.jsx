@@ -5,13 +5,9 @@ import FormField from '../../../components/Form/FormField';
 import { useScripts } from './UserEditor.Scripts';
 
 export default React.forwardRef((props, ref) => {
-  const { doSave, data } = useScripts(props, ref);
+  const { doSave, data, isSaveLoading } = useScripts(props, ref);
   return (
-    <ValidationForm
-      ref={ref}
-      name={props.name}
-      onSubmit={doSave}
-    >
+    <ValidationForm ref={ref} name={props.name} onSubmit={doSave}>
       <FormField name="id" hidden={true} initialValue={data.id}>
         <Input />
       </FormField>

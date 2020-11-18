@@ -6,7 +6,6 @@ import _ from 'lodash';
 
 export const useScripts = (props, ref) => {
   const history = useHistory();
-  //const dispatch = useDispatch();
   const match = useRouteMatch();
   const currentMatch = matchPath(history.location.pathname, {
     path: [`${match.path}/add`, `${match.path}/modify/:id`],
@@ -17,10 +16,13 @@ export const useScripts = (props, ref) => {
   if (currentMatch) {
     id = currentMatch.params.id * 1;
   }
-  const [doSave, isSaveLoading] = useLoading(id ? userModel.useDoModify() : userModel.useDoRegister());
-  useEffect(() => {
+  const [doSave, isSaveLoading] = useLoading(
+    id ? userModel.useDoModify() : userModel.useDoRegister()
+  );
+  console.log('s:' + isSaveLoading);
+  if (ref.current) {
     ref.current.isSaveLoading = isSaveLoading;
-  }, [isSaveLoading]);
+  }
   const [{ listData }] = userModel.useUsersData();
   const data = _.find(_.get(listData, ['items']), { id: id * 1 }) || {};
   if (currentMatch && id && id !== data.id) {
@@ -29,5 +31,6 @@ export const useScripts = (props, ref) => {
   return {
     data,
     doSave,
+    isSaveLoading,
   };
 };
