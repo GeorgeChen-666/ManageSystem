@@ -1,4 +1,4 @@
-const { BaseEntity } = require('../core/BaseEntity');
+const { AuthorizedEntity } = require('../core/AuthorizedEntity');
 const { BaseProcess } = require('../core/BaseProcess');
 const { getProcessLogsClass } = require('./ProcessLogs');
 const activeProcess = new Map();
@@ -9,7 +9,7 @@ class SystemProcess extends BaseProcess {
   }
 }
 
-class Process extends BaseEntity {
+class Process extends AuthorizedEntity {
   constructor(source, currentUser) {
     super(source, currentUser);
   }
@@ -29,7 +29,7 @@ class Process extends BaseEntity {
     }
     activeProcess.set(this.name, {
       processObj,
-      ftpObj: null,
+      ftpObj: null
     });
   }
 
@@ -39,9 +39,9 @@ class Process extends BaseEntity {
   }
 
   static loadAllActiveProcess() {
-    const activeDataList = Process.findRecords((record) => !record.deleted);
-    activeDataList.forEach((data) => {
-      new Process(data).load();
+    const activeDataList = this.findRecordsWithoutPermission((record) => !record.deleted);
+    activeDataList.forEach(({ id }) => {
+      new Process(id).load();
     });
   }
 }
@@ -56,9 +56,9 @@ Process.schema = {
   param: null,
   cwd: null,
   encoding: null,
-  outputs: null,
+  outputs: null
 };
 
-//Process.loadAllActiveProcess();
+Process.loadAllActiveProcess();
 
 module.exports = Process;

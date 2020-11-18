@@ -7,11 +7,11 @@ export const useScripts = () => {
   const [doFetchList, isFetchListLoading] = useLoading(
     userModel.useFetchList()
   );
-  const [{listData}] = userModel.useUsersData();
-  console.log('asd', listData)
   useEffect(() => {
-    doFetchList();
+    doFetchList({}, {isNew: true});
   }, []);
+  const [{listData}] = userModel.useUsersData();
+  console.log('listData', listData);
   return {
     doFetchList,
     isFetchListLoading,

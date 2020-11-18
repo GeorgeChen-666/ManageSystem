@@ -1,4 +1,4 @@
-import {atom, selector, useRecoilState, useRecoilValue} from 'recoil';
+import {atom, selector, useRecoilState, useRecoilValue, useResetRecoilState} from 'recoil';
 import {login, fetchList, register, modify} from '../services/user';
 import {useHistory} from 'react-router-dom';
 import _ from 'lodash'
@@ -20,14 +20,24 @@ const usersListState = selector({
 export const useUsersData = () => useRecoilState(usersState);
 export const useFetchList = () => {
   const [listData, setListData] = useRecoilState(usersListState);
-  return async (payload = {}) => {
-    console.log('getListData', listData);
-    const {searchAfter} = listData;
-    payload.searchAfter = searchAfter;
+  return async (payload = {}, {isNew = false, keepSize = false} = {}) => {
+    if (!isNew) {
+      const {searchAfter} = listData;
+      payload.searchAfter = searchAfter;
+    }
+    if (keepSize) {
+      payload.pageSize = listData.items.length;
+    }
     const result = await fetchList(payload);
     setListData(() => {
-      const newListData = {...listData, ...result.data};
-      newListData.items = [...listData.items, ...result.data.items];
+      let newListData = {};
+      if (!isNew) {
+        newListData = {...newListData, ...listData}
+      }
+      newListData = {...newListData, ...result.data};
+      if (!isNew) {
+        newListData.items = [...listData.items, ...result.data.items];
+      }
       newListData.searchAfter = _.get(_.findLast(result.data.items), 'id', newListData.searchAfter);
       return newListData;
     });
@@ -67,7 +77,7 @@ export const useDoRegister = () => {
   const history = useHistory();
   return async (payload) => {
     await register(payload);
-    await doFetchList();
+    await doFetchList({}, {isNew: true, keepSize: true});
     history.goBack();
   }
 }
@@ -76,7 +86,7 @@ export const useDoModify = () => {
   const history = useHistory();
   return async (payload) => {
     await modify(payload);
-    await doFetchList();
+    await doFetchList({}, {isNew: true, keepSize: true});
     history.goBack();
   }
 }

@@ -4,14 +4,14 @@ const enumPermissions = Object.freeze({
   any: 0,
   user: 10,
   own: 20,
-  admin: 30,
+  admin: 30
 });
 const enumPermissionTypes = Object.freeze({
   query: 'query',
   get: 'get',
   create: 'create',
   modify: 'modify',
-  remove: 'remove',
+  remove: 'remove'
 });
 
 class AuthorizedEntity extends BaseEntity {
@@ -26,7 +26,7 @@ class AuthorizedEntity extends BaseEntity {
     if (userPermissionType >= permission) {
       result = true;
     } else if (permission === enumPermissions.own) {
-      result = entity.createBy === entity.currentUser.username;
+      result = entity.createBy === entity.currentUser.username || (this.name === 'Users' && entity.username === entity.currentUser.username);
     }
     if (!result) {
       throw new Error('无权限');
@@ -95,12 +95,14 @@ class AuthorizedEntity extends BaseEntity {
   static findRecordsWithoutPermission(filter) {
     return super.findRecords(filter);
   }
+
   static getRecordByIdWithoutPermission(id) {
     const [record] = this.findRecordsWithoutPermission({
-      [systemProperty.id]: id * 1,
+      [systemProperty.id]: id * 1
     });
     return record;
   }
+
   static getRecordById(id, currentUser) {
     const [record] = this.findRecords(
       { [systemProperty.id]: id * 1 },
@@ -108,6 +110,7 @@ class AuthorizedEntity extends BaseEntity {
     );
     return record;
   }
+
   static findRecords(filter = null, currentUser = null) {
     const permissionFilter = this.getPermissionFilter(currentUser);
     const newFilter = [].concat(filter || []);
@@ -132,7 +135,7 @@ AuthorizedEntity.functionPermissions = {
   [enumPermissionTypes.query]: enumPermissions.any,
   [enumPermissionTypes.create]: enumPermissions.any,
   [enumPermissionTypes.modify]: enumPermissions.any,
-  [enumPermissionTypes.remove]: enumPermissions.any,
+  [enumPermissionTypes.remove]: enumPermissions.any
 };
 
 // let ttt = AuthorizedEntity.getPermission('admin', 'query');

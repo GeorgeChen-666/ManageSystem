@@ -1,63 +1,83 @@
 import React from 'react';
 import Loadable from 'react-loadable';
 import _ from 'lodash';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import { routeItems } from './menu';
+import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
+import {routeItems} from './menu';
 
-function getFlatMenuData(menus) {
+function getComponent(param) {
+  if (param instanceof Promise) {
+    return Loadable({
+      loader: () => param,
+      loading: () => <div>loading...</div>,
+    })
+  } else if (typeof param === 'function') {
+    return param;
+  }
+  return null;
+}
+
+function getFlatMenuData(menus, layout) {
   let itemDatas = [];
   menus.forEach((item) => {
-    const newItem = { ...item };
-    if (typeof newItem.component === 'object') {
-      const componentPromise = newItem.component;
-      newItem.component = Loadable({
-        loader: () => componentPromise,
-        loading: () => <div>loading...</div>,
-      });
+    const newItem = {...item};
+    newItem.component = getComponent(newItem.component);
+    newItem.layout = getComponent(newItem.layout) || layout
+    if (newItem.component) {
+      newItem.strict = true;
+      itemDatas.push(newItem);
     }
-    if (typeof newItem.layout === 'object') {
-      const layoutPromise = newItem.layout;
-      newItem.layout = Loadable({
-        loader: () => layoutPromise,
-        loading: () => <div>loading...</div>,
-      });
-    }
-    if (!newItem.layout && !newItem.component) {
-      return;
-    }
-    itemDatas.push(newItem);
     if (item.routes) {
-      itemDatas = itemDatas.concat(getFlatMenuData(item.routes));
+      const subDatas = getFlatMenuData(item.routes, newItem.layout);
+      subDatas.forEach((data) => {
+        itemDatas.push(data);
+      });
     }
   });
   return itemDatas;
 }
-const menuItemData = getFlatMenuData(_.get(routeItems, ['routes'], []));
 
+const menuItemData = getFlatMenuData(_.get(routeItems, ['routes'], []));
+console.log('menuItemData', menuItemData)
 export const Router = () => (
   <BrowserRouter>
     <Switch>
       {menuItemData
         .filter((e) => e.layout)
-        .map((layoutItem) => (
-          <Route key={layoutItem.path} path={layoutItem.path}>
-            <layoutItem.layout>
-              <Switch>
-                {menuItemData
-                  .map(
-                    (item) =>
-                      item.component && (
-                        <Route key={item.path} path={item.path}>
-                          <item.component />
-                        </Route>
-                      )
-                  )
-                  .filter((e) => e)}
-              </Switch>
-            </layoutItem.layout>
+        .map((item) => (
+          <Route key={item.path} path={item.path}>
+            <item.layout>
+              {item.component && (
+                <Route key={item.path} path={item.path}>
+                  <item.component/>
+                </Route>
+              )}
+            </item.layout>
           </Route>
         ))}
-      <Redirect exact from="/" to="/manage/monitor" />
+      <Redirect exact from="/" to="/manage/monitor"/>
     </Switch>
+    {/*<Switch>*/}
+    {/*{menuItemData*/}
+    {/*.filter((e) => e.layout)*/}
+    {/*.map((layoutItem) => (*/}
+    {/*<Route key={layoutItem.path} path={layoutItem.path}>*/}
+    {/*<layoutItem.layout>*/}
+    {/*<Switch>*/}
+    {/*{menuItemData*/}
+    {/*.map(*/}
+    {/*(item) =>*/}
+    {/*item.component && (*/}
+    {/*<Route key={item.path} path={item.path}>*/}
+    {/*<item.component/>*/}
+    {/*</Route>*/}
+    {/*)*/}
+    {/*)*/}
+    {/*.filter((e) => e)}*/}
+    {/*</Switch>*/}
+    {/*</layoutItem.layout>*/}
+    {/*</Route>*/}
+    {/*))}*/}
+    {/*<Redirect exact from="/" to="/manage/monitor"/>*/}
+    {/*</Switch>*/}
   </BrowserRouter>
 );

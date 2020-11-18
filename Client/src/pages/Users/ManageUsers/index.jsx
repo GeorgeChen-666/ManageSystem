@@ -71,7 +71,7 @@ export default (props) => {
             initialLoad={false}
             loadMore={() => doFetchList()}
             hasMore={!isFetchListLoading && (listData.items.length < listData.total || listData.total === undefined)}
-            loader={<div className="loader" key={0}>Loading ...</div>}
+            loader={<div className="loader" key={0} />}
             useWindow={false}
             getScrollParent={() => document.querySelector('#test-pro-layout div section section')}
           >
