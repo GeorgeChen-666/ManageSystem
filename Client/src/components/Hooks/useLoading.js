@@ -18,26 +18,20 @@ export default (callback) => {
   // );
   const func = (...args) => {
     setLoading((v) => v + 1);
-    console.log('i+');
-    setTimeout(() => {
-      try {
-        const result = callback(...args);
-        if (result instanceof Promise) {
-          result.then(() => {
-            setLoading((v) => v - 1);
-            console.log('i-');
-          });
-        } else {
+    try {
+      const result = callback(...args);
+      if (result instanceof Promise) {
+        result.then(() => {
           setLoading((v) => v - 1);
-          console.log('i-');
-        }
-        return result;
-      } catch (e) {
+        });
+      } else {
         setLoading((v) => v - 1);
-        console.log('i-');
-        throw e;
       }
-    }, 0);
+      return result;
+    } catch (e) {
+      setLoading((v) => v - 1);
+      throw e;
+    }
   };
   return [func, isLoading > 0];
 };

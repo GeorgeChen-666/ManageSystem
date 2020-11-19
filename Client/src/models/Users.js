@@ -81,7 +81,7 @@ export const useDoRegister = () => {
   const history = useHistory();
   return async (payload) => {
     await register(payload);
-    doFetchList({}, { isNew: true, keepSize: true });
+    await doFetchList({}, { isNew: true, keepSize: true });
     history.goBack();
   };
 };
@@ -90,7 +90,7 @@ export const useDoModify = () => {
   const history = useHistory();
   return async (payload) => {
     await modify(payload);
-    doFetchList({}, { isNew: true, keepSize: true });
+    await doFetchList({}, { isNew: true, keepSize: true });
     history.goBack();
   };
 };
