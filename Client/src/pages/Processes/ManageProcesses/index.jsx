@@ -2,7 +2,13 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Card } from 'antd';
 import React, { useEffect } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
-import UserEditor from './UserEditor';
+import {
+  HomeOutlined,
+  SettingFilled,
+  SmileOutlined,
+  SyncOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons';
 import styles from '../Style.module.less';
 import * as userModel from '../../../models/Users';
 import useLoading from '../../../components/Hooks/useLoading';
@@ -32,7 +38,7 @@ export default () => {
         </Link>,
       ]}
     >
-      <div className={styles.standardList}>
+      <div className={styles.cardList}>
         <Card
           bordered={false}
           style={{ marginTop: 24 }}
@@ -48,10 +54,11 @@ export default () => {
             isFetching={isFetchListLoading}
             dataSource={listData.items}
             renderItem={ListItem(match)}
+            grid={{ column: 4, xl: 3, lg: 2, md: 1, sm: 1, xs: 1 }}
           />
         </Card>
       </div>
-      {listDataDone && <UserEditor />}
+      {/*{listDataDone && <UserEditor />}*/}
     </PageContainer>
   );
 };

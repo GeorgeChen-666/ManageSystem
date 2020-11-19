@@ -1,4 +1,4 @@
-import {SmileOutlined, CrownOutlined} from '@ant-design/icons';
+import { SmileOutlined, CrownOutlined } from '@ant-design/icons';
 import React from 'react';
 import _ from 'lodash';
 
@@ -12,24 +12,24 @@ export const routeItems = {
         {
           path: '/manage/monitor',
           name: '监控页',
-          icon: <SmileOutlined/>,
-          component: () => <div>监控页</div>
+          icon: <SmileOutlined />,
+          component: () => <div>监控页</div>,
         },
         {
           path: '/manage/admin',
           name: '管理页',
-          icon: <CrownOutlined/>,
+          icon: <CrownOutlined />,
           routes: [
             {
               path: '/manage/admin/process',
               name: '进程管理',
-              icon: <SmileOutlined/>,
-              component: () => <div>进程管理</div>
+              icon: <SmileOutlined />,
+              component: import('../pages/Processes/ManageProcesses'),
             },
             {
               path: '/manage/admin/users',
               name: '用户管理',
-              icon: <SmileOutlined/>,
+              icon: <SmileOutlined />,
               component: import('../pages/Users/ManageUsers'),
               routes: [
                 {
@@ -49,7 +49,7 @@ export const routeItems = {
         {
           path: '/manage/about',
           name: '关于',
-          icon: <SmileOutlined/>,
+          icon: <SmileOutlined />,
         },
       ],
     },

@@ -1,11 +1,11 @@
 import React from 'react';
-import {List, Avatar} from 'antd';
-import MoreBtn from './MoreBtn'
-import {getLabelFromTimeStamp} from "../../../utils/dateUtils";
-import {Link, matchPath, useRouteMatch, useHistory} from 'react-router-dom';
+import { List, Avatar } from 'antd';
+import MoreBtn from './MoreBtn';
+import { getLabelFromTimeStamp } from '../../../utils/dateUtils';
+import { Link } from 'react-router-dom';
 import styles from '../Style.module.less';
 
-const ListContent = ({data: {owner, createOn, lastLoginTime}}) => (
+const ListContent = ({ data: { owner, createOn, lastLoginTime } }) => (
   <div className={styles.listContent}>
     <div className={styles.listContentItem}>
       <span>上次登录</span>
@@ -17,13 +17,12 @@ const ListContent = ({data: {owner, createOn, lastLoginTime}}) => (
     </div>
   </div>
 );
-export default (item) => {
-  const match = useRouteMatch();
+export default (match) => (item) => {
   return (
     <List.Item
       actions={[
         <Link to={`${match.path}/modify/${item.id}`}>编辑</Link>,
-        <MoreBtn/>,
+        <MoreBtn />,
       ]}
     >
       <List.Item.Meta
@@ -33,11 +32,9 @@ export default (item) => {
           </Avatar>
         }
         title={`${item.nickname || 'noname'} (${item.username})`}
-        description={
-          item.permissionType === 30 ? '管理员' : '一般用户'
-        }
+        description={item.permissionType === 30 ? '管理员' : '一般用户'}
       />
-      <ListContent data={item}/>
+      <ListContent data={item} />
     </List.Item>
-  )
-}
+  );
+};
