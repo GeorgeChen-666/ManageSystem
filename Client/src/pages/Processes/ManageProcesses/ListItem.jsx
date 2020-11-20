@@ -1,7 +1,8 @@
 import React from 'react';
-import { List, Card, Avatar } from 'antd';
+import { List, Card } from 'antd';
 import styles from '../Style.module.less';
-import { SyncOutlined } from '@ant-design/icons';
+
+import StatusAvatar from './StatusAvatar'
 
 export default (match) => (item) => {
   return (
@@ -10,16 +11,15 @@ export default (match) => (item) => {
         hoverable
         className={styles.card}
         actions={[<a>终端</a>, <a>任务</a>]}
-        title={item.username}
+        title={item.name}
         extra={<span>操作</span>}
       >
         <Card.Meta
-          avatar={<Avatar size={64} icon={<SyncOutlined spin />} />}
-          // title={<a href="#">{item.username}</a>}
+          avatar={<StatusAvatar />}
           description={
             <div className={styles.item}>
               <div>进程类型：</div>
-              <div>运行时间：</div>
+              <div>持续时间：</div>
             </div>
           }
         />

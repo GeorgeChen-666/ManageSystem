@@ -1,24 +1,29 @@
 {
   "records": [
     {
-      "log": "Microsoft Windows [版本 10.0.17763.316]\r\n(c) 2018 Microsoft Corporation。保留所有权利。\r\n",
-      "id": 1602511275144,
-      "createOn": 1602511275144
+      "log": "Microsoft Windows [Version 10.0.16299.1029]\r\n(c) 2017 Microsoft Corporation. All rights reserved.\r\n\r\nC:\\dev\\ManageSystem\\Server>",
+      "id": 1605858169126,
+      "createOn": 1605858169126
     },
     {
-      "log": "\r\nD:\\Documents\\Project\\ManageSystem\\Server>",
-      "id": 1602511275152,
-      "createOn": 1602511275152
+      "log": "Microsoft Windows [Version 10.0.16299.1029]\r\n(c) 2017 Microsoft Corporation. All rights reserved.\r\n\r\nC:\\dev\\ManageSystem\\Server>",
+      "id": 1605858448696,
+      "createOn": 1605858448696
     },
     {
-      "log": "Microsoft Windows [版本 10.0.17763.316]\r\n(c) 2018 Microsoft Corporation。保留所有权利。\r\n",
-      "id": 1602511291321,
-      "createOn": 1602511291321
+      "log": "Microsoft Windows [Version 10.0.16299.1029]\r\n(c) 2017 Microsoft Corporation. All rights reserved.\r\n\r\nC:\\dev\\ManageSystem\\Server>",
+      "id": 1605858499132,
+      "createOn": 1605858499132
     },
     {
-      "log": "\r\nD:\\Documents\\Project\\ManageSystem\\Server>",
-      "id": 1602511291329,
-      "createOn": 1602511291329
+      "log": "Microsoft Windows [Version 10.0.16299.1029]\r\n(c) 2017 Microsoft Corporation. All rights reserved.\r\n\r\nC:\\dev\\ManageSystem\\Server>",
+      "id": 1605861353842,
+      "createOn": 1605861353842
+    },
+    {
+      "log": "Microsoft Windows [Version 10.0.16299.1029]\r\n(c) 2017 Microsoft Corporation. All rights reserved.\r\n\r\nC:\\dev\\ManageSystem\\Server>",
+      "id": 1605861788298,
+      "createOn": 1605861788298
     }
   ]
 }

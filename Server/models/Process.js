@@ -1,4 +1,8 @@
-const { AuthorizedEntity } = require('../core/AuthorizedEntity');
+const {
+  AuthorizedEntity,
+  enumPermissions,
+  enumPermissionTypes
+} = require('../core/AuthorizedEntity');
 const { BaseProcess } = require('../core/BaseProcess');
 const { getProcessLogsClass } = require('./ProcessLogs');
 const activeProcess = new Map();
@@ -12,17 +16,39 @@ class SystemProcess extends BaseProcess {
 class Process extends AuthorizedEntity {
   constructor(source, currentUser) {
     super(source, currentUser);
+    Object.defineProperty(this, 'isRunning', {
+      configurable: true,
+      enumerable: true,
+      get: function() {
+        try {
+          const process = activeProcess.get(this.name);
+          if (process) {
+            return process.isRunning;
+          }
+          else {
+            return false;
+          }
+        } catch (e) {
+          return false;
+        }
+      }
+    });
   }
 
-  isLoaded() {
-    return activeProcess.has(this.name);
+  static fitData(data) {
+    let isRunning = false;
+    const process = activeProcess.get(data.name);
+    if (process) {
+      isRunning = process.processObj.isProcessRun();
+    }
+    return { ...data, isRunning };
   }
 
   load() {
     const { cmd, param, cwd, encoding } = this;
     const processObj = new SystemProcess({ cmd, param, cwd, encoding });
     processObj.on('onData', (data) => {
-      new (getProcessLogsClass(this.name))(this.currentUser, data).saveRecord();
+      new (getProcessLogsClass(this.name))(data).saveRecord();
     });
     if (this.autoStart) {
       processObj.run();
@@ -31,6 +57,16 @@ class Process extends AuthorizedEntity {
       processObj,
       ftpObj: null
     });
+  }
+
+  static pageProcessLogs(id, params) {
+    const entity = new this(id);
+    return getProcessLogsClass(entity.name).pageRecords(params);
+  }
+
+  static findProcessLogs(id, params) {
+    const entity = new this(id);
+    return getProcessLogsClass(entity.name).findRecords(params);
   }
 
   unload() {
@@ -47,6 +83,7 @@ class Process extends AuthorizedEntity {
 }
 
 Process.schema = {
+  isRunning: Boolean,
   name: String,
   description: String,
   type: String,
@@ -58,7 +95,13 @@ Process.schema = {
   encoding: null,
   outputs: null
 };
-
+Process.functionPermissions = {
+  [enumPermissionTypes.get]: enumPermissions.own,
+  [enumPermissionTypes.query]: enumPermissions.own,
+  [enumPermissionTypes.create]: enumPermissions.own,
+  [enumPermissionTypes.modify]: enumPermissions.own,
+  [enumPermissionTypes.remove]: enumPermissions.own
+};
 Process.loadAllActiveProcess();
 
 module.exports = Process;

@@ -4,9 +4,9 @@
       "username": "admin",
       "password": "d0970714757783e6cf17b26fb8e2298f",
       "id": 1,
-      "lastLoginTime": 1605602150995,
+      "lastLoginTime": 1605863447474,
       "errorTimes": 0,
-      "updateOn": 1605602150995,
+      "updateOn": 1605863447475,
       "updateBy": "admin",
       "permissionType": 30,
       "nickname": "ee"
@@ -17,17 +17,19 @@
       "id": 1602306639695,
       "createOn": 1602306639695,
       "errorTimes": 0,
-      "updateOn": 1604892237819,
+      "updateOn": 1605690294851,
       "updateBy": "xiaoming",
       "deleted": false,
-      "lastLoginTime": 1604892237819
+      "lastLoginTime": 1605690291062,
+      "nickname": "ttt"
     },
     {
       "username": "liuzi",
       "password": "112233",
       "id": 1602431998492,
       "createOn": 1602431998492,
-      "createBy": "admin"
+      "createBy": "admin",
+      "errorTimes": 2
     },
     {
       "username": "zg",
@@ -41,7 +43,10 @@
       "password": "d0970714757783e6cf17b26fb8e2298f",
       "id": 1605590031484,
       "createOn": 1605590031484,
-      "createBy": "admin"
+      "createBy": "admin",
+      "nickname": "1",
+      "updateOn": 1605770085643,
+      "updateBy": "admin"
     },
     {
       "username": "user2",
@@ -125,7 +130,10 @@
       "password": "d0970714757783e6cf17b26fb8e2298f",
       "id": 1605590078309,
       "createOn": 1605590078309,
-      "createBy": "admin"
+      "createBy": "admin",
+      "nickname": "13",
+      "updateOn": 1605689260432,
+      "updateBy": "admin"
     },
     {
       "username": "user14",

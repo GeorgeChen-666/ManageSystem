@@ -1,16 +1,18 @@
 const { BaseEntity } = require('../core/BaseEntity');
+
 function getProcessLogsClass(processName) {
   const ProcessLogs = class extends BaseEntity {
-    constructor(currentUser, log) {
-      super(currentUser);
+    constructor(log) {
+      super(null, null);
       this.log = log;
     }
+
     saveRecord() {
       super.saveRecord();
       // TODO 也许能优化
       const datas = this.constructor.pageRecords({
         pageSize: 2000,
-        sort: 'updateOn desc',
+        sort: 'updateOn desc'
       });
       if (datas.length === 2000) {
         const oldestDate = datas.pop().updateOn;
@@ -20,18 +22,21 @@ function getProcessLogsClass(processName) {
           .write();
       }
     }
+
     removeRecord() {
       throw new Error('not supported');
     }
+
     restoreRecord() {
       throw new Error('not supported');
     }
+
     realRemoveRecord() {
       throw new Error('not supported');
     }
   };
   ProcessLogs.schema = {
-    log: null,
+    log: null
   };
   ProcessLogs._baseName = `ProcessLogs_${processName}`;
   return ProcessLogs;

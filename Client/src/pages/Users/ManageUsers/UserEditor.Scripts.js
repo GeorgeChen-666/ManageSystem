@@ -19,7 +19,7 @@ export const useScripts = (props) => {
   const [doSave, isSaveLoading] = useLoading(
     id ? userModel.useDoModify() : userModel.useDoRegister()
   );
-  const [{ listData }] = userModel.useUsersData();
+  const [{ listData }] = userModel.useData();
   const data = _.find(_.get(listData, ['items']), { id: id * 1 }) || {};
   if (currentMatch && id && id !== data.id) {
     history.goBack();

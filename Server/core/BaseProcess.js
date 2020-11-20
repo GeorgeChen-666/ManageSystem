@@ -42,7 +42,7 @@ class BaseProcess extends EventEmitter {
   }
 
   killProcess(silent = false) {
-    if (this.isRun()) {
+    if (this.isProcessRun()) {
       if (!silent) {
         this.emit('onKill');
       }

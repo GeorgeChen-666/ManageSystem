@@ -18,7 +18,7 @@ export default () => {
   useEffect(() => {
     doFetchList({}, { isNew: true });
   }, []);
-  const [{ listData }] = userModel.useUsersData();
+  const [{ listData }] = userModel.useData();
   const listDataDone = listData.total;
   return (
     <PageContainer

@@ -17,7 +17,7 @@ const usersListState = selector({
   set: ({ set, get }, newValue) =>
     set(usersState, { ...get(usersState), listData: newValue }),
 });
-export const useUsersData = () => useRecoilState(usersState);
+export const useData = () => useRecoilState(usersState);
 export const useFetchList = () => {
   const [listData, setListData] = useRecoilState(usersListState);
   return async (payload = {}, { isNew = false, keepSize = false } = {}) => {

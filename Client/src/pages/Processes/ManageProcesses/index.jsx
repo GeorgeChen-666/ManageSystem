@@ -10,7 +10,7 @@ import {
   LoadingOutlined,
 } from '@ant-design/icons';
 import styles from '../Style.module.less';
-import * as userModel from '../../../models/Users';
+import * as processModel from '../../../models/Processes';
 import useLoading from '../../../components/Hooks/useLoading';
 import MainInfiniteScrollList from '../../../components/PageParts/MainInfiniteScrollList';
 import ListItem from './ListItem';
@@ -19,12 +19,12 @@ export default () => {
   let match = useRouteMatch();
   const PATH_ADD = `${match.path}/add`;
   const [doFetchList, isFetchListLoading] = useLoading(
-    userModel.useFetchList()
+    processModel.useFetchList()
   );
   useEffect(() => {
     doFetchList({}, { isNew: true });
   }, []);
-  const [{ listData }] = userModel.useUsersData();
+  const [{ listData }] = processModel.useData();
   const listDataDone = listData.total;
   return (
     <PageContainer
