@@ -24,6 +24,11 @@
       "log": "Microsoft Windows [Version 10.0.16299.1029]\r\n(c) 2017 Microsoft Corporation. All rights reserved.\r\n\r\nC:\\dev\\ManageSystem\\Server>",
       "id": 1605861788298,
       "createOn": 1605861788298
+    },
+    {
+      "log": "Microsoft Windows [版本 10.0.17763.1577]\r\n(c) 2018 Microsoft Corporation。保留所有权利。\r\n\r\nD:\\Documents\\Project\\ManageSystem\\Server\\bin>",
+      "id": 1605877974345,
+      "createOn": 1605877974345
     }
   ]
 }

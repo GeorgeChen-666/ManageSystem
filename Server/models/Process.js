@@ -1,7 +1,7 @@
 const {
   AuthorizedEntity,
   enumPermissions,
-  enumPermissionTypes
+  enumPermissionTypes,
 } = require('../core/AuthorizedEntity');
 const { BaseProcess } = require('../core/BaseProcess');
 const { getProcessLogsClass } = require('./ProcessLogs');
@@ -19,19 +19,18 @@ class Process extends AuthorizedEntity {
     Object.defineProperty(this, 'isRunning', {
       configurable: true,
       enumerable: true,
-      get: function() {
+      get: function () {
         try {
           const process = activeProcess.get(this.name);
           if (process) {
             return process.isRunning;
-          }
-          else {
+          } else {
             return false;
           }
         } catch (e) {
           return false;
         }
-      }
+      },
     });
   }
 
@@ -51,11 +50,11 @@ class Process extends AuthorizedEntity {
       new (getProcessLogsClass(this.name))(data).saveRecord();
     });
     if (this.autoStart) {
-      processObj.run();
+      //processObj.run();
     }
     activeProcess.set(this.name, {
       processObj,
-      ftpObj: null
+      ftpObj: null,
     });
   }
 
@@ -75,7 +74,9 @@ class Process extends AuthorizedEntity {
   }
 
   static loadAllActiveProcess() {
-    const activeDataList = this.findRecordsWithoutPermission((record) => !record.deleted);
+    const activeDataList = this.findRecordsWithoutPermission(
+      (record) => !record.deleted
+    );
     activeDataList.forEach(({ id }) => {
       new Process(id).load();
     });
@@ -93,14 +94,14 @@ Process.schema = {
   param: null,
   cwd: null,
   encoding: null,
-  outputs: null
+  outputs: null,
 };
 Process.functionPermissions = {
   [enumPermissionTypes.get]: enumPermissions.own,
   [enumPermissionTypes.query]: enumPermissions.own,
   [enumPermissionTypes.create]: enumPermissions.own,
   [enumPermissionTypes.modify]: enumPermissions.own,
-  [enumPermissionTypes.remove]: enumPermissions.own
+  [enumPermissionTypes.remove]: enumPermissions.own,
 };
 Process.loadAllActiveProcess();
 

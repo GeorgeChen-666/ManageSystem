@@ -4,24 +4,24 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('server:server');
-var http = require('http');
+const app = require('../app');
+const debug = require('debug')('server:server');
+const http = require('http');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3002');
+const port = normalizePort(process.env.PORT || '3002');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const server = http.createServer(app);
 const io = require('socket.io')(server);
-io.on('connection', function(socket) { // socket相关监听都要放在这个回调里
+io.on('connection', function(socket) {
   console.log('a user connected');
 
   socket.on('disconnect', function() {
@@ -35,6 +35,15 @@ io.on('connection', function(socket) { // socket相关监听都要放在这个�
       io.emit('msg', obj);
     }, 3000);
   });
+});
+const testNS = io.of('test');
+testNS.use((socket, next) => {
+  // ensure the user has sufficient rights
+  next();
+});
+
+testNS.on('connection', socket => {
+  console.log('a user connect to test');
 });
 /**
  * Listen on provided port, on all network interfaces.

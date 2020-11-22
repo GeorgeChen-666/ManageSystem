@@ -5,6 +5,7 @@ import 'antd/dist/antd.css';
 import { RecoilRoot } from 'recoil';
 import { Router } from './common/route';
 import { registerAxioInterceptors } from './services';
+import './common/socket';
 registerAxioInterceptors();
 ReactDOM.render(
   <RecoilRoot>
@@ -13,7 +14,6 @@ ReactDOM.render(
   document.getElementById('root')
 );
 serviceWorker.unregister();
-
 
 // TODO 消息
 // TODO token超时bug
