@@ -1,6 +1,7 @@
 import React from 'react';
 import { List, Card } from 'antd';
 import styles from '../Style.module.less';
+import {Link, matchPath, useRouteMatch, useHistory} from 'react-router-dom';
 
 import StatusAvatar from './StatusAvatar'
 
@@ -10,7 +11,7 @@ export default (match) => (item) => {
       <Card
         hoverable
         className={styles.card}
-        actions={[<a>终端</a>, <a>任务</a>]}
+        actions={[<Link to={`${match.path}/terminal/${item.id}`}>终端</Link>, <a>任务</a>]}
         title={item.name}
         extra={<span>操作</span>}
       >

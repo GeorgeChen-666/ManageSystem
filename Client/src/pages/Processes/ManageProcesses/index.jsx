@@ -1,7 +1,7 @@
-import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Card } from 'antd';
-import React, { useEffect } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import {PageContainer} from '@ant-design/pro-layout';
+import {Button, Card} from 'antd';
+import React, {useEffect} from 'react';
+import {Link, useRouteMatch} from 'react-router-dom';
 import {
   HomeOutlined,
   SettingFilled,
@@ -14,6 +14,8 @@ import * as processModel from '../../../models/Processes';
 import useLoading from '../../../components/Hooks/useLoading';
 import MainInfiniteScrollList from '../../../components/PageParts/MainInfiniteScrollList';
 import ListItem from './ListItem';
+import Terminal from './Terminal'
+import {registerSocket} from '../../../common/socket';
 
 export default () => {
   let match = useRouteMatch();
@@ -22,9 +24,17 @@ export default () => {
     processModel.useFetchList()
   );
   useEffect(() => {
-    doFetchList({}, { isNew: true });
+    doFetchList({}, {isNew: true});
+    // const socket = registerSocket('process', (socket) => {
+    //   socket.on('msg', (data) => {
+    //     console.log(8888, data)
+    //   });
+    // });
+    // return ()=>{
+    //   socket.close();
+    // }
   }, []);
-  const [{ listData }] = processModel.useData();
+  const [{listData}] = processModel.useData();
   const listDataDone = listData.total;
   return (
     <PageContainer
@@ -41,8 +51,8 @@ export default () => {
       <div className={styles.cardList}>
         <Card
           bordered={false}
-          style={{ marginTop: 24 }}
-          bodyStyle={{ padding: '0 32px 40px 32px' }}
+          style={{marginTop: 24}}
+          bodyStyle={{padding: '0 32px 40px 32px'}}
         >
           <MainInfiniteScrollList
             loadMore={() => doFetchList()}
@@ -54,11 +64,11 @@ export default () => {
             isFetching={isFetchListLoading}
             dataSource={listData.items}
             renderItem={ListItem(match)}
-            grid={{ column: 4, xl: 3, lg: 2, md: 1, sm: 1, xs: 1 }}
+            grid={{column: 4, xl: 3, lg: 2, md: 1, sm: 1, xs: 1}}
           />
         </Card>
       </div>
-      {/*{listDataDone && <UserEditor />}*/}
+      {listDataDone && <Terminal />}
     </PageContainer>
   );
 };
