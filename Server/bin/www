@@ -7,7 +7,7 @@
 const app = require('../app');
 const debug = require('debug')('server:server');
 const http = require('http');
-
+const { socketHandlers } = require('../core/SocketHelper');
 /**
  * Get port from environment and store in Express.
  */
@@ -20,36 +20,65 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
-const io = require('socket.io')(server);
-io.on('connection', function(socket) {
-  console.log('a user connected');
-
-  socket.on('disconnect', function() {
-    console.log('a user go out');
-  });
-
-  socket.on('msg', function(obj) {
-    //延迟3s返回信息给客户端
-    setTimeout(function() {
-      console.log('the websokcet message is' + obj);
-      io.emit('msg', obj);
-    }, 3000);
-  });
-});
-const testNS = io.of('test');
-testNS.use((socket, next) => {
-  // ensure the user has sufficient rights
-  next();
-});
-
-testNS.on('connection', socket => {
-  console.log('a user connect to test');
-});
+global.sio = require('socket.io')(server);
+// const io = require('socket.io')(server);
+// io.on('connection', function(socket) {
+//   console.log('a user connected');
+//
+//   socket.on('disconnect', function() {
+//     console.log('a user go out');
+//   });
+//
+//   socket.on('msg', function(obj) {
+//     //延迟3s返回信息给客户端
+//     setTimeout(function() {
+//       console.log('the websokcet message is' + obj);
+//       io.emit('msg', obj);
+//     }, 3000);
+//   });
+// });
+// const testNS = io.of('test');
+// testNS.use((socket, next) => {
+//   // ensure the user has sufficient rights
+//   next();
+// });
+//
+// testNS.on('connection', socket => {
+//   console.log('a user connect to test');
+//   socket.on('msg', function(obj) {
+//     console.log('the websokcet message is:' + obj);
+//     //延迟3s返回信息给客户端
+//     setTimeout(function() {
+//
+//       socket.emit('msg', obj);
+//     }, 3000);
+//   });
+// });
+// const tttNS = io.of('ttt');
+// tttNS.use((socket, next) => {
+//   // ensure the user has sufficient rights
+//   next();
+// });
+//
+// tttNS.on('connection', socket => {
+//   console.log('a user connect to ttt');
+//   socket.on('msg', function(obj) {
+//     console.log('the websokcet message is:' + obj);
+//     //延迟3s返回信息给客户端
+//     setTimeout(function() {
+//
+//       socket.emit('msg', obj);
+//     }, 3000);
+//   });
+// });
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port, () => console.log('listening on *:' + port));
+server.listen(port, () => {
+  socketHandlers.forEach(handler => handler());
+  console.log('listening on *:' + port);
+});
 server.on('error', onError);
 server.on('listening', onListening);
 

@@ -1,5 +1,6 @@
 const { BaseEntity } = require('../core/BaseEntity');
 
+
 function getProcessLogsClass(processName) {
   const ProcessLogs = class extends BaseEntity {
     constructor(log) {
@@ -9,6 +10,10 @@ function getProcessLogsClass(processName) {
 
     saveRecord() {
       super.saveRecord();
+      global.events.emit('onLog', {
+        key: this.constructor.name,
+        log: this.log
+      });
       // TODO 也许能优化
       const datas = this.constructor.pageRecords({
         pageSize: 2000,

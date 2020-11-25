@@ -2,9 +2,9 @@ import React, {useState} from 'react'
 import {Avatar} from 'antd';
 import {SyncOutlined, CaretRightOutlined, PauseOutlined} from '@ant-design/icons';
 
-export default ({isRunning1 = true}) => {
+export default ({isRunning = false}) => {
   const [isHover, setHover] = useState(false);
-  const [isRunning, setRunning] = useState(false);
+  const [, setRunning] = useState(false);
   return (<span
     onMouseEnter={() => setHover(true)}
     onMouseLeave={() => setHover(false)}

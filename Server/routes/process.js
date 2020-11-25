@@ -3,6 +3,8 @@ const _ = require('lodash');
 const { body } = require('express-validator');
 const router = express.Router();
 const Process = require('../models/Process');
+const { registerSocket } = require('../core/SocketHelper');
+const events = require('events');
 
 const {
   PublicHandler,
@@ -12,6 +14,22 @@ const {
   canRestore,
   canPageSearch
 } = require('../core/RouteHelper');
+
+registerSocket('process', (socket) => {
+  socket.emit('msg', 'process ready');
+  global.events.on('onLog', ({ key = '', log }) => {
+    console.log('=======>', log);
+    const [, processId] = key.split('_');
+    try {
+      //check permission
+      Process.getRecordById(processId, socket.currentUser);
+      socket.emit('msg', log);
+    } catch (e) {
+    }
+
+  });
+});
+
 canModify(router, Process, {
   extraRules: [
     body('name').custom((name) => {

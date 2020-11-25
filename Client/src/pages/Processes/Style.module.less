@@ -1,4 +1,5 @@
 @import '~antd/lib/style/themes/default.less';
+
 .cardList {
   margin-bottom: -24px;
 
@@ -32,3 +33,34 @@
     }
   }
 }
+@keyframes cursor-blinks {
+  0% {
+    opacity: 1;
+    display: block;
+  }
+  50% {
+    opacity: 0;
+    display: none;
+  }
+  100% {
+    opacity: 1;
+    color: bisque;
+    display: block;
+  }
+}
+.terminalModal {
+  :global(.ant-list) {
+    background-color: black;
+    color: white;
+    pre {
+      display: contents;
+    }
+    :global(.cursor) {
+      color: aquamarine;
+      animation: cursor-blinks 10.5s infinite steps(1, start);
+    }
+
+  }
+}
+//less donghua
+//https://www.jianshu.com/p/a3059c40bb5b?utm_campaign=shakespeare

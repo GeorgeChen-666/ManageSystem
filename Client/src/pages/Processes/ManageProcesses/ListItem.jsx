@@ -16,7 +16,7 @@ export default (match) => (item) => {
         extra={<span>操作</span>}
       >
         <Card.Meta
-          avatar={<StatusAvatar />}
+          avatar={<StatusAvatar isRunning={item.isRunning} />}
           description={
             <div className={styles.item}>
               <div>进程类型：</div>

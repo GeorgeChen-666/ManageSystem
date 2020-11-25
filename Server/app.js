@@ -3,8 +3,9 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const setupRoutes = require('./routes/setupRoutes');
+const events = require('events');
 
-
+global.events = new events.EventEmitter();
 const app = express();
 
 // view engine setup
@@ -13,7 +14,7 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 setupRoutes(app);
 

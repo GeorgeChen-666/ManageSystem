@@ -1,0 +1,24 @@
+{
+  "records": [
+    {
+      "log": "Microsoft Windows [Version 10.0.16299.1029]\r\n(c) 2017 Microsoft Corporation. All rights reserved.\r\n",
+      "id": 1606294172416,
+      "createOn": 1606294172416
+    },
+    {
+      "log": "\r\nC:\\dev\\ManageSystem\\Server>",
+      "id": 1606294172432,
+      "createOn": 1606294172432
+    },
+    {
+      "log": "Microsoft Windows [Version 10.0.16299.1029]\r\n(c) 2017 Microsoft Corporation. All rights reserved.\r\n",
+      "id": 1606295382538,
+      "createOn": 1606295382538
+    },
+    {
+      "log": "\r\nC:\\dev\\ManageSystem\\Server>",
+      "id": 1606295382554,
+      "createOn": 1606295382554
+    }
+  ]
+}

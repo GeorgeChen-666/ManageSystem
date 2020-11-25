@@ -104,11 +104,13 @@ class AuthorizedEntity extends BaseEntity {
   }
 
   static getRecordById(id, currentUser) {
-    const [record] = this.findRecords(
-      { [systemProperty.id]: id * 1 },
-      currentUser
-    );
+    const record = super.getRecordById(id);
+    this.checkPermission(new this(record, currentUser), enumPermissionTypes.get);
     return record;
+  }
+
+  static getRecordByIdWithoutPermission(id) {
+    return super.getRecordById(id);
   }
 
   static findRecords(filter = null, currentUser = null) {
