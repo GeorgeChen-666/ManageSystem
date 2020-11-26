@@ -14,9 +14,9 @@ class BaseProcess extends EventEmitter {
     const { cmd, param, cwd, encoding = defaultEncoding } = this.config;
     //this.kill(true);
     this.process = child_process.spawn(cmd, param, {
-      // cwd,
-      // stdio: 'pipe',
-      // stdio: [process.stdin, process.stdout, fd]
+      //cwd,
+      //stdio: 'pipe',
+      //stdio: [process.stdin, process.stdout],
     });
     const onData = (data) => this.emit('onData', iconv.decode(data, encoding));
     this.process.stdout.on('data', onData);
@@ -36,7 +36,7 @@ class BaseProcess extends EventEmitter {
     return !!this.process;
   }
 
-  sendProcessCommand(command) {
+  sendCommand(command) {
     this.process.stdin.write(command);
     this.process.stdin.write('\n');
   }

@@ -140,7 +140,7 @@ class BaseEntity {
 
   static _findById(id) {
     return this._getRecordsObject().find({
-      [systemProperty.id]: id,
+      [systemProperty.id]: id * 1,
     });
   }
 
@@ -189,8 +189,7 @@ class BaseEntity {
   }
 
   static getRecordById(id) {
-    const [record] = this._findById(id * 1).value();
-    return record;
+    return this._findById(id * 1).value();
   }
 
   static getEntityByData(data, currentUser) {

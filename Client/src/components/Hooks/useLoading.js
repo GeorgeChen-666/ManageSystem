@@ -21,9 +21,15 @@ export default (callback) => {
     try {
       const result = callback(...args);
       if (result instanceof Promise) {
-        result.then(() => {
-          setLoading((v) => v - 1);
-        });
+        result.then(
+          () => {
+            setLoading((v) => v - 1);
+          },
+          (e) => {
+            setLoading((v) => v - 1);
+            throw e;
+          }
+        );
       } else {
         setLoading((v) => v - 1);
       }

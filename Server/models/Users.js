@@ -7,8 +7,8 @@ const {
 } = require('../core/AuthorizedEntity');
 
 const Users = class extends AuthorizedEntity {
-  constructor(source, currentUser) {
-    super(source, currentUser);
+  constructor(id, currentUser) {
+    super(id, currentUser);
     if (this.currentUser === null) {
       this.currentUser = this;
     }

@@ -33,34 +33,48 @@
     }
   }
 }
-@keyframes cursor-blinks {
-  0% {
-    opacity: 1;
-    display: block;
+
+.lessAnimation(@Name){
+  @keyframes @Name {
+    0% {
+      opacity: 1;
+      display: block;
+    }
+    50% {
+      opacity: 0;
+      display: none;
+    }
+    100% {
+      opacity: 1;
+      display: block;
+    }
   }
-  50% {
-    opacity: 0;
-    display: none;
-  }
-  100% {
-    opacity: 1;
-    color: bisque;
-    display: block;
-  }
-}
+};
+.lessAnimation(cursor-blinks);
+
 .terminalModal {
+  .logListDiv {
+    max-height: 60vh;
+    overflow: auto;
+  }
   :global(.ant-list) {
     background-color: black;
     color: white;
     pre {
-      display: contents;
+      display: inline;
+      max-width: 100%;
+      word-break: break-all;
+      white-space: pre-wrap;
     }
-    :global(.cursor) {
-      color: aquamarine;
-      animation: cursor-blinks 10.5s infinite steps(1, start);
+    .cursor {
+      display: initial;
+      animation: cursor-blinks 1.5s infinite;
     }
-
+    .cmdTextBox {
+      color: transparent;
+      text-shadow: 0 0 #aaa;
+      font-weight: bold;
+      display: inline;
+    }
   }
 }
-//less donghua
-//https://www.jianshu.com/p/a3059c40bb5b?utm_campaign=shakespeare

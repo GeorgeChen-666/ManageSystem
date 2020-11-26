@@ -6,7 +6,7 @@ import UserEditor from './UserEditor';
 import styles from '../Style.module.less';
 import * as userModel from '../../../models/Users';
 import useLoading from '../../../components/Hooks/useLoading';
-import MainInfiniteScrollList from '../../../components/PageParts/MainInfiniteScrollList';
+import InfiniteScrollList from '../../../components/InfiniteScrollList';
 import ListItem from './ListItem';
 
 export default () => {
@@ -38,8 +38,11 @@ export default () => {
           style={{ marginTop: 24 }}
           bodyStyle={{ padding: '0 32px 40px 32px' }}
         >
-          <MainInfiniteScrollList
+          <InfiniteScrollList
             loadMore={() => doFetchList()}
+            scrollParent={document.querySelector(
+              '#test-pro-layout div section section'
+            )}
             hasMore={
               !isFetchListLoading &&
               (listData.items.length < listData.total ||
