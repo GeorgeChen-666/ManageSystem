@@ -1,7 +1,9 @@
 import React from 'react';
 import { List, Card } from 'antd';
 import styles from '../Style.module.less';
+import MoreBtn from './MoreBtn';
 import {Link, matchPath, useRouteMatch, useHistory} from 'react-router-dom';
+
 
 import StatusAvatar from './StatusAvatar'
 
@@ -13,7 +15,7 @@ export default (match) => (item) => {
         className={styles.card}
         actions={[<Link to={`${match.path}/terminal/${item.id}`}>终端</Link>, <a>任务</a>]}
         title={item.name}
-        extra={<span>操作</span>}
+        extra={<MoreBtn />}
       >
         <Card.Meta
           avatar={<StatusAvatar isRunning={item.isRunning} />}

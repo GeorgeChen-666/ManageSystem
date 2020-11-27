@@ -61,7 +61,6 @@ export const useCheckAutoLogin = () => {
   };
 };
 export const useDoLogin = () => {
-  const history = useHistory();
   return async (payload) => {
     const result = await login(payload);
     const { remember } = payload;
@@ -73,7 +72,6 @@ export const useDoLogin = () => {
     } else {
       localStorage.removeItem('autoLogin');
     }
-    history.push('/');
   };
 };
 export const useDoRegister = () => {

@@ -9,14 +9,14 @@ const registerAxioInterceptors = () => {
       if (token) {
         const { exp } = jwt_decode(token);
         const fresh = exp * 1000 - new Date().getTime();
-        if (fresh < 1800000 && fresh > 0) {
-          //TODO 如果快超时了就刷新token
-          console.log('需要调用刷token');
-        }
-        if (fresh <= 0) {
-          window.location.href = '/login';
-        }
         if (config.url !== '/api/users/login') {
+          if (fresh < 1800000 && fresh > 0) {
+            //TODO 如果快超时了就刷新token
+            console.log('需要调用刷token');
+          }
+          if (fresh <= 0) {
+            window.location.href = '/login';
+          }
           config.headers.Authorization = 'Bearer ' + token;
         }
       }

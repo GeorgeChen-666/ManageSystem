@@ -19,31 +19,31 @@ const usersListState = selector({
 });
 export const useData = () => useRecoilState(usersState);
 export const useFetchList = (id) => {
-  const [listData, setListData] = useRecoilState(usersListState);
+  //const [listData, setListData] = useRecoilState(usersListState);
   return async (payload = {}, {isNew = false, keepSize = false} = {}) => {
-    if (!isNew) {
-      const {searchAfter} = listData;
-      payload.searchAfter = searchAfter;
-    }
-    if (keepSize) {
-      payload.pageSize = listData.items.length;
-    }
-    const result = await fetchLogs(id, payload);
-    setListData(() => {
-      let newListData = {};
-      if (!isNew) {
-        newListData = {...newListData, ...listData};
-      }
-      newListData = {...newListData, ...result.data};
-      if (!isNew) {
-        newListData.items = [...listData.items, ...result.data.items];
-      }
-      newListData.searchAfter = _.get(
-        _.findLast(result.data.items),
-        'id',
-        newListData.searchAfter
-      );
-      return newListData;
-    });
+    // if (!isNew) {
+    //   const {searchAfter} = listData;
+    //   payload.searchAfter = searchAfter;
+    // }
+    // if (keepSize) {
+    //   payload.pageSize = listData.items.length;
+    // }
+    // const result = await fetchLogs(id, payload);
+    // setListData(() => {
+    //   let newListData = {};
+    //   if (!isNew) {
+    //     newListData = {...newListData, ...listData};
+    //   }
+    //   newListData = {...newListData, ...result.data};
+    //   if (!isNew) {
+    //     newListData.items = [...listData.items, ...result.data.items];
+    //   }
+    //   newListData.searchAfter = _.get(
+    //     _.findLast(result.data.items),
+    //     'id',
+    //     newListData.searchAfter
+    //   );
+    //   return newListData;
+    // });
   };
 };

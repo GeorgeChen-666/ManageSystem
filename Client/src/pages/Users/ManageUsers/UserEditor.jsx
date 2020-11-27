@@ -7,18 +7,13 @@ import { useScripts } from './UserEditor.Scripts';
 
 export default (props) => {
   const history = useHistory();
-  let match = useRouteMatch();
-  const [PATH_ADD, PATH_MODIFY] = [`${match.path}/add`, `${match.path}/modify`];
-  const currentMatch = matchPath(history.location.pathname, {
-    path: [PATH_ADD, PATH_MODIFY],
-  });
   const { doSave, data, isSaveLoading } = useScripts(props);
   const formRef = useRef({});
   return (
     <Modal
       title="用户信息"
       centered
-      visible={!!currentMatch}
+      visible={true}
       confirmLoading={isSaveLoading}
       onOk={() => formRef.current.submit()}
       onCancel={() => history.goBack()}

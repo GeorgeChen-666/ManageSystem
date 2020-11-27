@@ -1,7 +1,7 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Card } from 'antd';
 import React, { useEffect } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import {Link, Switch, Route, useRouteMatch} from 'react-router-dom';
 import UserEditor from './UserEditor';
 import styles from '../Style.module.less';
 import * as userModel from '../../../models/Users';
@@ -54,7 +54,11 @@ export default () => {
           />
         </Card>
       </div>
-      {listDataDone && <UserEditor />}
+      <Switch>
+        <Route path={[`${match.path}/add`, `${match.path}/modify/:id`]}>
+          {listDataDone && <UserEditor />}
+        </Route>
+      </Switch>
     </PageContainer>
   );
 };
