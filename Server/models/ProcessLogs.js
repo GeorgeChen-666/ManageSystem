@@ -1,6 +1,5 @@
 const { BaseEntity } = require('../core/BaseEntity');
 
-
 function getProcessLogsClass(processName) {
   const ProcessLogs = class extends BaseEntity {
     constructor(log) {
@@ -11,13 +10,13 @@ function getProcessLogsClass(processName) {
     saveRecord() {
       super.saveRecord();
       global.events.emit('onLog', {
-        key: this.constructor.name,
-        log: this.log
+        key: this.constructor._baseName,
+        log: this.getFitData(),
       });
       // TODO 也许能优化
       const datas = this.constructor.pageRecords({
         pageSize: 2000,
-        sort: 'updateOn desc'
+        sort: 'updateOn desc',
       });
       if (datas.length === 2000) {
         const oldestDate = datas.pop().updateOn;
@@ -41,7 +40,7 @@ function getProcessLogsClass(processName) {
     }
   };
   ProcessLogs.schema = {
-    log: null
+    log: null,
   };
   ProcessLogs._baseName = `ProcessLogs_${processName}`;
   return ProcessLogs;

@@ -1,4 +1,5 @@
 const { getDataFromToken } = require('./jwt');
+const Users = require('../models/Users');
 
 const socketHandlers = [];
 const registerSocket = (path, callback) => {
@@ -9,7 +10,7 @@ const registerSocket = (path, callback) => {
     //
     //   next();
     // });
-    testNS.on('connection', socket => {
+    testNS.on('connection', (socket) => {
       const token = socket.handshake.query.token;
 
       if (!token) {
@@ -17,7 +18,7 @@ const registerSocket = (path, callback) => {
       } else {
         try {
           const { user } = getDataFromToken(token);
-          socket.currentUser = user;
+          socket.currentUser = Users.getEntityByData(user, '@');
           callback(socket);
         } catch (e) {
           socket.emit('error', 'token expired');
@@ -32,11 +33,10 @@ const registerSocket = (path, callback) => {
         // });
       }
     });
-
   });
 };
 
 module.exports = {
   registerSocket,
-  socketHandlers
+  socketHandlers,
 };

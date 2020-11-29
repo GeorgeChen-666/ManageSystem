@@ -16,7 +16,7 @@ const {
 } = require('../core/RouteHelper');
 
 registerSocket('process', (socket) => {
-  socket.emit('msg', 'process ready');
+  //socket.emit('msg', 'process ready');
   global.events.on('onLog', ({ key = '', log }) => {
     console.log('=======>', log);
     const [, processId] = key.split('_');

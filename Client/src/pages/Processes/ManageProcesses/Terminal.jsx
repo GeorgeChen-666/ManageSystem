@@ -1,36 +1,41 @@
-import React, {useEffect, useState, Fragment} from 'react';
+import React, { useEffect, useState, useRef, Fragment } from 'react';
 import _ from 'lodash';
-import {Checkbox, Input, Modal, List} from 'antd';
-import {Link, matchPath, useRouteMatch, useHistory} from 'react-router-dom';
+import { Modal } from 'antd';
+import { useRouteMatch, useHistory } from 'react-router-dom';
 import * as processLogModel from '../../../models/ProcessLog';
 import useLoading from '../../../components/Hooks/useLoading';
 import InfiniteScrollList from '../../../components/InfiniteScrollList';
-import {sendCommand} from '../../../services/process';
+import { sendCommand } from '../../../services/process';
+import { registerSocket } from '../../../common/socket';
 import styles from '../Style.module.less';
 
 const setTextBoxFocus = () => {
-  const el = document.getElementById('cmdTextBox');
-  if (!el) return;
-  const range = document.createRange();
-  el.focus();
-  range.selectNodeContents(el);
-  range.collapse(false);
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
+  setTimeout(() => {
+    const el = document.getElementById('cmdTextBox');
+    if (!el) return;
+    const range = document.createRange();
+    el.focus();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }, 400);
 };
 
 export default () => {
   const history = useHistory();
   let match = useRouteMatch();
-  const id = _.get(match, ["params", "id"]);
+  const id = _.get(match, ['params', 'id']);
   const [doFetchList, isFetchListLoading] = useLoading(
     processLogModel.useFetchList(id)
   );
   const [sendCmd, isSendingCmd] = useLoading(sendCommand);
-  const [{listData}] = processLogModel.useData();
+  const [{ listData }] = processLogModel.useData();
+  const addNewLogFromWS = useRef(() => {});
+  addNewLogFromWS.current = processLogModel.useAddNewLogFromWS();
 
-  const onTextEnter = ({keyCode}) => {
+  const onTextEnter = ({ keyCode }) => {
     if (keyCode === 13 && !isSendingCmd) {
       const el = document.getElementById('cmdTextBox');
       const command = el.innerText;
@@ -41,10 +46,16 @@ export default () => {
   };
   useEffect(() => {
     doFetchList();
-    const timer = setTimeout(setTextBoxFocus, 400);
+    const socket = registerSocket('process', (socket) => {
+      socket.on('msg', (data) => {
+        addNewLogFromWS.current(data);
+        setTextBoxFocus();
+      });
+    });
+    setTextBoxFocus();
     return () => {
-      clearTimeout(timer);
-    }
+      socket.close();
+    };
   }, []);
 
   const [focus, setFocus] = useState(true);
@@ -78,7 +89,7 @@ export default () => {
                   if (listData.items.length === index + 1) {
                     return (
                       <div onClick={setTextBoxFocus}>
-                        <pre style={{marginBottom: 0}}>{item.log}</pre>
+                        <pre style={{ marginBottom: 0 }}>{item.log}</pre>
                         <div
                           id={'cmdTextBox'}
                           className={styles.cmdTextBox}
@@ -103,7 +114,7 @@ export default () => {
                       </div>
                     );
                   } else {
-                    return <pre style={{marginBottom: 0}}>{item.log}</pre>;
+                    return <pre style={{ marginBottom: 0 }}>{item.log}</pre>;
                   }
                 })()}
               </Fragment>
