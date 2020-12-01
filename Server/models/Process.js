@@ -1,15 +1,27 @@
 const {
   AuthorizedEntity,
   enumPermissions,
-  enumPermissionTypes,
+  enumPermissionTypes
 } = require('../core/AuthorizedEntity');
 const { BaseProcess } = require('../core/BaseProcess');
 const { getProcessLogsClass } = require('./ProcessLogs');
+const appRoot = require('app-root-path');
+const fs = require('fs');
+const path = require('path');
 const activeProcess = new Map();
 
 class SystemProcess extends BaseProcess {
   constructor(config) {
     super(config);
+    try {
+      fs.statSync(config.cwd);
+    } catch (e) {
+      fs.mkdirSync(config.cwd);
+    }
+    console.log(`=${config.cwd}=`);
+    fs.readdirSync(config.cwd).forEach((file) => {
+      console.log(file);
+    });
   }
 }
 
@@ -19,7 +31,7 @@ class Process extends AuthorizedEntity {
     Object.defineProperty(this, 'isRunning', {
       configurable: true,
       enumerable: true,
-      get: function () {
+      get: function() {
         try {
           const process = activeProcess.get(this.name);
           if (process) {
@@ -30,8 +42,9 @@ class Process extends AuthorizedEntity {
         } catch (e) {
           return false;
         }
-      },
+      }
     });
+    this.cwd = path.join(appRoot.path, `/storage/program/${this.id}`);
   }
 
   static fitData(data) {
@@ -42,14 +55,17 @@ class Process extends AuthorizedEntity {
     }
     return { ...data, isRunning };
   }
+
   sendCommand(command) {
     this.constructor.checkPermission(this, enumPermissionTypes.modify);
     const { processObj } = activeProcess.get(this.name);
     processObj.sendCommand(command);
   }
+
   addLog(log) {
     new (getProcessLogsClass(this.id))(log).saveRecord();
   }
+
   load() {
     const { cmd, param, cwd, encoding } = this;
     const processObj = new SystemProcess({ cmd, param, cwd, encoding });
@@ -62,7 +78,7 @@ class Process extends AuthorizedEntity {
     }
     activeProcess.set(this.name, {
       processObj,
-      ftpObj: null,
+      ftpObj: null
     });
   }
 
@@ -100,16 +116,16 @@ Process.schema = {
   ftpPort: String,
   cmd: null,
   param: null,
-  cwd: null,
+  //cwd: null,
   encoding: null,
-  outputs: null,
+  outputs: null
 };
 Process.functionPermissions = {
   [enumPermissionTypes.get]: enumPermissions.own,
   [enumPermissionTypes.query]: enumPermissions.own,
   [enumPermissionTypes.create]: enumPermissions.own,
   [enumPermissionTypes.modify]: enumPermissions.own,
-  [enumPermissionTypes.remove]: enumPermissions.own,
+  [enumPermissionTypes.remove]: enumPermissions.own
 };
 setTimeout(() => {
   Process.loadAllActiveProcess();

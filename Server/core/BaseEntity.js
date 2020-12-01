@@ -9,7 +9,7 @@ const systemProperty = Object.freeze({
   createOn: 'createOn',
   createBy: 'createBy',
   updateOn: 'updateOn',
-  updateBy: 'updateBy',
+  updateBy: 'updateBy'
 });
 
 class BaseEntity {
@@ -21,30 +21,30 @@ class BaseEntity {
     Object.defineProperty(this, 'data', {
       enumerable: false,
       writable: true,
-      value: {},
+      value: {}
     });
     Object.defineProperty(this, 'currentUser', {
       enumerable: false,
       writable: true,
-      value: cUser,
+      value: cUser
     });
     const keys = Object.keys(this.constructor.schema);
     [...Object.values(systemProperty), ...keys].forEach((key) => {
       Object.defineProperty(this, key, {
         configurable: true,
         enumerable: true,
-        set: function (value) {
+        set: function(value) {
           this.data[key] = value;
         },
-        get: function () {
+        get: function() {
           return this.data[key];
-        },
+        }
       });
     });
     if (id) {
       this.data = this.constructor._findById(id).value();
     } else {
-      this.data = {};
+      this.data = { [systemProperty.id]: new Date().getTime() };
     }
   }
 
@@ -112,11 +112,6 @@ class BaseEntity {
   saveRecord() {
     const isNew = this.isNew();
     const updateObj = this.getData();
-    _.set(
-      updateObj,
-      systemProperty.id,
-      _.get(this, systemProperty.id, new Date().getTime())
-    );
 
     if (isNew) {
       _.set(updateObj, systemProperty.createOn, new Date().getTime());
@@ -140,7 +135,7 @@ class BaseEntity {
 
   static _findById(id) {
     return this._getRecordsObject().find({
-      [systemProperty.id]: id * 1,
+      [systemProperty.id]: id * 1
     });
   }
 
@@ -208,11 +203,11 @@ class BaseEntity {
   }
 
   static pageRecords({
-    searchAfter = null,
-    pageSize = 10,
-    filter = null,
-    sort = '',
-  }) {
+                       searchAfter = null,
+                       pageSize = 10,
+                       filter = null,
+                       sort = ''
+                     }) {
     let obj = this._getRecordsObject();
     const filterArray = [].concat(filter).filter((e) => e);
     obj = filterArray.reduce((to, cu) => {

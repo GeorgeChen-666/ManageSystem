@@ -14,7 +14,7 @@ class BaseProcess extends EventEmitter {
     const { cmd, param, cwd, encoding = defaultEncoding } = this.config;
     //this.kill(true);
     this.process = child_process.spawn(cmd, param, {
-      //cwd,
+      cwd
       //stdio: 'pipe',
       //stdio: [process.stdin, process.stdout],
     });
