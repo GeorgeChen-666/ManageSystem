@@ -16,6 +16,8 @@ import InfiniteScrollList from '../../../components/InfiniteScrollList';
 import ListItem from './ListItem';
 import Terminal from './Terminal';
 import ProcessEditor from './ProcessEditor';
+import ProcessCreator from './ProcessCreator';
+
 
 export default () => {
   let match = useRouteMatch();
@@ -69,7 +71,7 @@ export default () => {
           {listDataDone && <Terminal />}
         </Route>
         <Route path={[`${match.path}/add`]}>
-          {listDataDone && <ProcessEditor />}
+          {listDataDone && <ProcessCreator />}
         </Route>
       </Switch>
     </PageContainer>
