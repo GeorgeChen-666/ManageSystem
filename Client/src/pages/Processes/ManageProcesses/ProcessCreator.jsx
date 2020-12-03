@@ -1,16 +1,22 @@
-import React, { useRef } from 'react';
+import React, { useRef,useState } from 'react';
 import { Checkbox, Input, Modal, Dropdown, Button, Select } from 'antd';
 import { Link, matchPath, useRouteMatch, useHistory } from 'react-router-dom';
 import ValidationForm from '../../../components/Form/ValidationForm';
 import FormField from '../../../components/Form/FormField';
 import { DownOutlined } from '@ant-design/icons';
 import styles from '../Style.module.less';
-
+import mime from 'mime';
+import { FilePond, registerPlugin } from 'react-filepond';
+import fpfvs from 'filepond-plugin-file-validate-size';
+registerPlugin(fpfvs);
 const { Option } = Select;
-
+//fileRef.current.getFile().file
 export default (props) => {
   const history = useHistory();
   const formRef = useRef({});
+  const [fileObject,setFileObject] = useState();
+  const fileRef = useRef({});
+  console.log(mime.getType('jar'))
   const data = {};
   return (
     <Modal
@@ -31,11 +37,13 @@ export default (props) => {
           label={' '}
           style={{ textAlign: 'right' }}
         >
-          <Select defaultValue={1}>
-            <Option value={1}>高级模式</Option>
-            <Option value={2}>Java进程</Option>
-            <Option value={3}>Node进程</Option>
-          </Select>
+          <FilePond
+            onupdatefiles={(fileItems)=>{
+              setFileObject(fileItems[0])
+            }}
+            allowMultiple={false}
+            maxFiles={1}
+          />
         </FormField>
         <FormField
           name="name"
@@ -65,6 +73,7 @@ export default (props) => {
           <Checkbox />
         </FormField>
       </ValidationForm>
+      <Button onClick={()=>{console.log(fileRef);debugger;}}>????</Button>
     </Modal>
   );
 };
