@@ -33,26 +33,32 @@ export default (props) => {
           <Input />
         </FormField>
         <FormField
-          labelCol={{ span: 5 }}
-          label={' '}
-          style={{ textAlign: 'right' }}
-        >
-          <FilePond
-            onupdatefiles={(fileItems)=>{
-              setFileObject(fileItems[0])
-            }}
-            allowMultiple={false}
-            maxFiles={1}
-          />
-        </FormField>
-        <FormField
           name="name"
           required={true}
-          label={'服务器名'}
+          label={'服务名称'}
           labelCol={{ span: 5 }}
           initialValue={data.nickname}
         >
           <Input />
+        </FormField>
+        <FormField
+          name="file"
+          required={true}
+          labelCol={{ span: 5 }}
+          label={'服务文件'}
+          style={{ textAlign: 'right' }}
+          trigger={'onupdatefiles'}
+        >
+          <FilePond
+            // onupdatefiles={(fileItems)=>{
+            //   setFileObject(fileItems[0])
+            // }}
+            // onchage={()=>{
+            //   console.log('=')
+            // }}
+            allowMultiple={false}
+            maxFiles={1}
+          />
         </FormField>
         <FormField
           name="param"

@@ -4,6 +4,6 @@ import { useScripts } from './FormField.Scripts';
 
 const FormField = (props) => {
   const { params } = useScripts(props);
-  return <Form.Item {...params}>{props.children}</Form.Item>;
+  return <Form.Item {...props} {...params}>{props.children}</Form.Item>;
 };
 export default FormField;
