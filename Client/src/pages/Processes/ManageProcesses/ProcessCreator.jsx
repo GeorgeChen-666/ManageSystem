@@ -10,7 +10,7 @@ import {FilePond, registerPlugin} from 'react-filepond';
 import fpfvs from 'filepond-plugin-file-validate-size';
 
 registerPlugin(fpfvs);
-const allowedExtensions = [ 'js', 'exe', 'bat', 'cmd', 'sh', 'jar', 'class', 'zip'];
+const allowedExtensions = ['js', 'exe', 'bat', 'cmd', 'sh', 'jar', 'class', 'zip'];
 const {Option} = Select;
 //fileRef.current.getFile().file
 export default (props) => {
@@ -30,8 +30,7 @@ export default (props) => {
       destroyOnClose={true}
       className={styles.terminalModal}
     >
-      <ValidationForm ref={formRef} name={props.name} onSubmit={() => {
-      }}>
+      <ValidationForm ref={formRef} name={props.name}>
         <FormField name="id" hidden={true} initialValue={data.id}>
           <Input/>
         </FormField>
@@ -44,50 +43,70 @@ export default (props) => {
         >
           <Input/>
         </FormField>
-        <FormField
-          name="file"
-          labelCol={{span: 5}}
-          label={'服务文件'}
-          style={{textAlign: 'right'}}
-          trigger={'onupdatefiles'}
-          rules={[
-            {
-              validator: async (rule, value) => {
-                const [file = {}] = value;
-                const {fileExtension} = file;
-                if (![undefined,...allowedExtensions].includes(fileExtension)) {
-                  return Promise.reject(new Error('文件类型不支持！'));
+        <FormField noStyle shouldUpdate>
+          {({setFieldsValue}) => {
+            return <FormField
+              name="file"
+              labelCol={{span: 5}}
+              label={'服务文件'}
+              style={{textAlign: 'right'}}
+              trigger={'onupdatefiles'}
+              rules={[
+                {
+                  validator: async (rule, value) => {
+                    const [file = {}] = value;
+                    const {fileExtension} = file;
+                    if (![undefined, ...allowedExtensions].includes(fileExtension)) {
+                      return Promise.reject(new Error('文件类型不支持！'));
+                    }
+                  }
                 }
-              }
-            }
-          ]}
-        >
-          <FilePond
-            labelIdle={`拖拽文件至此或 <span class="filepond--label-action">浏览</span><br />支持格式：${allowedExtensions.join(',')}`}
-            allowMultiple={false}
-            maxFiles={1}
-          />
+              ]}
+            >
+              <FilePond
+                labelIdle={`拖拽文件至此或 <span class="filepond--label-action">浏览</span><br />支持格式：${allowedExtensions.join(',')}`}
+                allowMultiple={false}
+                maxFiles={1}
+                onupdatefiles={(fileItems) => {
+                  let value = fileItems.length === 0 ? null : fileItems[0].id;
+                  setFieldsValue({exe: value});
+                }}
+              />
+            </FormField>
+          }}
         </FormField>
-        <FormField
-          name="exe"
-          label={'应用程序'}
-          labelCol={{span: 5}}
-          initialValue={data.cmd}
-        >
-          <Select style={{ width: 240 }}>
-            <Option value="jack">Jack</Option>
-            <Option value="lucy">Lucy</Option>
-            <Option value="Yiminghe">yiminghe</Option>
-          </Select>
+
+        <FormField noStyle shouldUpdate={(pv, cv) => pv.file !== cv.file}>
+          {({getFieldValue, getFieldError}) => {
+            const fieldValue = (!getFieldError('file').length && getFieldValue('file')) || [];
+            const fileList = fieldValue.map(file => ({label: file.filename, value: file.id}));
+            return <FormField
+              name="exe"
+              label={'应用程序'}
+              labelCol={{span: 5}}
+              initialValue={data.cmd}
+            >
+              <Select style={{width: 240}} options={fileList}>
+              </Select>
+            </FormField>;
+          }}
         </FormField>
-        <FormField
-          name="param"
-          label={'附加参数'}
-          labelCol={{span: 5}}
-          initialValue={data.username}
-        >
-          <Input/>
+        <FormField noStyle shouldUpdate={(pv, cv) => pv.file !== cv.file}>
+          {({getFieldValue, getFieldError, setFieldsValue}) => {
+            const fieldValue = getFieldValue('exe');
+            const fieldObject = (getFieldValue('file') || []).find(file => file.id === fieldValue);
+            console.log("===", fieldObject)
+            return <FormField
+              name="param"
+              label={'附加参数'}
+              labelCol={{span: 5}}
+              initialValue={data.username}
+            >
+              <Input/>
+            </FormField>;
+          }}
         </FormField>
+
         <FormField
           name="isAutoStart"
           valuePropName="checked"
