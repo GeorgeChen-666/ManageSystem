@@ -1,13 +1,13 @@
-import jwt_decode from 'jwt-decode';
+import { getUserFromToken } from '../../utils/token';
+
 export default () => {
+  const invalidCB = () => {
+    window.location.href = '/login';
+  };
   return {
     getCurrentUser: () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        return jwt_decode(token).user;
-      } else {
-        return null;
-      }
+      const { user } = getUserFromToken(invalidCB);
+      return user;
     },
   };
 };

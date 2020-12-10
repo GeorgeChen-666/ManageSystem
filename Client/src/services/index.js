@@ -1,24 +1,19 @@
 import _ from 'lodash';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import { getUserFromToken } from '../utils/token';
 
 const registerAxioInterceptors = () => {
   axios.interceptors.request.use(
     async (config) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const { exp } = jwt_decode(token);
-        const fresh = exp * 1000 - new Date().getTime();
+      const invalidCB = () => {
         if (config.url !== '/api/users/login') {
-          if (fresh < 1800000 && fresh > 0) {
-            //TODO 如果快超时了就刷新token
-            console.log('需要调用刷token');
-          }
-          if (fresh <= 0) {
-            window.location.href = '/login';
-          }
-          config.headers.Authorization = 'Bearer ' + token;
+          window.location.href = '/login';
         }
+      };
+      const { token } = getUserFromToken(invalidCB);
+      if (token) {
+        config.headers.Authorization = 'Bearer ' + token;
       }
       return config;
     },
