@@ -6,13 +6,14 @@ import { getUserFromToken } from '../utils/token';
 const registerAxioInterceptors = () => {
   axios.interceptors.request.use(
     async (config) => {
+      const isLogin = config.url === '/api/users/login'
       const invalidCB = () => {
-        if (config.url !== '/api/users/login') {
+        if (!isLogin) {
           window.location.href = '/login';
         }
       };
       const { token } = getUserFromToken(invalidCB);
-      if (token) {
+      if (token && !isLogin) {
         config.headers.Authorization = 'Bearer ' + token;
       }
       return config;
