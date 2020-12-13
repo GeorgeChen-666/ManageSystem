@@ -1,7 +1,7 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Card } from 'antd';
 import React, { useEffect } from 'react';
-import {Link, Switch, Route, useRouteMatch} from 'react-router-dom';
+import { Link, Switch, Route, useRouteMatch } from 'react-router-dom';
 import UserEditor from './UserEditor';
 import styles from '../Style.module.less';
 import * as userModel from '../../../models/Users';
@@ -23,10 +23,6 @@ export default () => {
   return (
     <PageContainer
       extra={[
-        <Button key="3" onClick={() => doFetchList()}>
-          Fetch
-        </Button>,
-        <Button key="2">操作</Button>,
         <Link key="1" to={PATH_ADD}>
           <Button type="primary">添加</Button>
         </Link>,

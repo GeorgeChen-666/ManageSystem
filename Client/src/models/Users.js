@@ -3,7 +3,7 @@ import { login, fetchList, register, modify } from '../services/user';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 
-const usersState = atom({
+const state = atom({
   key: 'Users',
   default: {
     listData: {
@@ -11,15 +11,15 @@ const usersState = atom({
     },
   },
 });
-const usersListState = selector({
+const listState = selector({
   key: 'Users.List',
-  get: ({ get }) => get(usersState).listData,
+  get: ({ get }) => get(state).listData,
   set: ({ set, get }, newValue) =>
-    set(usersState, { ...get(usersState), listData: newValue }),
+    set(state, { ...get(state), listData: newValue }),
 });
-export const useData = () => useRecoilState(usersState);
+export const useData = () => useRecoilState(state);
 export const useFetchList = () => {
-  const [listData, setListData] = useRecoilState(usersListState);
+  const [listData, setListData] = useRecoilState(listState);
   return async (payload = {}, { isNew = false, keepSize = false } = {}) => {
     if (!isNew) {
       const { searchAfter } = listData;
@@ -46,6 +46,10 @@ export const useFetchList = () => {
       return newListData;
     });
   };
+};
+export const useEntity = () => {
+  const [listData] = useRecoilState(listState);
+  return (id) => _.find(_.get(listData, ['items']), { id: id * 1 }) || {};
 };
 export const useCheckAutoLogin = () => {
   const doLogin = useDoLogin();

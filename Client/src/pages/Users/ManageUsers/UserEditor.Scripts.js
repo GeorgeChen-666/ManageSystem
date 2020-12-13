@@ -1,20 +1,16 @@
 import * as userModel from '../../../models/Users';
-import { useHistory, matchPath, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import useLoading from '../../../components/Hooks/useLoading';
-import _ from 'lodash';
+import useEditor from '../../../components/Hooks/useEditor';
 
 export const useScripts = () => {
   const history = useHistory();
-  const match = useRouteMatch();
-  let id = null;
-  if (match.params.id) {
-    id = match.params.id * 1;
-  }
+  const editor = useEditor();
+  let id = editor.getId();
   const [doSave, isSaveLoading] = useLoading(
     id ? userModel.useDoModify() : userModel.useDoRegister()
   );
-  const [{ listData }] = userModel.useData();
-  const data = _.find(_.get(listData, ['items']), { id: id * 1 }) || {};
+  const data = editor.getEntity(userModel);
   if (id && id !== data.id) {
     history.goBack();
   }

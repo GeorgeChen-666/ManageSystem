@@ -2,13 +2,6 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Card } from 'antd';
 import React, { useEffect } from 'react';
 import { Link, Switch, Route, useRouteMatch } from 'react-router-dom';
-import {
-  HomeOutlined,
-  SettingFilled,
-  SmileOutlined,
-  SyncOutlined,
-  LoadingOutlined,
-} from '@ant-design/icons';
 import styles from '../Style.module.less';
 import * as processModel from '../../../models/Processes';
 import useLoading from '../../../components/Hooks/useLoading';
@@ -16,12 +9,9 @@ import InfiniteScrollList from '../../../components/InfiniteScrollList';
 import ListItem from './ListItem';
 import Terminal from './Terminal';
 import ProcessEditor from './ProcessEditor';
-import ProcessCreator from './ProcessCreator';
-
 
 export default () => {
   let match = useRouteMatch();
-  console.log(match.path);
   const PATH_ADD = `${match.path}/add`;
   const [doFetchList, isFetchListLoading] = useLoading(
     processModel.useFetchList()
@@ -34,10 +24,6 @@ export default () => {
   return (
     <PageContainer
       extra={[
-        <Button key="3" onClick={() => doFetchList()}>
-          Fetch
-        </Button>,
-        <Button key="2">操作</Button>,
         <Link key="1" to={PATH_ADD}>
           <Button type="primary">添加</Button>
         </Link>,
@@ -70,8 +56,11 @@ export default () => {
         <Route path={[`${match.path}/terminal/:id`]}>
           {listDataDone && <Terminal />}
         </Route>
+        <Route path={[`${match.path}/modify/:id`]}>
+          {listDataDone && <ProcessEditor />}
+        </Route>
         <Route path={[`${match.path}/add`]}>
-          {listDataDone && <ProcessCreator />}
+          {listDataDone && <ProcessEditor />}
         </Route>
       </Switch>
     </PageContainer>
