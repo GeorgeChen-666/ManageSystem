@@ -1,25 +1,21 @@
 const {
   AuthorizedEntity,
   enumPermissions,
-  enumPermissionTypes
+  enumPermissionTypes,
 } = require('../core/AuthorizedEntity');
 const { BaseProcess } = require('../core/BaseProcess');
 const { getProcessLogsClass } = require('./ProcessLogs');
 const appRoot = require('app-root-path');
-const fs = require('fs');
+const FsHelper = require('../core/FsHelper');
 const path = require('path');
 const activeProcess = new Map();
 
 class SystemProcess extends BaseProcess {
   constructor(config) {
     super(config);
-    try {
-      fs.statSync(config.cwd);
-    } catch (e) {
-      fs.mkdirSync(config.cwd);
-    }
+    FsHelper.checkOrCreateFolder(config.cwd);
     console.log(`=${config.cwd}=`);
-    fs.readdirSync(config.cwd).forEach((file) => {
+    FsHelper.getFolderItems(config.cwd).forEach((file) => {
       console.log(file);
     });
   }
@@ -31,7 +27,7 @@ class Process extends AuthorizedEntity {
     Object.defineProperty(this, 'isRunning', {
       configurable: true,
       enumerable: true,
-      get: function() {
+      get: function () {
         try {
           const process = activeProcess.get(this.name);
           if (process) {
@@ -42,7 +38,7 @@ class Process extends AuthorizedEntity {
         } catch (e) {
           return false;
         }
-      }
+      },
     });
     this.cwd = path.join(appRoot.path, `/storage/program/${this.id}`);
   }
@@ -78,10 +74,13 @@ class Process extends AuthorizedEntity {
     }
     activeProcess.set(this.name, {
       processObj,
-      ftpObj: null
+      ftpObj: null,
     });
   }
-
+  static pageRecords(...args) {
+    const datas = super.pageRecords(...args);
+    datas.forEach((data) => {});
+  }
   static pageProcessLogs(id, params) {
     const entity = new this(id);
     return getProcessLogsClass(entity.id).pageRecords(params);
@@ -118,14 +117,14 @@ Process.schema = {
   param: null,
   //cwd: null,
   encoding: null,
-  outputs: null
+  outputs: null,
 };
 Process.functionPermissions = {
   [enumPermissionTypes.get]: enumPermissions.own,
   [enumPermissionTypes.query]: enumPermissions.own,
   [enumPermissionTypes.create]: enumPermissions.own,
   [enumPermissionTypes.modify]: enumPermissions.own,
-  [enumPermissionTypes.remove]: enumPermissions.own
+  [enumPermissionTypes.remove]: enumPermissions.own,
 };
 setTimeout(() => {
   Process.loadAllActiveProcess();
