@@ -1,5 +1,5 @@
 import { atom, selector, useRecoilState } from 'recoil';
-import { fetchList } from '../services/process';
+import { fetchList, modify } from '../services/process';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 
@@ -50,4 +50,14 @@ export const useFetchList = () => {
 export const useEntity = () => {
   const [listData] = useRecoilState(listState);
   return (id) => _.find(_.get(listData, ['items']), { id: id * 1 }) || {};
+};
+export const useDoModify = () => {
+  const doFetchList = useFetchList();
+  const history = useHistory();
+  return async (payload) => {
+    payload.file = _.map(payload.file,file=>file.file);
+    await modify(payload);
+    await doFetchList({}, { isNew: true, keepSize: true });
+    history.goBack();
+  };
 };

@@ -1,22 +1,18 @@
 import * as userModel from '../../../models/Users';
-import { useHistory } from 'react-router-dom';
-import useLoading from '../../../components/Hooks/useLoading';
+import {useHistory} from 'react-router-dom';
 import useEditor from '../../../components/Hooks/useEditor';
 
 export const useScripts = () => {
-  const history = useHistory();
-  const editor = useEditor();
-  let id = editor.getId();
-  const [doSave, isSaveLoading] = useLoading(
-    id ? userModel.useDoModify() : userModel.useDoRegister()
-  );
-  const data = editor.getEntity(userModel);
-  if (id && id !== data.id) {
-    history.goBack();
-  }
+  //const history = useHistory();
+  const editor = useEditor(userModel);
+  //let id = editor.getId();
+  const data = editor.getEntity();
+  // if (id && id !== data.id) {
+  //   history.goBack();
+  // }
   return {
     data,
-    doSave,
-    isSaveLoading,
+    doSave: editor.doSave,
+    isSaveLoading: editor.isSaveLoading,
   };
 };

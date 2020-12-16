@@ -6,7 +6,7 @@ import { getUserFromToken } from '../utils/token';
 const registerAxioInterceptors = () => {
   axios.interceptors.request.use(
     async (config) => {
-      const isLogin = config.url === '/api/users/login'
+      const isLogin = config.url === '/api/users/login';
       const invalidCB = () => {
         if (!isLogin) {
           window.location.href = '/login';

@@ -11,9 +11,9 @@ class BaseProcess extends EventEmitter {
 
   run() {
     const defaultEncoding = os.platform() === 'win32' ? 'GBK' : 'UTF-8';
-    const { cmd, param, cwd, encoding = defaultEncoding } = this.config;
+    const { cmd, param = '', cwd, encoding = defaultEncoding } = this.config;
     //this.kill(true);
-    this.process = child_process.spawn(cmd, param, {
+    this.process = child_process.spawn(cmd, param.split(' '), {
       cwd
       //stdio: 'pipe',
       //stdio: [process.stdin, process.stdout],

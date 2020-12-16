@@ -3,7 +3,9 @@ import axios from 'axios';
 export async function fetchList(params) {
   return axios.get('/api/process/page', { params });
 }
-
+export function modify(entity) {
+  return axios.patch(`/api/process/modify/${entity.id}`, entity);
+}
 export async function fetchLogs(id, params) {
   return axios.get(`/api/process/${id}/pageLogs`, {
     params: {

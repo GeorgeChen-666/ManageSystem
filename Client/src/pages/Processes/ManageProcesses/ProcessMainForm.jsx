@@ -1,18 +1,32 @@
 import FormField from '../../../components/Form/FormField';
-import { Checkbox, Input, Select } from 'antd';
+import {Checkbox, Input, Select} from 'antd';
 import ValidationForm from '../../../components/Form/ValidationForm';
-import React from 'react';
-import { FilePond, registerPlugin } from 'react-filepond';
+import React, {forwardRef} from 'react';
+import {FilePond, registerPlugin} from 'react-filepond';
 import fpfvs from 'filepond-plugin-file-validate-size';
+
 
 registerPlugin(fpfvs);
 
-export default (props) => {
+function fileName2Command(filename = "") {
+  const [, ext] = filename.split('.');
+  let cmd = filename;
+  if (ext === 'js') {
+    cmd = `node ${cmd}`;
+  } else if (ext === 'class') {
+    cmd = `java ${cmd}`;
+  } else if (ext === 'jar') {
+    cmd = `java -jar ${cmd}`;
+  }
+  return cmd;
+}
+
+export default forwardRef((props, ref) => {
   const allowedExtensions = ' js exe bat cmd sh jar class zip'.split(' ');
   return (
-    <ValidationForm name={props.name} labelCol={{ span: 5 }}>
+    <ValidationForm name={props.name} ref={ref} labelCol={{span: 5}} onSubmit={props.onSubmit}>
       <FormField name="id" hidden={true} initialValue={props.data.id}>
-        <Input />
+        <Input/>
       </FormField>
       <FormField
         name="name"
@@ -20,27 +34,31 @@ export default (props) => {
         label={'服务名称'}
         initialValue={props.data.name}
       >
-        <Input />
+        <Input/>
       </FormField>
       <FormField noStyle shouldUpdate>
-        {({ setFieldsValue }) => {
+        {({setFieldsValue}) => {
           return (
             <FormField
               name="file"
-              label={'服务文件'}
-              style={{ textAlign: 'right' }}
+              label={'上传文件'}
+              style={{textAlign: 'right'}}
               trigger={'onupdatefiles'}
+              //getValueProps={(value) => {debugger;return 666}}//(value||[]).map(f=>f.file)
               rules={[
                 {
                   validator: async (rule, value) => {
-                    const [file = {}] = value;
-                    const { fileExtension, filename } = file;
+                    const [file = {}] = value || [];
+                    const {fileExtension, filename} = file;
                     if (
                       ![undefined, ...allowedExtensions].includes(
                         fileExtension === filename ? '' : fileExtension
                       )
                     ) {
                       return Promise.reject(new Error('文件类型不支持！'));
+                    }
+                    if (props.data.exeOptions.includes(filename)) {
+                      return Promise.reject(new Error('文件名重复！'));
                     }
                   },
                 },
@@ -52,10 +70,6 @@ export default (props) => {
                 )}`}
                 allowMultiple={false}
                 maxFiles={1}
-                onupdatefiles={(fileItems) => {
-                  let value = fileItems.length === 0 ? null : fileItems[0].id;
-                  setFieldsValue({ cmd: value });
-                }}
               />
             </FormField>
           );
@@ -63,41 +77,44 @@ export default (props) => {
       </FormField>
 
       <FormField noStyle shouldUpdate={(pv, cv) => pv.file !== cv.file}>
-        {({ getFieldValue, getFieldError }) => {
+        {({getFieldValue, getFieldError, setFieldsValue}) => {
           const fieldValue =
             (!getFieldError('file').length && getFieldValue('file')) || [];
-          const fileList = fieldValue.map((file) => {
-            let label = file.filename;
-            if (file.fileExtension === 'js') {
-              label = `node ${label}`;
-            } else if (file.fileExtension === 'class') {
-              label = `java ${label}`;
-            } else if (file.fileExtension === 'jar') {
-              label = `java -jar ${label}`;
-            }
-            return {
-              label,
-              value: file.id,
-            };
-          });
+          const fileListUpload = fieldValue.map((file) => ({
+            value: file.filename,
+          }));
+          const fileListExist = props.data.exeOptions.map((fileName) => ({
+            value: fileName,
+          }));
+          const fileList = [...fileListUpload, ...fileListExist];
           return (
             <FormField
-              name="cmd"
-              label={'执行命令'}
-              initialValue={props.data.cmd}
+              name="exeList"
+              label={'入口文件'}
             >
-              <Select options={fileList} />
+              <Select options={fileList} onChange={(value) => {
+                setFieldsValue({cmd: fileName2Command(value), param: ''});
+              }}/>
             </FormField>
           );
         }}
       </FormField>
-      <FormField noStyle shouldUpdate={(pv, cv) => pv.file !== cv.file}>
+      <FormField noStyle shouldUpdate={(pv, cv) => pv.exeList !== cv.exeList}>
+        <FormField
+          name="cmd"
+          label={'执行命令'}
+          initialValue={props.data.cmd}
+        >
+          <Input/>
+        </FormField>
+      </FormField>
+      <FormField noStyle shouldUpdate={(pv, cv) => pv.exeList !== cv.exeList}>
         <FormField
           name="param"
           label={'附加参数'}
           initialValue={props.data.param}
         >
-          <Input />
+          <Input/>
         </FormField>
       </FormField>
 
@@ -107,8 +124,8 @@ export default (props) => {
         label={'自动启动'}
         initialValue={props.data.autoStart}
       >
-        <Checkbox />
+        <Checkbox/>
       </FormField>
     </ValidationForm>
   );
-};
+});

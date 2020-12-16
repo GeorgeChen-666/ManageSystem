@@ -1,6 +1,6 @@
-import { atom, selector, useRecoilState } from 'recoil';
-import { login, fetchList, register, modify } from '../services/user';
-import { useHistory } from 'react-router-dom';
+import {atom, selector, useRecoilState} from 'recoil';
+import {login, fetchList, register, modify} from '../services/user';
+import {useHistory} from 'react-router-dom';
 import _ from 'lodash';
 
 const state = atom({
@@ -13,16 +13,16 @@ const state = atom({
 });
 const listState = selector({
   key: 'Users.List',
-  get: ({ get }) => get(state).listData,
-  set: ({ set, get }, newValue) =>
-    set(state, { ...get(state), listData: newValue }),
+  get: ({get}) => get(state).listData,
+  set: ({set, get}, newValue) =>
+    set(state, {...get(state), listData: newValue}),
 });
 export const useData = () => useRecoilState(state);
 export const useFetchList = () => {
   const [listData, setListData] = useRecoilState(listState);
-  return async (payload = {}, { isNew = false, keepSize = false } = {}) => {
+  return async (payload = {}, {isNew = false, keepSize = false} = {}) => {
     if (!isNew) {
-      const { searchAfter } = listData;
+      const {searchAfter} = listData;
       payload.searchAfter = searchAfter;
     }
     if (keepSize) {
@@ -32,9 +32,9 @@ export const useFetchList = () => {
     setListData(() => {
       let newListData = {};
       if (!isNew) {
-        newListData = { ...newListData, ...listData };
+        newListData = {...newListData, ...listData};
       }
-      newListData = { ...newListData, ...result.data };
+      newListData = {...newListData, ...result.data};
       if (!isNew) {
         newListData.items = [...listData.items, ...result.data.items];
       }
@@ -49,7 +49,7 @@ export const useFetchList = () => {
 };
 export const useEntity = () => {
   const [listData] = useRecoilState(listState);
-  return (id) => _.find(_.get(listData, ['items']), { id: id * 1 }) || {};
+  return (id) => _.find(_.get(listData, ['items']), {id: id * 1}) || {};
 };
 export const useCheckAutoLogin = () => {
   const doLogin = useDoLogin();
@@ -67,8 +67,8 @@ export const useCheckAutoLogin = () => {
 export const useDoLogin = () => {
   return async (payload) => {
     const result = await login(payload);
-    const { remember } = payload;
-    const { jwt } = result.data;
+    const {remember} = payload;
+    const {jwt} = result.data;
     localStorage.setItem('token', jwt);
     if (remember) {
       payload.expires = new Date().getTime() + 604800000; //一周后，连续一周不进系统就需要重新登录
@@ -78,21 +78,17 @@ export const useDoLogin = () => {
     }
   };
 };
-export const useDoRegister = () => {
-  const doFetchList = useFetchList();
-  const history = useHistory();
-  return async (payload) => {
-    await register(payload);
-    await doFetchList({}, { isNew: true, keepSize: true });
-    history.goBack();
-  };
-};
+
 export const useDoModify = () => {
   const doFetchList = useFetchList();
   const history = useHistory();
   return async (payload) => {
-    await modify(payload);
-    await doFetchList({}, { isNew: true, keepSize: true });
+    if (payload.id) {
+      await modify(payload);
+    } else {
+      await register(payload);
+    }
+    await doFetchList({}, {isNew: true, keepSize: true});
     history.goBack();
   };
 };

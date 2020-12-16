@@ -29,7 +29,7 @@ class Process extends AuthorizedEntity {
       enumerable: true,
       get: function() {
         try {
-          const process = activeProcess.get(this.name);
+          const process = activeProcess.get(this.id);
           if (process) {
             return process.isRunning;
           } else {
@@ -45,7 +45,7 @@ class Process extends AuthorizedEntity {
 
   static fitData(data) {
     let isRunning = false;
-    const process = activeProcess.get(data.name);
+    const process = activeProcess.get(data.id);
     if (process) {
       isRunning = process.processObj.isProcessRun();
     }
@@ -54,7 +54,7 @@ class Process extends AuthorizedEntity {
 
   sendCommand(command) {
     this.constructor.checkPermission(this, enumPermissionTypes.modify);
-    const { processObj } = activeProcess.get(this.name);
+    const { processObj } = activeProcess.get(this.id);
     processObj.sendCommand(command);
   }
 
@@ -72,7 +72,7 @@ class Process extends AuthorizedEntity {
       processObj.run();
       this.addLog('\r\n============== server started ==============\r\n');
     }
-    activeProcess.set(this.name, {
+    activeProcess.set(this.id, {
       processObj,
       ftpObj: null
     });
@@ -100,7 +100,7 @@ class Process extends AuthorizedEntity {
 
   unload() {
     //processObj.kill();
-    activeProcess.delete(this.name);
+    activeProcess.delete(this.id);
   }
 
   static loadAllActiveProcess() {
