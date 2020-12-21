@@ -9,6 +9,7 @@ const appRoot = require('app-root-path');
 const FsHelper = require('../core/FsHelper');
 const path = require('path');
 const activeProcess = new Map();
+const fs = require('fs');
 
 class SystemProcess extends BaseProcess {
   constructor(config) {
@@ -41,6 +42,15 @@ class Process extends AuthorizedEntity {
       }
     });
     this.cwd = path.join(appRoot.path, `/storage/program/${this.id}`);
+  }
+
+  setData(data) {
+    super.setData(data);
+    if (data.file.length > 0) {
+      const [{ fileName, base64 }] = data.file;
+      const dataBuffer = new Buffer(base64, 'base64');
+      fs.writeFileSync(path.join(this.cwd, fileName), dataBuffer);
+    }
   }
 
   static fitData(data) {

@@ -4,9 +4,9 @@ import ValidationForm from '../../../components/Form/ValidationForm';
 import React, {forwardRef} from 'react';
 import {FilePond, registerPlugin} from 'react-filepond';
 import fpfvs from 'filepond-plugin-file-validate-size';
+import fppfe from 'filepond-plugin-file-encode';
 
-
-registerPlugin(fpfvs);
+registerPlugin(fpfvs,fppfe);
 
 function fileName2Command(filename = "") {
   const [, ext] = filename.split('.');

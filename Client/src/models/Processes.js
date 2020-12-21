@@ -1,6 +1,6 @@
-import { atom, selector, useRecoilState } from 'recoil';
-import { fetchList, modify } from '../services/process';
-import { useHistory } from 'react-router-dom';
+import {atom, selector, useRecoilState} from 'recoil';
+import {fetchList, modify} from '../services/process';
+import {useHistory} from 'react-router-dom';
 import _ from 'lodash';
 
 const state = atom({
@@ -13,16 +13,16 @@ const state = atom({
 });
 const listState = selector({
   key: 'Processes.List',
-  get: ({ get }) => get(state).listData,
-  set: ({ set, get }, newValue) =>
-    set(state, { ...get(state), listData: newValue }),
+  get: ({get}) => get(state).listData,
+  set: ({set, get}, newValue) =>
+    set(state, {...get(state), listData: newValue}),
 });
 export const useData = () => useRecoilState(state);
 export const useFetchList = () => {
   const [listData, setListData] = useRecoilState(listState);
-  return async (payload = {}, { isNew = false, keepSize = false } = {}) => {
+  return async (payload = {}, {isNew = false, keepSize = false} = {}) => {
     if (!isNew) {
-      const { searchAfter } = listData;
+      const {searchAfter} = listData;
       payload.searchAfter = searchAfter;
     }
     if (keepSize) {
@@ -32,9 +32,9 @@ export const useFetchList = () => {
     setListData(() => {
       let newListData = {};
       if (!isNew) {
-        newListData = { ...newListData, ...listData };
+        newListData = {...newListData, ...listData};
       }
-      newListData = { ...newListData, ...result.data };
+      newListData = {...newListData, ...result.data};
       if (!isNew) {
         newListData.items = [...listData.items, ...result.data.items];
       }
@@ -49,15 +49,15 @@ export const useFetchList = () => {
 };
 export const useEntity = () => {
   const [listData] = useRecoilState(listState);
-  return (id) => _.find(_.get(listData, ['items']), { id: id * 1 }) || {};
+  return (id) => _.find(_.get(listData, ['items']), {id: id * 1}) || {};
 };
 export const useDoModify = () => {
   const doFetchList = useFetchList();
   const history = useHistory();
   return async (payload) => {
-    payload.file = _.map(payload.file,file=>file.file);
+    payload.file = _.map(payload.file, file => ({fileName: file.filename, base64: file.getFileEncodeBase64String()}));
     await modify(payload);
-    await doFetchList({}, { isNew: true, keepSize: true });
+    await doFetchList({}, {isNew: true, keepSize: true});
     history.goBack();
   };
 };
