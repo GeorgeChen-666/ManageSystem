@@ -1,15 +1,16 @@
 const fs = require('fs');
-const checkOrCreateFolder = (path) => {
+const path = require('path');
+const checkOrCreateFolder = (pathName) => {
   try {
-    fs.statSync(path);
+    fs.statSync(pathName);
   } catch (e) {
-    fs.mkdirSync(path);
+    fs.mkdirSync(pathName);
   }
 };
-const getFolderItems = (path) => {
-  return fs.readdirSync(path);
+const getFolderItems = (pathName) => {
+  return fs.readdirSync(pathName);
 };
 module.exports = {
   checkOrCreateFolder,
-  getFolderItems,
+  getFolderItems
 };

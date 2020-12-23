@@ -10,7 +10,7 @@ export default (props) => {
   const history = useHistory();
   const editor = useEditor(processModel);
   const data = editor.getEntity();
-  const formRef = useRef({});//isRunning
+  const formRef = useRef({});
   return (
     <Modal
       title="进程信息"
@@ -19,6 +19,7 @@ export default (props) => {
       width={'50%'}
       destroyOnClose={true}
       className={styles.terminalModal}
+      onCancel={()=>history.goBack()}
       footer={(<React.Fragment>
         <Button onClick={() => history.goBack()}>取消</Button>
         <Popconfirm
@@ -28,7 +29,7 @@ export default (props) => {
           cancelText="否"
           disabled={!data.isRunning}
         >
-          <Button type="primary" onClick={() => data.isRunning && formRef.current.submit()}>确定</Button>
+          <Button type="primary" onClick={() => !data.isRunning && formRef.current.submit()}>确定</Button>
         </Popconfirm>
       </React.Fragment>)}
     >

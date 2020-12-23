@@ -12,11 +12,13 @@ class BaseProcess extends EventEmitter {
   run() {
     const defaultEncoding = os.platform() === 'win32' ? 'GBK' : 'UTF-8';
     const { cmd, param = '', cwd, encoding = defaultEncoding } = this.config;
+    const [command, ...params] = (cmd + ' ' + param.split(' ').join(' ')).split(' ');
+    console.log('执行了：' + command + ' ' + params);
     //this.kill(true);
-    this.process = child_process.spawn(cmd, param.split(' '), {
+    this.process = child_process.spawn(command, [].concat(params), {
       cwd
-      //stdio: 'pipe',
-      //stdio: [process.stdin, process.stdout],
+      //stdio: 'pipe'
+      //stdio: [process.stdin, process.stdout]
     });
     const onData = (data) => this.emit('onData', iconv.decode(data, encoding));
     this.process.stdout.on('data', onData);
@@ -27,6 +29,7 @@ class BaseProcess extends EventEmitter {
       this.emit('onError', err);
     });
     this.process.on('exit', (code) => {
+      this.killProcess();
       this.emit('onExit', code);
     });
     this.emit('onRun');

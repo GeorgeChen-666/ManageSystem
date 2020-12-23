@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const { body, param, validationResult } = require('express-validator');
 const { systemProperty } = require('./BaseEntity');
 
@@ -32,7 +33,7 @@ function PublicHandler(callback) {
 function canModify(
   router,
   entityType,
-  { pathName = ['/modify', '/modify/:id'], extraRules = [] } = {}
+  { pathName = ['/modify', '/modify/:id'], extraRules = [], onFinish = _.noop() } = {}
 ) {
   router.patch(
     pathName,
@@ -42,6 +43,7 @@ function canModify(
       const data = { ...req.body, [systemProperty.id]: id * 1 };
       const entityData = entityType.getEntityByData(data, req.currentUser);
       entityData.saveRecord();
+      onFinish(entityData);
       res.json({
         message: 'modify',
         data: entityData.getFitData()

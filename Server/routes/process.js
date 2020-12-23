@@ -38,7 +38,14 @@ canModify(router, Process, {
       }
       return true;
     })
-  ]
+  ],
+  onFinish: (entityData) => {
+    const { isRunning } = entityData;
+    entityData.unload();
+    if (isRunning) {
+      entityData.load();
+    }
+  }
 });
 canRemove(router, Process, {});
 canRestore(router, Process, {});
@@ -75,8 +82,7 @@ router.get(
         pageSize,
         filter,
         sort
-      },
-      req.currentUser
+      }
     );
     const total = Process.findProcessLogs(id * 1, filter).length;
     res.json({

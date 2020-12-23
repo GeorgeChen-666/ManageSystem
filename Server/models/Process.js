@@ -15,10 +15,6 @@ class SystemProcess extends BaseProcess {
   constructor(config) {
     super(config);
     FsHelper.checkOrCreateFolder(config.cwd);
-    console.log(`=${config.cwd}=`);
-    FsHelper.getFolderItems(config.cwd).forEach((file) => {
-      console.log(file);
-    });
   }
 }
 
@@ -32,7 +28,7 @@ class Process extends AuthorizedEntity {
         try {
           const process = activeProcess.get(this.id);
           if (process) {
-            return process.isRunning;
+            return process.isProcessRun();
           } else {
             return false;
           }
@@ -109,8 +105,11 @@ class Process extends AuthorizedEntity {
   }
 
   unload() {
-    //processObj.kill();
-    activeProcess.delete(this.id);
+    const process = activeProcess.get(this.id);
+    if (process) {
+      process.processObj.killProcess();
+      activeProcess.delete(this.id);
+    }
   }
 
   static loadAllActiveProcess() {

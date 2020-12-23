@@ -130,7 +130,7 @@ class BaseEntity {
         .assign(updateObj)
         .write();
     }
-    this.data = updateObj;
+    this.data = { ...this.data, ...updateObj };
   }
 
   static _findById(id) {
@@ -152,7 +152,7 @@ class BaseEntity {
         ._findById(this[systemProperty.id])
         .assign(updateObj)
         .write();
-      this.data = updateObj;
+      this.data = { ...this.data, ...updateObj };
     }
   }
 
@@ -169,7 +169,7 @@ class BaseEntity {
         ._findById(this[systemProperty.id])
         .assign(updateObj)
         .write();
-      this.data = updateObj;
+      this.data = { ...this.data, ...updateObj };
     }
   }
 
@@ -202,31 +202,27 @@ class BaseEntity {
     return obj.value() || [];
   }
 
-  static pageRecords({
-                       searchAfter = null,
-                       pageSize = 10,
-                       filter = null,
-                       sort = ''
-                     }) {
+  static pageRecords(param) {
+    param.pageSize = param.pageSize || 10;
     let obj = this._getRecordsObject();
-    const filterArray = [].concat(filter).filter((e) => e);
+    const filterArray = [].concat(param.filter).filter((e) => e);
     obj = filterArray.reduce((to, cu) => {
       return to.filter(cu);
     }, obj);
-    if (sort !== '') {
-      const [sortKey, sortWay] = sort.split(' ');
+    if (param.sort) {
+      const [sortKey, sortWay] = param.sort.split(' ');
       obj = obj.sortBy(sortKey);
       if (sortWay === 'desc') {
         obj = obj.reverse();
       }
     }
-    if (searchAfter !== null) {
+    if (param.searchAfter) {
       const index = obj
-        .findIndex({ [systemProperty.id]: searchAfter * 1 })
+        .findIndex({ [systemProperty.id]: param.searchAfter * 1 })
         .value();
       obj = obj.drop(index + 1);
     }
-    return obj.take(pageSize).value() || [];
+    return obj.take(param.pageSize).value() || [];
   }
 }
 

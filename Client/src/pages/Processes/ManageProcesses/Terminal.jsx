@@ -45,7 +45,7 @@ export default () => {
     }
   };
   useEffect(() => {
-    doFetchList();
+    doFetchList({}, { isNew: true });
     const socket = registerSocket('process', (socket) => {
       socket.on('msg', (data) => {
         addNewLogFromWS.current(data);
