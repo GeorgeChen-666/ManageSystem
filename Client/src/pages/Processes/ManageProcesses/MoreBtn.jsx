@@ -10,6 +10,9 @@ export default ({ match, item }) => {
         <Link to={`${match.path}/modify/${item.id}`}>编辑</Link>
       </Menu.Item>
       <Menu.Item>
+        <Link to={`${match.path}/files/${item.id}`}>文件</Link>
+      </Menu.Item>
+      <Menu.Item>
         <a>删除</a>
       </Menu.Item>
     </Menu>

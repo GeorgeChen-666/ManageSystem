@@ -4,6 +4,7 @@ const { body } = require('express-validator');
 const router = express.Router();
 const Process = require('../models/Process');
 const { registerSocket } = require('../core/SocketHelper');
+const { sleep } = require('../core/util');
 const events = require('events');
 
 const {
@@ -39,10 +40,11 @@ canModify(router, Process, {
       return true;
     })
   ],
-  onFinish: (entityData) => {
-    const { isRunning } = entityData;
+  onFinish: async (entityData) => {
+    const { isRunning, autoStart } = entityData;
     entityData.unload();
-    if (isRunning) {
+    if (isRunning || autoStart) {
+      await sleep(100);
       entityData.load();
     }
   }

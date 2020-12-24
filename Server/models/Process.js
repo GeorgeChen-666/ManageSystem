@@ -14,6 +14,7 @@ const fs = require('fs');
 class SystemProcess extends BaseProcess {
   constructor(config) {
     super(config);
+    console.log('cwd' + config.cwd);
     FsHelper.checkOrCreateFolder(config.cwd);
   }
 }
@@ -28,7 +29,7 @@ class Process extends AuthorizedEntity {
         try {
           const process = activeProcess.get(this.id);
           if (process) {
-            return process.isProcessRun();
+            return process.processObj.isProcessRun();
           } else {
             return false;
           }
@@ -74,9 +75,16 @@ class Process extends AuthorizedEntity {
     processObj.on('onData', (data) => {
       this.addLog(data);
     });
+    processObj.on('onExit', (data) => {
+      this.addLog('\r\n============== server stopped ==============\r\n');
+    });
+    processObj.on('onRun', (data) => {
+      this.addLog('\r\n============== server started ==============\r\n');
+    });
+
     if (this.autoStart) {
       processObj.run();
-      this.addLog('\r\n============== server started ==============\r\n');
+
     }
     activeProcess.set(this.id, {
       processObj,

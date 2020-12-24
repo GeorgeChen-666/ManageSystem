@@ -16,7 +16,7 @@ export default (props) => {
       title="进程信息"
       centered
       visible={true}
-      width={'50%'}
+      width={'75%'}
       destroyOnClose={true}
       className={styles.terminalModal}
       onCancel={()=>history.goBack()}

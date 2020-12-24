@@ -67,7 +67,7 @@ export default () => {
       // confirmLoading={isSaveLoading}
       // onOk={() => formRef.current.submit()}
       onCancel={() => history.goBack()}
-      width={'50%'}
+      width={'75%'}
       destroyOnClose={true}
       className={styles.terminalModal}
     >

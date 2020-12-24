@@ -17,7 +17,7 @@ export default (props) => {
       confirmLoading={isSaveLoading}
       onOk={() => formRef.current.submit()}
       onCancel={() => history.goBack()}
-      width={'50%'}
+      width={'75%'}
       destroyOnClose={true}
     >
       <ValidationForm ref={formRef} name={props.name} onSubmit={doSave}>

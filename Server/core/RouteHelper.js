@@ -26,7 +26,7 @@ function PublicHandler(callback) {
     if (!vr.isEmpty()) {
       throw new Error(JSON.stringify(vr.array()));
     }
-    callback(req, res, next);
+    return callback(req, res, next);
   };
 }
 
@@ -38,12 +38,12 @@ function canModify(
   router.patch(
     pathName,
     [...extraRules],
-    PublicHandler(function(req, res, next) {
+    PublicHandler(async function(req, res, next) {
       const { id } = req.params;
       const data = { ...req.body, [systemProperty.id]: id * 1 };
       const entityData = entityType.getEntityByData(data, req.currentUser);
       entityData.saveRecord();
-      onFinish(entityData);
+      await onFinish(entityData);
       res.json({
         message: 'modify',
         data: entityData.getFitData()

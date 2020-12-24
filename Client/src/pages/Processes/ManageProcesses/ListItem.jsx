@@ -14,7 +14,7 @@ export default (match) => (item) => {
         className={styles.card}
         actions={[
           <Link to={`${match.path}/terminal/${item.id}`}>终端</Link>,
-          <a>任务</a>,
+          <Link to={`${match.path}/tasks/${item.id}`}>任务</Link>,
         ]}
         title={item.name}
         extra={<MoreBtn match={match} item={item} />}
