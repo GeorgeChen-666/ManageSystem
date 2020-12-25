@@ -1,13 +1,14 @@
 import React, {useRef} from 'react';
-import {Modal, Table, Button, Select, Input} from 'antd';
+import {Modal, Table, Button} from 'antd';
 import {useRouteMatch, useHistory} from 'react-router-dom';
-import ValidationForm from '../../../components/Form/ValidationForm';
-import TaskEditorCell from './TaskEditorCell'
+import ValidationForm from '../../../../components/Form/ValidationForm';
+import TaskEditorCell from './TaskEditorCell';
+import EventInput from './EventInput';
+import WhenInput from './WhenInput';
+import FormField from "../../../../components/Form/FormField";
 
-const {Option} = Select;
 
 const dataSource = [
-  {}
 ];
 
 const columns = [
@@ -21,13 +22,7 @@ const columns = [
       record,
       key: 'when',
       editing: true,
-      editor: <Select defaultValue="lucy" style={{width: 120}}>
-        <Option value="jack">启动时</Option>
-        <Option value="lucy">每x分钟</Option>
-        <Option value="disabled">每x个小时</Option>
-        <Option value="Yiminghe">每天的x点</Option>
-        <Option value="Yiminghe">当日志匹配</Option>
-      </Select>
+      editor: <FormField name="when" style={{marginBottom: 0}}><WhenInput /></FormField>
     }),
   },
   {
@@ -40,11 +35,7 @@ const columns = [
       record,
       key: 'event',
       editing: true,
-      editor: <Input addonBefore={<Select defaultValue="lucy" style={{width: 120}}>
-        <Option value="jack">输入命令</Option>
-        <Option value="lucy">执行命令</Option>
-        <Option value="disabled">修改变量</Option>
-      </Select>} />
+      editor: <FormField name="event" style={{marginBottom: 0}}><EventInput /></FormField>
     }),
   },
   {
@@ -67,12 +58,13 @@ export default () => {
     centered
     visible={true}
     width={'75%'}
+    onOk={() => formRef.current.submit()}
     onCancel={() => history.goBack()}
     destroyOnClose={true}
   >
-    <ValidationForm ref={formRef}>
+    <ValidationForm ref={formRef} onSubmit={(v)=>{console.log(v)}}>
       <div style={{textAlign: "right"}}>
-        <Button style={{marginBottom: 6, marginRight:12}}>
+        <Button style={{marginBottom: 6, marginRight: 12}}>
           导入...
         </Button>
         <Button type="primary" style={{marginBottom: 6}}>

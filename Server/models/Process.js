@@ -10,6 +10,7 @@ const FsHelper = require('../core/FsHelper');
 const path = require('path');
 const activeProcess = new Map();
 const fs = require('fs');
+const _ = require('lodash');
 
 class SystemProcess extends BaseProcess {
   constructor(config) {
@@ -128,20 +129,33 @@ class Process extends AuthorizedEntity {
       new Process(id).load();
     });
   }
+
+  modifyTask(taskData) {
+    const tasks = this.tasks || [];
+    if (taskData.id) {
+      const findIndex = _.findIndex(tasks, { id: taskData.id });
+      if (findIndex > -1) {
+        _.set(tasks, findIndex, { ...tasks[findIndex], ...taskData });
+      }
+    } else {
+      taskData.id = new Date().getTime();
+      tasks.push(taskData);
+      this.tasks = tasks;
+    }
+    this.saveRecord();
+  }
 }
 
 Process.schema = {
   isRunning: Boolean,
   name: String,
   description: String,
-  type: String,
   autoStart: Boolean,
   ftpPort: String,
+  tasks: [],
   cmd: null,
   param: null,
-  //cwd: null,
-  encoding: null,
-  outputs: null
+  encoding: null
 };
 Process.functionPermissions = {
   [enumPermissionTypes.get]: enumPermissions.own,

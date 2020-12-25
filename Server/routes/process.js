@@ -19,7 +19,6 @@ const {
 registerSocket('process', (socket) => {
   //socket.emit('msg', 'process ready');
   global.events.on('onLog', ({ key = '', log }) => {
-    console.log('=======>', log);
     const [, processId] = key.split('_');
     try {
       //check permission
@@ -90,6 +89,20 @@ router.get(
     res.json({
       items,
       total
+    });
+  })
+);
+router.patch(
+  ['/modify/:id/modifyTask', '/modify/:id/modifyTask/:taskId'],
+  [],
+  PublicHandler(function(req, res, next) {
+    const { id, taskId } = req.params;
+    const processObject = new Process(id, req.currentUser);
+    const taskData = { ...req.body, id: taskId * 1 };
+    processObject.modifyTask(taskData);
+    res.json({
+      message: 'modifyTask',
+      data: processObject.getFitData()
     });
   })
 );

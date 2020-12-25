@@ -9,7 +9,7 @@ import InfiniteScrollList from '../../../components/InfiniteScrollList';
 import ListItem from './ListItem';
 import Terminal from './Terminal';
 import ProcessEditor from './ProcessEditor';
-import TaskEditor from './TaskEditor';
+import TaskEditor from './Task/TaskEditor';
 
 export default () => {
   let match = useRouteMatch();

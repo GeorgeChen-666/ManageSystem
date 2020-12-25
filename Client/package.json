@@ -5,6 +5,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
     "@ant-design/pro-layout": "^6.5.1",
+    "@ant-design/pro-table": "^2.16.4",
     "antd": "^4.7.0",
     "axios": "^0.21.0",
     "dayjs": "^1.9.5",

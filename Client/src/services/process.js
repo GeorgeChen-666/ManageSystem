@@ -21,3 +21,7 @@ export async function sendCommand(id, params) {
     command: params,
   });
 }
+
+export function modifyTask(processId,entity) {
+  return axios.patch(`/api/process/modify/${processId}/modifyTask/${entity.id}`, entity);
+}

@@ -1,5 +1,5 @@
 import {atom, selector, useRecoilState} from 'recoil';
-import {fetchList, modify} from '../services/process';
+import {fetchList, modify, modifyTask} from '../services/process';
 import {useHistory} from 'react-router-dom';
 import _ from 'lodash';
 
@@ -60,4 +60,10 @@ export const useDoModify = () => {
     await doFetchList({}, {isNew: true, keepSize: true});
     history.goBack();
   };
+};
+
+export const useDoModifyTask = () => {
+  return async (payload) => {
+    await modifyTask(payload);
+  }
 };

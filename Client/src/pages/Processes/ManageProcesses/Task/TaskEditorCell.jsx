@@ -1,5 +1,5 @@
 import React from 'react';
-import FormField from '../../../components/Form/FormField';
+import FormField from '../../../../components/Form/FormField';
 
 
 export default ({
@@ -12,6 +12,6 @@ export default ({
                   index, ...restProps
                 }) => {
   return (<td {...restProps}>
-    <span>{editing ? <FormField style={{marginBottom: 0}}>{editor}</FormField> : children}</span>
+    <span>{editing ? editor : children}</span>
   </td>)
 }
